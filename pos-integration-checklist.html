@@ -1,0 +1,550 @@
+<style>
+:root{
+  --navy:#321e57; --purple:#503390; --bright:#7b51bf; --action:#6C3FC5; --purple-dark:#4A2A8A;
+  --yellow:#fcd34d; --blue:#109ae7; --orange:#fb763c; --red:#c2260c; --green:#40c798;
+  --bg-success:#E8FAF0; --tx-success:#1A8A5C;
+  --bg-warning:#FEF9EC; --tx-warning:#B8860B;
+  --bg-error:#FEE2E2;   --tx-error:#DC2626;
+  --bg-info:#EBF3FC;    --tx-info:#1E5FA8;
+  --bg-neutral:#EDE9FB; --tx-neutral:#6C3FC5;
+  --text:#1A1A2E; --border:#efedfa; --page:#f4f1fa; --card:#ffffff;
+  --mid:#888888; --light:#F6F5FA;
+  --font:'Noto Sans',system-ui,-apple-system,sans-serif;
+  --mono:'SF Mono','Fira Code',ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+#supy-app{font-family:var(--font);color:var(--text);background:var(--page);padding:20px;border-radius:12px;line-height:1.5}
+#supy-app h1,#supy-app h2,#supy-app h3,#supy-app p{margin:0}
+
+/* ---------- Header ---------- */
+.hd{background:var(--navy);border-radius:12px;padding:20px 24px;margin-bottom:16px}
+.hd h1{color:#fff;font-size:22px;font-weight:600;letter-spacing:-.01em}
+.hd p{color:#C9BEE0;font-size:12px;margin-top:4px}
+
+/* ---------- Setup bar ---------- */
+.setup{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:16px}
+.setup-grid{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end}
+.fld{display:flex;flex-direction:column;gap:5px;flex:1;min-width:190px}
+.fld label{font-size:11px;font-weight:600;color:var(--mid);text-transform:uppercase;letter-spacing:.06em}
+.fld input,.fld select{font-family:var(--font);font-size:14px;padding:10px 12px;border:1.5px solid var(--border);
+  border-radius:8px;background:#fff;color:var(--text);outline:none;width:100%}
+.fld input:focus,.fld select:focus{border-color:var(--action)}
+.fld select{cursor:pointer}
+
+.btn{font-family:var(--font);font-size:13px;font-weight:600;padding:10px 16px;border-radius:8px;
+  border:1.5px solid transparent;cursor:pointer;white-space:nowrap;transition:background .15s}
+.btn-primary{background:var(--action);color:#fff}
+.btn-primary:hover{background:var(--purple-dark)}
+.btn-ghost{background:#fff;color:var(--action);border-color:var(--border)}
+.btn-ghost:hover{background:var(--light)}
+.btn-danger{background:#fff;color:var(--tx-error);border-color:#F5C6C6}
+.btn-danger:hover{background:var(--bg-error)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* ---------- Saved clients ---------- */
+.saved{margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
+.saved-lbl{font-size:11px;font-weight:600;color:var(--mid);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{background:var(--bg-neutral);color:var(--tx-neutral);border:1px solid #DDD3F5;border-radius:20px;
+  padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px}
+.chip:hover{background:#E0D6F8}
+.chip.on{background:var(--action);color:#fff;border-color:var(--action)}
+.chip .pct{font-family:var(--mono);font-size:11px;opacity:.85}
+
+/* ---------- Progress ---------- */
+.prog-wrap{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:16px}
+.prog-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;flex-wrap:wrap;gap:8px}
+.prog-title{font-size:15px;font-weight:600}
+.prog-title .sub{color:var(--mid);font-weight:400;font-size:13px}
+.prog-num{font-family:var(--mono);font-size:13px;color:var(--mid)}
+.bar{height:9px;background:var(--border);border-radius:20px;overflow:hidden}
+.bar-fill{height:100%;background:var(--action);border-radius:20px;transition:width .3s ease}
+.bar-fill.done{background:var(--green)}
+.gate-warn{margin-top:12px;background:var(--bg-warning);border-left:3px solid var(--yellow);
+  padding:10px 12px;border-radius:0 6px 6px 0;font-size:12.5px;color:var(--tx-warning)}
+.gate-ok{margin-top:12px;background:var(--bg-success);border-left:3px solid var(--green);
+  padding:10px 12px;border-radius:0 6px 6px 0;font-size:12.5px;color:var(--tx-success);font-weight:600}
+
+/* ---------- Phase ---------- */
+.phase{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.phase-hd{background:var(--purple);padding:13px 18px;display:flex;align-items:center;gap:12px;cursor:pointer;user-select:none}
+.phase-hd:hover{background:var(--purple-dark)}
+.phase-n{background:rgba(255,255,255,.18);color:#fff;font-family:var(--mono);font-size:11px;font-weight:700;
+  width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.phase-t{color:#fff;font-size:14.5px;font-weight:600;flex:1}
+.phase-t .gate{background:var(--yellow);color:var(--navy);font-size:9.5px;font-weight:700;padding:2px 7px;
+  border-radius:4px;margin-left:9px;text-transform:uppercase;letter-spacing:.05em;vertical-align:middle}
+.phase-c{font-family:var(--mono);font-size:11.5px;color:#D9CFF0;flex-shrink:0}
+.phase-ar{color:#fff;font-size:11px;opacity:.75;transition:transform .2s;flex-shrink:0}
+.phase.closed .phase-ar{transform:rotate(-90deg)}
+.phase.closed .phase-body{display:none}
+.phase.complete .phase-hd{background:var(--tx-success)}
+.phase.complete .phase-hd:hover{background:#157049}
+
+/* ---------- Items ---------- */
+.item{display:flex;gap:13px;padding:14px 18px;border-bottom:1px solid var(--border);align-items:flex-start}
+.item:last-child{border-bottom:none}
+.item:hover{background:var(--light)}
+.item.checked{background:#FAFCFB}
+.item.checked .item-req{text-decoration:line-through;color:var(--mid)}
+
+.cb{width:20px;height:20px;border:2px solid #C9BEE0;border-radius:5px;cursor:pointer;flex-shrink:0;
+  margin-top:1px;display:flex;align-items:center;justify-content:center;background:#fff;transition:all .12s}
+.cb:hover{border-color:var(--action)}
+.cb.on{background:var(--green);border-color:var(--green)}
+.cb.on::after{content:'';width:5px;height:9px;border:solid #fff;border-width:0 2.5px 2.5px 0;
+  transform:rotate(45deg);margin-top:-2px}
+
+.item-body{flex:1;min-width:0}
+.item-req{font-size:13.5px;font-weight:600;margin-bottom:3px}
+.item-req .cred{font-family:var(--mono);background:var(--bg-neutral);color:var(--tx-neutral);
+  padding:1px 6px;border-radius:4px;font-size:12px;font-weight:600}
+.item-ins{font-size:12.5px;color:#555;margin-bottom:5px}
+.item-note{font-size:12px;background:var(--bg-warning);color:var(--tx-warning);border-radius:6px;
+  padding:7px 10px;margin-top:6px;display:flex;gap:7px;align-items:flex-start}
+.item-note::before{content:'!';font-weight:800;flex-shrink:0;font-family:var(--mono)}
+.item-note.info{background:var(--bg-info);color:var(--tx-info)}
+.item-note.info::before{content:'i'}
+
+.owner{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;
+  text-transform:uppercase;letter-spacing:.04em;margin-left:8px;vertical-align:middle}
+.ow-client{background:var(--bg-info);color:var(--tx-info)}
+.ow-me{background:var(--bg-neutral);color:var(--tx-neutral)}
+.ow-csm{background:var(--bg-warning);color:var(--tx-warning)}
+.ow-eng{background:var(--bg-error);color:var(--tx-error)}
+
+/* ---------- Provider banner ---------- */
+.pbanner{background:linear-gradient(135deg,#1A0B3D,#503390);border-radius:12px;padding:16px 20px;margin-bottom:16px}
+.pbanner-t{color:#fff;font-size:16px;font-weight:600;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.pbanner-tag{font-size:10px;font-weight:700;padding:3px 9px;border-radius:5px;text-transform:uppercase;letter-spacing:.05em}
+.tag-self{background:var(--bg-success);color:var(--tx-success)}
+.tag-assist{background:var(--bg-warning);color:var(--tx-warning)}
+.tag-tech{background:var(--bg-error);color:var(--tx-error)}
+.pbanner-n{color:#D0B4FF;font-size:12.5px;margin-top:8px;line-height:1.55}
+.pbanner-recon{margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.15);
+  color:#C9BEE0;font-size:12px;font-family:var(--mono)}
+
+/* ---------- Empty ---------- */
+.empty{background:var(--card);border:2px dashed var(--border);border-radius:12px;padding:48px 24px;text-align:center}
+.empty h3{font-size:16px;font-weight:600;margin-bottom:6px}
+.empty p{font-size:13px;color:var(--mid)}
+
+.toolbar{display:flex;gap:8px;justify-content:flex-end;margin-bottom:14px;flex-wrap:wrap}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;
+  padding:11px 20px;border-radius:8px;font-size:13px;font-weight:600;z-index:999;opacity:0;
+  transition:opacity .25s;pointer-events:none}
+.toast.show{opacity:1}
+</style>
+
+<div id="supy-app">
+  <div class="hd">
+    <h1>POS Integration Checklist</h1>
+    <p>Pick a client and their POS. The checklist builds itself. Progress saves automatically.</p>
+  </div>
+
+  <div class="setup">
+    <div class="setup-grid">
+      <div class="fld">
+        <label>Client / retailer name</label>
+        <input id="clientName" type="text" placeholder="e.g. Al Mandi Group" autocomplete="off"/>
+      </div>
+      <div class="fld">
+        <label>POS provider</label>
+        <select id="posSelect"><option value="">Select a POS...</option></select>
+      </div>
+      <div class="fld" style="flex:0 0 auto;min-width:auto">
+        <button class="btn btn-primary" id="loadBtn">Load checklist</button>
+      </div>
+    </div>
+    <div class="saved" id="savedWrap" style="display:none">
+      <div class="saved-lbl">Saved clients</div>
+      <div class="chips" id="chips"></div>
+    </div>
+  </div>
+
+  <div id="main"></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+"use strict";
+
+/* ═════════════ PROVIDER DATA ═════════════ */
+// type: self | assist | tech
+// creds: [requirement, instruction, note, noteType]  noteType: '' warn | 'info'
+const P = {
+"Addictive":{type:"self",auth:"API (phone + password)",note:"Request both from the client's Addictive point of contact.",warn:"Discounts are NOT exposed by Addictive. Discount amounts will never appear in Supy sales data even when applied on the POS. Set client expectations before go-live.",recon:"Reports > Reports Dashboard > Sales Report. Net Sales = Total Sales Excl. Tax | Gross Sales = Total Sales Incl. Tax",creds:[["Phone number","The phone number registered on the Addictive account. Entered in the 'Enter Phone' field.","",""],["Password","The Addictive account password. Entered in the 'Enter Password' field.","",""]]},
+"AI Menu":{type:"self",auth:"API (key + secret)",note:"Request both from the client's AI Menu point of contact.",warn:"Standalone refunds with no matching sale that day are excluded from Supy sales data unless marked as wastage.",recon:"Administration > View History > Custom Sales Report. Settled Gross Total = Total Sales Incl. Tax | Net Total = Total Sales Excl. Tax | Total Discount = Total Discount Value",creds:[["Client ID","Goes in the 'Key' field when adding AI-Menu POS in Supy.","",""],["Client Secret","Goes in the 'Secret' field when adding AI-Menu POS in Supy.","",""]]},
+"Castle IT":{type:"assist",auth:"API (setup assisted)",note:"Client requests these from their Castle IT point of contact, then hands them to the CSM. Supy team completes authentication, typically within 48 hours.",warn:"Item mapping is MANUAL for Castle IT. Items are uploaded via the Menu Items Template, not auto-synced from the POS. Budget extra time. Discount and modifier support is undocumented, confirm behaviour before promising it.",creds:[["Access Token","Collect from client, pass to CSM for Supy-side authentication.","",""],["Organization ID (one per branch)","One org ID per branch. Pair each with its Supy branch name.","",""],["Host URL","The Castle IT tenant host URL.","",""],["Branch mapping bundle","For each branch send the CSM: retailer name, Castle IT org ID, Supy branch name, sales history start date/time, tenant name.","",""]]},
+"Clover":{type:"self",auth:"OAuth",note:"No credentials to request from Clover. The client logs into their own Clover account through a popup.",warn:"Each Clover merchant location becomes its own separate tenant in Supy. A 5-location client means 5 tenants, not 1. Factor this into the complexity rating.",recon:"Reports > Sales Report, custom date range. Net Sales = Total Sales Excl. Tax",creds:[["Clover portal email","Client enters this on the Clover login page during the OAuth redirect.","",""],["Clover portal password","Client enters this on the Clover login page.","",""],["Region","Selected from a dropdown in Supy before the redirect to Clover.","",""],["Merchant / location selection","Client picks which merchant to connect. The Supy tenant is created at this moment.","",""]]},
+"CompuCash":{type:"self",auth:"API (name + secret)",note:"Request both from the client's CompuCash or Revel point of contact.",warn:"Discount and modifier support is undocumented for this integration. Confirm current behaviour before committing to it with the client.",recon:"Sales > Sales Report. Sum with VAT = Revenue Incl. Tax | Sum without VAT = Revenue Excl. Tax. Note: the end date is excluded by default because the time picker defaults to 06:00 AM.",creds:[["Client Name","Entered in Supy when adding CompuCash.","",""],["Client Secret","Entered in Supy when adding CompuCash.","",""]]},
+"Dinlr":{type:"self",auth:"OAuth",note:"No credentials to request from Dinlr. The client logs into their own account during setup.",warn:"",recon:"Overview > Reports > Sales Report > Sales Summary. Totals = Total Sales Incl. Tax | Net Sales = Total Sales Excl. Tax",creds:[["Dinlr username","Client enters this on the Dinlr login page.","",""],["Dinlr password","Client enters this on the Dinlr login page.","",""],["Branch selection + allow access","Client selects the branch and grants access to complete the OAuth flow.","",""]]},
+"Dual Link":{type:"self",auth:"API (username + password)",note:"Request both from the client's Dual Link point of contact.",warn:"",recon:"Reports > Sales by Product. PRODUCT (* = modifier) = POS Item Name | BASE = Total Sales Excl. Tax | TOTAL = Total Sales Incl. Tax | DISCOUNTED = Total Discount Value",creds:[["Username","Entered in Supy when adding Dual Link.","",""],["Password","Entered in Supy when adding Dual Link.","",""]]},
+"Eats365":{type:"assist",auth:"API (setup assisted)",note:"Sequencing matters here. The CSM must first coordinate authorization with the Eats365 support team and share an access token with the client's Eats365 contact, who redeems it on the merchant portal. Only then can the client connect.",warn:"Sales types are NOT fetched automatically. Each one must be entered manually by code and name (pick_up, delivery, dine_in). If the client adds a new order type later, someone has to remember to add it here or those sales go untyped.",creds:[["CSM raises request with Eats365","Start this first, it gates everything else. CSM initiates with Eats365 support and shares the access token.","",""],["Eats365 contact redeems token","Client's Eats365 point of contact redeems the token on the Eats365 merchant portal.","",""],["Item Access Permission enabled","Client asks their Eats365 contact to enable Item Access Permission for the integration user.","Without this, menu item data will not be shared and item mapping cannot proceed.",""],["Restaurant Code","Client finds this in their Eats365 restaurant settings. Entered in Supy.","",""]]},
+"Fascano":{type:"self",auth:"API (email + password)",note:"Request both from the client's Fascano point of contact.",warn:"Discount support is not fully documented. Confirm current behaviour before promising discount visibility.",creds:[["Email","The email registered on the Fascano account.","",""],["Password","The Fascano account password.","",""]]},
+"Flex Catering":{type:"self",auth:"API (key + host)",note:"Request both from the client's Flex Catering point of contact.",warn:"Every product in Flex Catering needs a unique SKU with no blanks, or item mapping breaks. Audit the client's SKUs before you start mapping. Only orders with 'invoiced' status are pulled, regardless of payment status. Combo details and item attributes are not recorded individually.",creds:[["X-API-KEY","Goes in the 'Key' field when adding Flex POS in Supy.","",""],["Host address","Goes in the 'Host' field when adding Flex POS in Supy.","",""],["SKU audit confirmed","Verify with the client that every product has a unique, non-blank SKU before mapping.","",""]]},
+"Foodics":{type:"self",auth:"OAuth",note:"No credentials to request from Foodics. The client logs into their own account through a popup and allows the requested permissions.",warn:"Business day opening and closing times MUST match between Foodics and Supy per branch, or orders near the cutoff land on different business dates and daily totals will not reconcile. Check this before validation, not after.",recon:"Reports > Sales Reports > Sales by Product (NOT Sales by Branch, they differ). Avoid 'group by day', it inflates revenue. Items at 100% discount are excluded from Foodics net quantity but included in Supy.",creds:[["Account Number","Client enters this on the Foodics login popup.","",""],["Email","Client's Foodics account email, entered on the popup.","",""],["Password","Client's Foodics account password, entered on the popup.","",""],["Permissions allowed","Client must click through and allow the requested permissions or the connection fails.","",""],["Business day cutoff matched","Confirm the opening/closing time in Foodics matches Supy for every branch.","This is the single most common cause of Foodics reconciliation mismatches.",""]]},
+"ForkPOS":{type:"assist",auth:"API (setup assisted)",note:"Client requests Location IDs from their ForkPOS point of contact and hands them to the CSM. Supy completes authentication, typically within 48 hours.",warn:"Discount and modifier support is undocumented. Confirm behaviour before committing.",creds:[["Location ID (one per branch)","Collect one Location ID per branch from the client's ForkPOS contact.","",""],["Branch mapping bundle","For each branch send the CSM: retailer name, ForkPOS Location ID, Supy branch name, sales history start date/time, tenant name.","",""]]},
+"Geidea":{type:"assist",auth:"API (setup assisted)",note:"Sequencing matters. The CSM must request that the Geidea team provision integration access on the client's tenant BEFORE the client can connect. Raise this on day one.",warn:"Enter the host address exactly as given, WITHOUT the 'admin-' prefix that appears on some Geidea URLs. Discount and modifier support is undocumented.",creds:[["CSM requests Geidea provisioning","Do this first, it gates the connection. CSM asks the Geidea team to enable integration access on the client's tenant.","",""],["Geidea Host address","Example format: yourbusiness.geideapos.net","Strip the 'admin-' prefix if present.",""]]},
+"GoTab":{type:"self",auth:"API (key + secret)",note:"Request both from the client's GoTab point of contact.",warn:"Item-level discounts cannot be traced back to the item they were applied to. GoTab spreads them proportionally across every item in the order. Sales for a business day only become available once GoTab closes the fiscal day, so a still-open fiscal day returns nothing.",creds:[["API Access ID","Goes in the 'Key' field when adding GoTab in Supy.","",""],["API Access Secret","Goes in the 'Secret' field when adding GoTab in Supy.","",""]]},
+"Grubtech (via API)":{type:"tech",auth:"API (Supy Engineering)",note:"Supy Integrations/Engineering configures this. The client requests the credentials from their Grubtech contact, or emails Grubtech directly with the CSM copied.",warn:"If one Grubtech Location ID is shared across multiple stores, item mapping cannot be auto-synced and items must be uploaded manually. Check this early. Schedule the sales sync at least 3 hours after the last shift cutoff. Grubtech supports full order cancellation only, no partial cancellations or returns.",recon:"Real-Time Reports > Sales > Locations. Net Sales = Total Sales Excl. Tax (may include delivery charges) | Gross Sales = Total Sales Incl. Tax | Discounts = Total Discount Value",creds:[["Sales API Key","Collect from client, pass to CSM for the Integrations team.","",""],["Menu-Items API Key","Collect from client, pass to CSM for the Integrations team.","",""],["Store ID","Collect from client, pass to CSM.","",""],["Location ID","Collect from client, pass to CSM.","Confirm whether this ID is shared across multiple stores. If yes, item mapping goes manual.",""],["Sync schedule set 3h+ after cutoff","Confirm with the Integrations team that the sync runs at least 3 hours after the last shift closes.","",""]]},
+"Grubtech (via Webhooks)":{type:"tech",auth:"Webhook (Supy Engineering)",note:"Supy Integrations/Engineering establishes the webhook connection, typically within 48 hours of receiving branch details. Supy supplies Grubtech with the webhook endpoint.",warn:"Item mapping happens on the GRUBTECH side, not in Supy. The Supy recipe code goes into the 'external ID' field on each Grubtech item. There is no manual sync button and no way to re-fetch a day. If Supy is briefly unavailable when Grubtech pushes, that push may be lost. Delivery fees post to a dedicated 'delivery fee' recipe that must be created.",creds:[["Branch ID(s)","One per location. Collect from the client's Grubtech contact, pass to CSM.","",""],["Recipe codes entered in Grubtech","For each recipe, the matching Supy recipe code must be entered in the 'external ID' field on the Grubtech item.","This is done in Grubtech by the client or Grubtech, not in Supy. Nothing maps until it is.",""],["Delivery fee recipe created","If delivery fees apply, ask the CSM to set up a dedicated delivery fee recipe in Supy.","",""]]},
+"IdealPOS":{type:"self",auth:"API (key + ID + secret)",note:"Request all three from the client's IdealPOS point of contact.",warn:"Refunds are recorded as brand new transactions with no link back to the original sale. Open tabs are dated when finalized, not when opened, so a tab opened yesterday and closed today lands on today. Wastage is a separate transaction type and cannot occur inside a sales order. Timestamps are local retailer time, not UTC.",creds:[["API Key","Entered in Supy when adding Ideal POS.","",""],["Tenant ID","Entered in Supy when adding Ideal POS.","",""],["Secret Key","Entered in Supy when adding Ideal POS.","",""]]},
+"Lightspeed K-Series":{type:"self",auth:"API (direct login)",note:"The client uses their existing Lightspeed K-Series credentials. Nothing to request from Lightspeed.",warn:"Use a SEPARATE login email per restaurant or account. Reusing one email across accounts mixes menu item data between them. If mapping branches across multiple tenants, stagger each tenant's sync time by at least 30 minutes or authentication fails. Sales are not tracked for 'production instructions', those must be converted to proper menu items.",recon:"Reports > Shifts Report. Gross = Total Sales Incl. Tax | Net = Total Sales Excl. Tax",creds:[["Username","Client enters this in Supy when adding Lightspeed K-series.","Confirm this email is unique to this restaurant and not reused across Lightspeed accounts.",""],["Password","Client enters this in Supy.","",""],["All 3 permissions granted","When prompted, the client must grant financial data, items, AND orders. All three are required.","Missing any one permission means the integration will not work.",""],["Sync times staggered (multi-tenant)","If more than one tenant, set each tenant's sync time at least 30 minutes apart.","",""],["Production instructions converted","Check whether the client uses production instructions in place of menu items. If so, they must be rebuilt as real items.","",""]]},
+"Lightspeed O-Series":{type:"self",auth:"OAuth",note:"Formerly Kounta. The client logs in with their existing Lightspeed O-Series credentials and grants access to the chosen company.",warn:"On-screen modifiers are NOT tracked in sales data, only 'options' are. This is a Lightspeed API limitation. Any sale with an on-screen modifier imports as INVALID_MODIFIER priced at 0.0. If the client uses on-screen modifiers, they must move them to options in the Lightspeed backoffice before go-live or you will have permanent gaps in tracking.",recon:"Insights > Reports > Product Sales > Sales by Product. Product Name (* = modifier) = POS Item Name | Sales = Total Sales Incl. Tax",creds:[["Lightspeed O-Series email","Client enters this on the Lightspeed login page.","",""],["Lightspeed O-Series password","Client enters this on the Lightspeed login page.","",""],["Company selected + access granted","Client picks the company and clicks Grant Access, then is redirected back to Supy.","",""],["Modifier audit: options vs on-screen","Check the client's menu. Anything using on-screen modifiers must be converted to options before go-live.","Skipping this produces INVALID_MODIFIER entries at 0.0 that cannot be recovered retroactively.",""]]},
+"Lightspeed X-Series":{type:"self",auth:"API (URL + login)",note:"The client uses their existing Lightspeed X-Series credentials.",warn:"X-Series is built for retail, not table-service hospitality. If the client also runs K-Series or O-Series at other sites, confirm the correct Lightspeed product per site before starting. Discount and modifier support is undocumented for X-Series.",creds:[["Store URL","Example format: yourstore.vendhq.com","",""],["Username","Client enters this in Supy.","",""],["Password","Client enters this in Supy.","",""],["Correct Lightspeed product confirmed","Verify per site whether it runs K, O, or X. They are different integrations.","",""]]},
+"Linga POS":{type:"assist",auth:"API (branch mapping assisted)",note:"The client requests Store ID and API Key from their Linga POS contact. Branch mapping requires CSM assistance.",warn:"Linga's own sales reports fold modifier returns into the parent item's totals, while Supy captures them per modifier. Expect the two to differ on any day involving returns. That is expected behaviour, not a bug, so do not escalate it.",recon:"Reports > Sales. Download BOTH the menu items report and the modifiers report. Sale Amount = Total Sales Excl. Tax | Quantity = Quantity Sold | Discount = Total Discount Value",creds:[["Store ID (initial connection)","Entered in Supy when adding Linga POS.","",""],["API Key","Entered in Supy. The same API Key is used across all of the client's stores.","",""],["Store ID per additional branch","One Store ID per branch. The API Key stays the same.","",""],["Branch mapping bundle","For each branch send the CSM: retailer ID, Linga store name (used as tenant name), Linga store ID, Supy branch name, sales history start date/time.","",""]]},
+"Loyverse":{type:"self",auth:"OAuth",note:"No credentials to request. The client logs into their own Loyverse account through a popup.",warn:"",creds:[["Loyverse login credentials","Client logs in directly through the Loyverse popup during setup.","",""]]},
+"LS Retail":{type:"self",auth:"API (key + secret)",note:"Request both from the client's LS Retail point of contact.",warn:"Partial documentation. Confirm current screens and behaviour with the Supy team before walking a client through it.",creds:[["API Key","Entered in Supy when adding LS Retail.","",""],["Secret","Entered in Supy when adding LS Retail.","",""]]},
+"Marn":{type:"self",auth:"OAuth",note:"No credentials to request. The client logs into their own Marn account through a popup.",warn:"",creds:[["Marn login credentials","Client logs in directly through the Marn popup during setup.","",""]]},
+"MobiPOS":{type:"self",auth:"API (key)",note:"Request from the client's MobiPOS point of contact.",warn:"Partial documentation. Confirm current screens with the Supy team.",creds:[["API Key","Entered in Supy when adding MobiPOS.","",""]]},
+"Ninja":{type:"self",auth:"API (confirm with Supy team)",note:"Documentation for Ninja is minimal. Confirm the current credential requirements with the Supy team BEFORE asking the client for anything.",warn:"Do not tell the client what to request until you have confirmed it internally. Guessing here creates a round trip that costs days.",creds:[["Internal confirmation of requirements","Ask the Supy team what Ninja currently needs. Log the answer in the playbook so the next person does not repeat this.","",""],["Credentials collected from client","Once confirmed internally, request from the client's Ninja point of contact.","",""]]},
+"Omega POS":{type:"self",auth:"API (key + secret)",note:"Request both from the client's Omega POS point of contact.",warn:"",creds:[["Client ID","Entered in Supy when adding Omega POS.","",""],["Client Secret","Entered in Supy when adding Omega POS.","",""]]},
+"Oolio":{type:"self",auth:"API (key + secret)",note:"Request both from the client's Oolio point of contact.",warn:"",creds:[["API Key","Entered in Supy when adding Oolio.","",""],["API Secret","Entered in Supy when adding Oolio.","",""]]},
+"Oracle Micros Simphony":{type:"tech",auth:"API (Supy Engineering)",note:"Supy Integrations/Engineering configures this. The client requests access details from their Oracle or Simphony administrator and provides them to the CSM.",warn:"Documentation is partial and the exact credential set varies by Simphony configuration. Confirm the specific requirements with the Integrations team before going to the client, and factor the engineering dependency into the timeline.",creds:[["Simphony environment access details","Collect from the client's Oracle/Simphony administrator, pass to CSM.","Confirm the exact fields needed with the Integrations team first, they vary by configuration.",""],["Integrations team engaged","Raise the request with the Integrations team and get a timeline commitment before promising the client a date.","",""]]},
+"Papaya":{type:"self",auth:"API (key + secret)",note:"Request both from the client's Papaya point of contact.",warn:"",creds:[["API Key","Entered in Supy when adding Papaya.","",""],["Secret Key","Entered in Supy when adding Papaya.","",""]]},
+"Poster":{type:"self",auth:"OAuth",note:"Documentation for Poster is minimal. The client logs into their own Poster account, but confirm the current setup flow with the Supy team first.",warn:"Confirm the flow internally before walking a client through it.",creds:[["Internal confirmation of setup flow","Check the current Poster flow with the Supy team, then log it in the playbook.","",""],["Poster login credentials","Client logs in directly through the Poster popup.","",""]]},
+"Prologic First":{type:"self",auth:"API (key + secret)",note:"Request both from the client's Prologic First point of contact.",warn:"",creds:[["Client ID","Entered in Supy when adding Prologic First.","",""],["Client Secret","Entered in Supy when adding Prologic First.","",""]]},
+"QU POS":{type:"self",auth:"API (key + secret)",note:"Request both from the client's QU POS point of contact.",warn:"",creds:[["API Key","Entered in Supy when adding QU POS.","",""],["Secret Key","Entered in Supy when adding QU POS.","",""]]},
+"Quadranet":{type:"self",auth:"API (username + password)",note:"Request both from the client's Quadranet point of contact.",warn:"",creds:[["Username","Entered in Supy when adding Quadranet.","",""],["Password","Entered in Supy when adding Quadranet.","",""]]},
+"Quantic POS":{type:"self",auth:"API (key)",note:"Request from the client's Quantic POS point of contact.",warn:"",creds:[["API Key","Entered in Supy when adding Quantic POS.","",""]]},
+"Redcat":{type:"self",auth:"API (key + host)",note:"Request both from the client's Redcat point of contact.",warn:"",creds:[["API Key","Entered in Supy when adding Redcat.","",""],["Host URL","Entered in Supy when adding Redcat.","",""]]},
+"Revel":{type:"self",auth:"API (key + secret + domain)",note:"Request all three from the client's Revel point of contact.",warn:"",creds:[["API Key","Entered in Supy when adding Revel.","",""],["API Secret","Entered in Supy when adding Revel.","",""],["Revel domain URL","Example format: yourbusiness.revelup.com","",""]]},
+"Roller":{type:"self",auth:"API (key + secret)",note:"Request both from the client's Roller point of contact.",warn:"",creds:[["API Key","Entered in Supy when adding Roller.","",""],["Secret Key","Entered in Supy when adding Roller.","",""]]},
+"Shopify":{type:"tech",auth:"API (Supy Engineering)",note:"Supy Integrations/Engineering configures this. The client provides store access details to the CSM.",warn:"Documentation is partial. Confirm the exact requirements with the Integrations team before going to the client.",creds:[["Shopify store access details","Collect from the client's Shopify administrator, pass to CSM.","",""],["Integrations team engaged","Raise the request and get a timeline commitment before promising the client a date.","",""]]},
+"SNAPOS":{type:"self",auth:"API (key + secret)",note:"Request both from the client's SNAPOS point of contact.",warn:"",creds:[["API Key","Entered in Supy when adding SNAPOS.","",""],["API Secret","Entered in Supy when adding SNAPOS.","",""]]},
+"Spare":{type:"self",auth:"API (key + secret)",note:"Request both from the client's Spare point of contact.",warn:"",creds:[["API Key","Entered in Supy when adding Spare.","",""],["Secret Key","Entered in Supy when adding Spare.","",""]]},
+"Spice POS":{type:"self",auth:"API (key + secret)",note:"Request both from the client's Spice POS point of contact.",warn:"",creds:[["Client ID","Entered in Supy when adding Spice POS.","",""],["Client Secret","Entered in Supy when adding Spice POS.","",""]]},
+"Square POS":{type:"self",auth:"OAuth",note:"No credentials to request. The client logs into their own Square account through a popup.",warn:"",creds:[["Square login credentials","Client logs in directly through the Square popup during setup.","",""]]},
+"Squirrel POS":{type:"assist",auth:"API (branch mapping assisted)",note:"Branch mapping is assisted by the CSM. Documentation is partial.",warn:"The exact credential fields are not fully documented. Confirm with the Supy team before requesting anything from the client.",creds:[["Internal confirmation of credential fields","Check with the Supy team what Squirrel currently needs, then log it in the playbook.","",""],["API credentials","Collect from the client's Squirrel POS point of contact once confirmed.","",""],["Branch mapping bundle","Send branch details to the CSM to complete mapping.","",""]]},
+"SysPos":{type:"self",auth:"API (key + secret)",note:"Request both from the client's SysPos point of contact.",warn:"",creds:[["API Key","Entered in Supy when adding SysPos.","",""],["API Secret","Entered in Supy when adding SysPos.","",""]]},
+"Task POS":{type:"self",auth:"API (key)",note:"Request from the client's Task POS point of contact.",warn:"Partial documentation. Confirm current screens with the Supy team.",creds:[["API Key","Entered in Supy when adding Task POS.","",""]]},
+"Tissl":{type:"self",auth:"API (key + secret)",note:"Request both from the client's Tissl point of contact.",warn:"",creds:[["API Key","Entered in Supy when adding Tissl.","",""],["API Secret","Entered in Supy when adding Tissl.","",""]]},
+"Toast POS":{type:"tech",auth:"API (Supy Engineering)",note:"Supy Integrations/Engineering configures this. The client requests credentials from their Toast point of contact and provides them to the CSM.",warn:"Engineering dependency. Get a timeline commitment from the Integrations team before promising the client a go-live date.",creds:[["Toast API credentials","Collect from the client's Toast point of contact, pass to CSM.","",""],["Integrations team engaged","Raise the request and get a timeline commitment before promising the client a date.","",""]]},
+"Tray POS":{type:"self",auth:"API (key + secret)",note:"Request both from the client's Tray POS point of contact.",warn:"",creds:[["API Key","Entered in Supy when adding Tray POS.","",""],["API Secret","Entered in Supy when adding Tray POS.","",""]]},
+"Urban Piper":{type:"self",auth:"API (key + secret)",note:"Request both from the client's Urban Piper point of contact.",warn:"Documentation is minimal. Confirm the current flow with the Supy team before walking a client through it.",creds:[["API Key","Entered in Supy when adding Urban Piper.","",""],["API Secret","Entered in Supy when adding Urban Piper.","",""]]},
+"Vita Mojo":{type:"assist",auth:"API (Supy handles setup)",note:"Setup is handled directly by Supy. The client provides account access to the CSM and Supy does the rest.",warn:"Documentation is partial. Confirm the exact access the client needs to grant with the Supy team before asking.",creds:[["POS account access details","Collect from the client, pass to CSM. Supy completes the setup.","",""],["Supy team engaged","Confirm what access is needed and get a timeline before promising the client a date.","",""]]},
+"Zid POS":{type:"self",auth:"API (key + secret)",note:"Request both from the client's Zid POS point of contact.",warn:"Partial documentation. Confirm current screens with the Supy team.",creds:[["API Key","Entered in Supy when adding Zid POS.","",""],["API Secret","Entered in Supy when adding Zid POS.","",""]]}
+};
+
+/* ═════════════ LIFECYCLE PHASES ═════════════
+   owner: me | client | csm | eng
+   Phases marked gate:true are hard go/no-go points.
+*/
+function buildPhases(posName){
+  const p = P[posName];
+  const credItems = p.creds.map(function(c){
+    return {r:"<span class='cred'>"+c[0]+"</span>", i:c[1], n:c[2]||"", nt:c[3]||"", o:
+      (p.type==="tech"||/CSM|Integrations team|Supy team/.test(c[1])) ? "csm" : "client"};
+  });
+
+  return [
+  {n:"0", t:"Kickoff and complexity rating", gate:"48h", items:[
+    {r:"Implementation reviewed within 48 hours of kickoff", i:"Charter requirement. Every new implementation gets reviewed by you inside 48 hours, no exceptions.", n:"", nt:"", o:"me"},
+    {r:"POS provider and exact variant confirmed", i:"Currently set to <b>"+posName+"</b>. Confirm this is the exact product, not a family name. Lightspeed alone has three different integrations.", n:"", nt:"info", o:"me"},
+    {r:"Branch count captured", i:"How many locations connect? 1-3 leans Simple, 4-10 Standard, 11+ Complex.", n:"", nt:"", o:"client"},
+    {r:"Modifier and combo load assessed", i:"Ask the client directly: does the menu rely heavily on modifiers or combos? Minimal, moderate (10-30%), or heavy (30%+).", n:"Modifiers are the number one source of mapping errors. A heavy-modifier menu needs every mapped item reviewed by hand.", nt:"", o:"me"},
+    {r:"Multi-brand or multi-entity checked", i:"Does the client run several brands or separate POS accounts? Each one is a separate tenant.", n:"", nt:"", o:"client"},
+    {r:"Other pillars in scope identified", i:"Accounting, supplier connectivity, Open API, Delta Share, MCP. Each adds onboarding and validation time.", n:"", nt:"", o:"me"},
+    {r:"Complexity rating assigned: Simple / Standard / Complex", i:"Run the six-question scoring tree. A Complex rating automatically adds buffer to the timeline at kickoff.", n:"This is a gate, not a label. The rating changes the timeline before anyone commits to a date.", nt:"", o:"me"},
+    {r:"Integration Health Sheet created", i:"One per implementation, opened at kickoff, closed at Day 30.", n:"", nt:"", o:"me"}
+  ]},
+
+  {n:"1", t:"Prerequisites", gate:"", items:[
+    {r:"Supy account active with all branches created", i:"Settings > Branches in the Retailer Portal. Every branch must exist before mapping.", n:"", nt:"", o:"csm"},
+    {r:"Named client point of contact confirmed", i:"Someone who can request credentials from the POS provider AND be available during setup and testing. Get a name, an email, and a phone number.", n:"", nt:"", o:"client"},
+    {r:"Branch list collected with exact POS names", i:"Every branch as it appears in the POS, spelled exactly. Include branches opening soon.", n:"Mismatched names are the most common cause of branch mapping delays.", nt:"", o:"client"},
+    {r:"Full menu exported from the POS", i:"All active items, modifiers, combos, variants. Ideally an export file rather than a screenshot.", n:"", nt:"", o:"client"},
+    {r:"Recipes built in Supy", i:"Every menu item that needs inventory depletion must have a recipe in Supy first.", n:"Hard blocker. Item mapping cannot be completed until the recipe exists. Charter puts recipe building in Week 4 while go-live is end of Week 2, so raise the timing conflict early.", nt:"", o:"csm"},
+    {r:"Business day cutoff time captured per branch", i:"What time does each branch's business day end? Example: 2:00 AM for a venue open until midnight.", n:"", nt:"", o:"client"},
+    {r:"Sales types listed", i:"Dine In, Delivery, Takeaway, Drive Thru, and so on. Some POS systems need these mapped manually.", n:"", nt:"", o:"client"},
+    {r:"Sales sync start date agreed", i:"When should Supy begin pulling sales? Usually go-live, but some clients want history backfilled.", n:"", nt:"", o:"me"}
+  ]},
+
+  {n:"2", t:"Credentials for "+posName, gate:"", items:credItems},
+
+  {n:"3", t:"Connect and authenticate", gate:"", items:[
+    {r:"Credentials entered / OAuth completed in the Retailer Portal", i:"Settings > Integrations > Add new Integration provider > "+posName+".", n:"Never share credentials over email or chat. Enter them directly in the portal or use the secure request process.", nt:"", o: p.type==="tech" ? "eng":"csm"},
+    {r:"Tenant created and visible in Supy", i:"Confirm the tenant appears under Settings > Integrations.", n:"", nt:"", o:"me"},
+    {r:"Connection tested, no auth errors", i:"Attempt a menu item sync. If it returns items, the credentials are live.", n:"", nt:"", o:"me"}
+  ]},
+
+  {n:"4", t:"Branch mapping", gate:"before UAT", items:[
+    {r:"Every branch mapped to its POS counterpart", i:"Settings > Integrations > "+posName+" > triple-dot > Set Branch Mapping. Connect each branch.", n:"", nt:"", o:"csm"},
+    {r:"Sales history start date/time set per branch", i:"Set the date from which sales should begin syncing for each branch.", n:"", nt:"", o:"csm"},
+    {r:"Automated Sync enabled on every branch", i:"Without this, someone has to click Sync manually every day. That will not happen reliably.", n:"", nt:"", o:"csm"},
+    {r:"Live data confirmed flowing from ALL locations", i:"Not just one branch. Every mapped location must return real sales.", n:"Charter gate: POS connected with live data from all locations before UAT begins.", nt:"", o:"me"},
+    {r:"Sales type mapping completed (if applicable)", i:"Set Sales Type Mapping from the tenant menu, where the POS distinguishes order types.", n:"", nt:"", o:"csm"}
+  ]},
+
+  {n:"5", t:"Item and modifier mapping", gate:"", items:[
+    {r:"Menu items synced from the POS", i:"Items Mapping page > Sync (or Sync with POS). Pulls the live menu into Supy.", n:"", nt:"", o:"csm"},
+    {r:"Every POS item mapped to a Supy recipe", i:"Each item lands in one of three states: Unmapped, Mapped, or Ignored. Nothing should stay Unmapped at go-live.", n:"", nt:"", o:"csm"},
+    {r:"Modifiers mapped", i:"Extra cheese, no onions, upsize. If these are not mapped, ingredient depletion will be wrong even when revenue looks right.", n:"", nt:"", o:"csm"},
+    {r:"Combos and variants mapped", i:"Combo meals and size variants often behave differently from base items.", n:"", nt:"", o:"csm"},
+    {r:"Unmapped item count is zero", i:"Check the Unmapped tab. Anything left there is revenue and depletion Supy cannot account for.", n:"", nt:"", o:"me"},
+    {r:"Recipes audited against the recipe-building standard", i:"Not just that a recipe exists, but that its ingredient quantities are right.", n:"Charter gate: recipes audited against standard before go-live. A wrong recipe produces confidently wrong depletion, which is worse than no data.", nt:"", o:"me"}
+  ]},
+
+  {n:"6", t:"Sales sync and reconciliation", gate:"<1% variance", items:[
+    {r:"Manual sync run for a test date range", i:"Imports page > Sync. Pull a known day and inspect the result.", n:"", nt:"", o:"me"},
+    {r:"3-7 days of real sales data collected", i:"One day is not enough to trust. Collect a window that includes a weekend and a weekday.", n:"", nt:"", o:"me"},
+    {r:"POS report pulled for the same period", i: p.recon ? "For "+posName+": "+p.recon : "Pull the equivalent sales report from "+posName+" for the identical date range and branch set.", n:"", nt:"info", o:"me"},
+    {r:"Variance calculated vs POS report", i:"Compare Total Sales Excl. Tax and Incl. Tax line by line. Worked example: POS reports AED 482,600 for the week, Supy reports AED 479,100. Variance is 3,500 / 482,600 = 0.73%, which passes.", n:"", nt:"", o:"me"},
+    {r:"Variance is under 1%", i:"Charter KPI. If it is above 1%, do not proceed. Find the cause first: business day cutoff mismatch, unmapped items, modifier handling, or timezone.", n:"Charter gate: POS mapping validated with 3-7 days of real sales at under 1% variance BEFORE go-live. This is the hard number.", nt:"", o:"me"},
+    {r:"Root cause of any variance documented", i:"Even a passing variance under 1% deserves an explanation. Log it in the Health Sheet.", n:"", nt:"", o:"me"},
+    {r:"Inventory depletion spot-checked", i:"Pick 3 high-volume items. Confirm the ingredients deducted match the recipe times quantity sold.", n:"Revenue matching does not prove depletion is right. They are separate failure modes.", nt:"", o:"me"}
+  ]},
+
+  {n:"7", t:"Other pillars in scope", gate:"", items:[
+    {r:"Accounting sync verified (if in scope)", i:"Xero, QuickBooks, NetSuite, Wafeq, Zoho, Odoo, MYOB. Push a test document and confirm it lands correctly.", n:"Charter gate: accounting sync verified before go-live.", nt:"", o:"me"},
+    {r:"Supplier links tested (if in scope)", i:"Catalog sync, e-invoicing, order transmission. Send a test order end to end.", n:"Charter gate: supplier links tested before go-live.", nt:"", o:"me"},
+    {r:"Open API provisioned and validated (if in scope)", i:"Credentials issued, sandbox access confirmed, client has made a successful test call.", n:"", nt:"", o:"me"},
+    {r:"Delta Share provisioned and validated (if in scope)", i:"Share provisioned, schema docs handed over, BI team has validated they can read it.", n:"", nt:"", o:"me"},
+    {r:"MCP connection set up and workflow tested (if in scope)", i:"Connection established, use cases agreed, at least one workflow tested end to end.", n:"", nt:"", o:"me"},
+    {r:"Items not in scope explicitly marked N/A", i:"Do not leave these ambiguous. An unanswered question at sign-off is a risk, not a blank.", n:"", nt:"", o:"me"}
+  ]},
+
+  {n:"8", t:"Go-live sign-off", gate:"GO / NO-GO", items:[
+    {r:"All prior gates passed", i:"Complexity rated, live data from all locations, variance under 1%, recipes audited, in-scope pillars validated.", n:"", nt:"", o:"me"},
+    {r:"Zero unmapped items outstanding", i:"Final check before sign-off.", n:"", nt:"", o:"me"},
+    {r:"Known limitations documented and communicated", i:"Anything the POS cannot do (missing discounts, untracked modifiers, delayed fiscal day) must be written down and told to the client BEFORE go-live, not discovered after.", n:"", nt:"", o:"me"},
+    {r:"Automated Sync confirmed running on schedule", i:"Watch it fire once unattended before you sign off.", n:"", nt:"", o:"me"},
+    {r:"Health Sheet complete", i:"Every gate section filled in. No blanks.", n:"", nt:"", o:"me"},
+    {r:"Formal sign-off recorded", i:"You are a required approver on the integration milestone, not a cc. Record the decision and the date.", n:"Never sign off because something looks connected. Only because it has been tested, validated, reconciled, and documented.", nt:"", o:"me"},
+    {r:"Any issue that took over 30 minutes added to the playbook", i:"Charter working rule: documentation is the deliverable. Add it the same week, not eventually.", n:"", nt:"", o:"me"}
+  ]},
+
+  {n:"9", t:"Day 7 audit", gate:"", items:[
+    {r:"Sync ran every day since go-live with no gaps", i:"Check the Imports page for missing dates.", n:"", nt:"", o:"me"},
+    {r:"Variance re-checked against POS", i:"Still under 1%? Drift after go-live usually means a menu change nobody mapped.", n:"", nt:"", o:"me"},
+    {r:"New or changed menu items mapped", i:"Clients change menus constantly. Any new item added since go-live needs mapping.", n:"", nt:"", o:"me"},
+    {r:"Integration tickets raised in the first week reviewed", i:"Check Gleap. A cluster of tickets in week one signals a config gap, not user error.", n:"", nt:"", o:"me"},
+    {r:"Day 7 audit logged in the Health Sheet", i:"Charter target is 95%+ of Day 7 audits completed.", n:"", nt:"", o:"me"}
+  ]},
+
+  {n:"10", t:"Day 30 audit and close", gate:"CLOSE", items:[
+    {r:"Full re-check of every gate", i:"Connection, branch mapping, item mapping, recipes, variance, in-scope pillars. All of it, again.", n:"", nt:"", o:"me"},
+    {r:"30-day variance trend reviewed", i:"Is variance stable, improving, or drifting? A drifting variance is a leading indicator of a mapping problem.", n:"", nt:"", o:"me"},
+    {r:"Integration ticket volume trend checked", i:"Charter KPI: downward trend in integration tickets in the first 60 days post go-live per cohort.", n:"", nt:"", o:"me"},
+    {r:"Friction points logged in the friction log", i:"Anything that was harder than it should have been. This feeds the monthly friction report to Product.", n:"", nt:"", o:"me"},
+    {r:"Playbook updated with anything learned", i:"If this implementation taught you something about "+posName+", the playbook should say so before you close.", n:"", nt:"", o:"me"},
+    {r:"Health Sheet closed and archived", i:"Charter: the Health Sheet is closed at Day 30.", n:"", nt:"", o:"me"}
+  ]}
+  ];
+}
+
+/* ═════════════ STATE ═════════════ */
+let cur = null;          // {client, pos, checked:{}, collapsed:{}}
+let index = [];          // [{client,pos,pct}]
+let mem = {};            // in-memory fallback
+
+const $ = function(id){return document.getElementById(id);};
+const key = function(c,p){return "posck:"+c.trim().toLowerCase()+"::"+p;};
+const esc = function(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");};
+
+async function sGet(k){
+  try{ const r = await window.storage.get(k); return r? JSON.parse(r.value):null; }
+  catch(e){ return mem[k]||null; }
+}
+async function sSet(k,v){
+  mem[k]=v;
+  try{ await window.storage.set(k, JSON.stringify(v)); }catch(e){}
+}
+async function sDel(k){
+  delete mem[k];
+  try{ await window.storage.delete(k); }catch(e){}
+}
+
+function toast(msg){
+  const t=$("toast"); t.textContent=msg; t.classList.add("show");
+  setTimeout(function(){t.classList.remove("show");},1800);
+}
+
+/* ═════════════ RENDER ═════════════ */
+function totals(phases, checked){
+  let done=0, all=0;
+  phases.forEach(function(ph,pi){
+    ph.items.forEach(function(_,ii){ all++; if(checked[pi+"-"+ii]) done++; });
+  });
+  return {done:done, all:all, pct: all? Math.round(done/all*100):0};
+}
+
+function render(){
+  const main=$("main");
+  if(!cur){
+    main.innerHTML='<div class="empty"><h3>No checklist loaded</h3>'+
+      '<p>Enter a client name, pick their POS provider, and hit Load checklist.</p></div>';
+    return;
+  }
+  const p=P[cur.pos];
+  const phases=buildPhases(cur.pos);
+  const t=totals(phases,cur.checked);
+
+  const tagCls = p.type==="self"?"tag-self":p.type==="assist"?"tag-assist":"tag-tech";
+  const tagTxt = p.type==="self"?"Self-service":p.type==="assist"?"Assisted setup":"Tech support";
+
+  let h='';
+
+  h+='<div class="toolbar">'+
+     '<button class="btn btn-ghost" id="expandAll">Expand all</button>'+
+     '<button class="btn btn-ghost" id="collapseAll">Collapse all</button>'+
+     '<button class="btn btn-ghost" id="copyBtn">Copy as text</button>'+
+     '<button class="btn btn-danger" id="resetBtn">Reset this client</button></div>';
+
+  h+='<div class="pbanner"><div class="pbanner-t">'+esc(cur.pos)+
+     '<span class="pbanner-tag '+tagCls+'">'+tagTxt+'</span>'+
+     '<span class="pbanner-tag" style="background:rgba(255,255,255,.15);color:#fff">'+esc(p.auth)+'</span></div>';
+  h+='<div class="pbanner-n">'+esc(p.note)+(p.warn? " "+esc(p.warn):"")+'</div>';
+  if(p.recon) h+='<div class="pbanner-recon">Reconcile with: '+esc(p.recon)+'</div>';
+  h+='</div>';
+
+  h+='<div class="prog-wrap"><div class="prog-top">'+
+     '<div class="prog-title">'+esc(cur.client)+' <span class="sub">on '+esc(cur.pos)+'</span></div>'+
+     '<div class="prog-num">'+t.done+' of '+t.all+' complete &middot; '+t.pct+'%</div></div>'+
+     '<div class="bar"><div class="bar-fill'+(t.pct===100?" done":"")+'" style="width:'+t.pct+'%"></div></div>';
+
+  // Gate status
+  const gateIdx=[0,4,6,8];
+  const openGates=[];
+  gateIdx.forEach(function(gi){
+    const ph=phases[gi];
+    const incomplete=ph.items.some(function(_,ii){return !cur.checked[gi+"-"+ii];});
+    if(incomplete) openGates.push(ph.t);
+  });
+  if(t.pct===100){
+    h+='<div class="gate-ok">All gates passed. This implementation is fully documented and signed off.</div>';
+  }else if(openGates.length){
+    h+='<div class="gate-warn"><b>Open gates blocking go-live:</b> '+openGates.map(esc).join(" &middot; ")+'</div>';
+  }
+  h+='</div>';
+
+  // Phases
+  phases.forEach(function(ph,pi){
+    const dn=ph.items.filter(function(_,ii){return cur.checked[pi+"-"+ii];}).length;
+    const complete = dn===ph.items.length;
+    const closed = cur.collapsed[pi];
+    h+='<div class="phase'+(closed?" closed":"")+(complete?" complete":"")+'" data-p="'+pi+'">';
+    h+='<div class="phase-hd" data-toggle="'+pi+'">'+
+       '<div class="phase-n">'+ph.n+'</div>'+
+       '<div class="phase-t">'+esc(ph.t)+(ph.gate?'<span class="gate">'+esc(ph.gate)+'</span>':'')+'</div>'+
+       '<div class="phase-c">'+dn+'/'+ph.items.length+'</div>'+
+       '<div class="phase-ar">&#9660;</div></div>';
+    h+='<div class="phase-body">';
+    ph.items.forEach(function(it,ii){
+      const id=pi+"-"+ii, on=!!cur.checked[id];
+      const ow=it.o==="client"?["ow-client","Client"]:it.o==="csm"?["ow-csm","CSM"]:
+               it.o==="eng"?["ow-eng","Engineering"]:["ow-me","Me"];
+      h+='<div class="item'+(on?" checked":"")+'">';
+      h+='<div class="cb'+(on?" on":"")+'" data-id="'+id+'"></div>';
+      h+='<div class="item-body">';
+      h+='<div class="item-req">'+it.r+'<span class="owner '+ow[0]+'">'+ow[1]+'</span></div>';
+      h+='<div class="item-ins">'+it.i+'</div>';
+      if(it.n) h+='<div class="item-note'+(it.nt==="info"?" info":"")+'"><span>'+esc(it.n)+'</span></div>';
+      h+='</div></div>';
+    });
+    h+='</div></div>';
+  });
+
+  main.innerHTML=h;
+  wire(phases);
+}
+
+function wire(phases){
+  Array.prototype.forEach.call(document.querySelectorAll(".cb"),function(el){
+    el.onclick=function(){
+      const id=el.getAttribute("data-id");
+      cur.checked[id]=!cur.checked[id];
+      if(!cur.checked[id]) delete cur.checked[id];
+      save(); render();
+    };
+  });
+  Array.prototype.forEach.call(document.querySelectorAll(".phase-hd"),function(el){
+    el.onclick=function(){
+      const pi=el.getAttribute("data-toggle");
+      cur.collapsed[pi]=!cur.collapsed[pi];
+      if(!cur.collapsed[pi]) delete cur.collapsed[pi];
+      save(); render();
+    };
+  });
+  $("expandAll").onclick=function(){ cur.collapsed={}; save(); render(); };
+  $("collapseAll").onclick=function(){
+    cur.collapsed={}; phases.forEach(function(_,i){cur.collapsed[i]=true;}); save(); render();
+  };
+  $("resetBtn").onclick=function(){
+    cur.checked={}; save(); render(); toast("Checklist reset");
+  };
+  $("copyBtn").onclick=function(){
+    let out=cur.client+" - "+cur.pos+"\n"+"=".repeat(50)+"\n\n";
+    phases.forEach(function(ph,pi){
+      out+="["+ph.n+"] "+ph.t.toUpperCase()+(ph.gate?"  (GATE: "+ph.gate+")":"")+"\n";
+      ph.items.forEach(function(it,ii){
+        const mark=cur.checked[pi+"-"+ii]?"[x]":"[ ]";
+        out+="  "+mark+" "+it.r.replace(/<[^>]+>/g,"")+"\n";
+      });
+      out+="\n";
+    });
+    if(navigator.clipboard){ navigator.clipboard.writeText(out).then(function(){toast("Copied to clipboard");}); }
+    else{ toast("Clipboard unavailable"); }
+  };
+}
+
+/* ═════════════ PERSISTENCE ═════════════ */
+async function save(){
+  if(!cur) return;
+  const k=key(cur.client,cur.pos);
+  await sSet(k,{client:cur.client,pos:cur.pos,checked:cur.checked,collapsed:cur.collapsed});
+  const phases=buildPhases(cur.pos);
+  const t=totals(phases,cur.checked);
+  const ex=index.filter(function(x){return key(x.client,x.pos)!==k;});
+  ex.unshift({client:cur.client,pos:cur.pos,pct:t.pct});
+  index=ex.slice(0,30);
+  await sSet("posck:index",index);
+  renderChips();
+}
+
+function renderChips(){
+  const w=$("savedWrap"), c=$("chips");
+  if(!index.length){ w.style.display="none"; return; }
+  w.style.display="block";
+  c.innerHTML=index.map(function(x,i){
+    const on = cur && key(cur.client,cur.pos)===key(x.client,x.pos);
+    return '<div class="chip'+(on?" on":"")+'" data-i="'+i+'">'+esc(x.client)+
+           ' <span class="pct">'+x.pct+'%</span></div>';
+  }).join("");
+  Array.prototype.forEach.call(c.querySelectorAll(".chip"),function(el){
+    el.onclick=function(){
+      const x=index[+el.getAttribute("data-i")];
+      $("clientName").value=x.client; $("posSelect").value=x.pos;
+      load();
+    };
+  });
+}
+
+async function load(){
+  const name=$("clientName").value.trim(), pos=$("posSelect").value;
+  if(!name){ toast("Enter a client name"); return; }
+  if(!pos){ toast("Select a POS provider"); return; }
+  const saved=await sGet(key(name,pos));
+  cur = saved || {client:name,pos:pos,checked:{},collapsed:{}};
+  cur.client=name; cur.pos=pos;
+  cur.checked=cur.checked||{}; cur.collapsed=cur.collapsed||{};
+  render(); renderChips(); await save();
+}
+
+/* ═════════════ INIT ═════════════ */
+(async function(){
+  const sel=$("posSelect");
+  Object.keys(P).sort().forEach(function(k){
+    const o=document.createElement("option"); o.value=k; o.textContent=k; sel.appendChild(o);
+  });
+  $("loadBtn").onclick=load;
+  $("clientName").onkeydown=function(e){ if(e.key==="Enter") load(); };
+  const ix=await sGet("posck:index");
+  if(ix && Array.isArray(ix)){ index=ix; renderChips(); }
+  render();
+})();
+
+})();
+</script>
