@@ -550,8 +550,8 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
    placeholders as they are and the page runs exactly as it did before,
    localStorage only, no network calls, nothing else changes.
    ═════════════════════════════════════════════════════════════════════ */
-var SUPABASE_URL = "REPLACE_WITH_YOUR_SUPABASE_PROJECT_URL";
-var SUPABASE_ANON_KEY = "REPLACE_WITH_YOUR_SUPABASE_ANON_KEY";
+var SUPABASE_URL = "https://niqsffegdtehasedvskr.supabase.co";
+var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5pcXNmZmVnZHRlaGFzZWR2c2tyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODczMTIyNjcsImV4cCI6MjEwMjg4ODI2N30.FQRyg4bmgw6kADN66nDXfb9UxxCUGvZa6UzFlpvfdpA";
 var supa = (SUPABASE_URL.indexOf("REPLACE_WITH") === 0 || SUPABASE_ANON_KEY.indexOf("REPLACE_WITH") === 0)
   ? null
   : createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
