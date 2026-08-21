@@ -3,9 +3,9 @@
 A single-file, static checklist tool for POS implementations. Pick a client and their POS
 provider, and the checklist builds itself from the provider data baked into the page.
 
-- **`index.html`** — the whole app. No build step, no dependencies, no server.
-- **`SUPABASE.md`** — schema and adapter for moving storage off this browser.
-- **`.claude/`** — a tiny local static server, only for previewing before you push.
+- **`index.html`**: the whole app. No build step, no dependencies, no server.
+- **`SUPABASE.md`**: schema and Cloud sync setup, storage moved off this browser.
+- **`.claude/`**: a tiny local static server, only for previewing before you push.
 
 ## What's in it
 
@@ -50,13 +50,16 @@ link appears to go back to the automatic value. Buffers live in the `CX` array i
 
 ## Storage
 
-Everything is saved in the browser's `localStorage`, under keys prefixed `posck:`.
+Everything is saved in the browser's `localStorage`, under keys prefixed `posck:`, and
+that's still true with cloud sync on: local storage is the cache, Supabase is where the
+team's copy lives.
 
-That means: **progress is per-browser and per-device.** Two people opening the same
-published URL see their own separate data, and clearing site data wipes it. Up to 100
-clients are kept in the index. Deleting a client profile is permanent and there is no
-backup, so use Copy as text first if you want a record. If you need shared data across
-the team, that's what `SUPABASE.md` is for.
+Without cloud sync configured: **progress is per-browser and per-device.** Two people
+opening the same published URL see their own separate data, and clearing site data wipes
+it. With it configured (see `SUPABASE.md`), signing in with a magic link syncs every
+client to a shared Supabase project, and the Client Tracker shows the whole team's
+clients. Up to 100 clients are kept in the local index either way. Deleting a client
+profile is permanent, in both places, so use Copy as text first if you want a record.
 
 ## Run it locally
 
@@ -64,7 +67,7 @@ the team, that's what `SUPABASE.md` is for.
 node .claude/serve.js
 ```
 
-Then open <http://localhost:8412>. Opening `index.html` straight off disk works too —
+Then open <http://localhost:8412>. Opening `index.html` straight off disk works too,
 `localStorage` behaves slightly differently on `file://` URLs, so the local server is
 the closer match to how it will behave once published.
 

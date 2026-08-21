@@ -68,6 +68,16 @@ body{font-family:var(--font);font-weight:400;font-size:14px;color:var(--text);
 .fld select{cursor:pointer}
 .setup-hint{font-size:11.5px;color:var(--mid);margin-top:11px}
 
+/* ---------- Auth bar ---------- */
+.authbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--bg-neutral);
+  border:1px solid #DDD3F5;border-radius:8px;padding:9px 14px;margin-bottom:14px;font-size:12.5px;font-weight:400}
+.authbar input{font-family:var(--font);font-size:12.5px;font-weight:400;padding:7px 10px;
+  border:1.5px solid var(--border);border-radius:6px;background:#fff;color:var(--text);outline:none;min-width:200px}
+.authbar input:focus{border-color:var(--action)}
+.authbar-off{color:var(--mid)}
+.authbar-on{font-weight:600;color:var(--tx-neutral)}
+.authbar-msg{color:var(--tx-neutral);font-weight:600}
+
 .btn{font-family:var(--font);font-size:13px;font-weight:600;padding:10px 16px;border-radius:8px;
   border:1.5px solid transparent;cursor:pointer;white-space:nowrap;transition:background .2s ease-out}
 .btn-primary{background:var(--action);color:#fff}
@@ -430,7 +440,7 @@ table.hs-tbl input.num{font-family:var(--mono);text-align:right}
   @page{margin:14mm}
   html,body{background:#fff}
   #supy-app{background:#fff;padding:0;max-width:none}
-  .nav,.setup,.toolbar,.col-side,.toast,.mask,.note-btn,.cx-chip:not(.on),
+  .nav,.setup,.authbar,.toolbar,.col-side,.toast,.mask,.note-btn,.cx-chip:not(.on),
   .row-del,.tbar,.hs-addrow,.link-btn{display:none !important}
   .layout{display:block}
   .col-main{width:100%}
@@ -483,6 +493,8 @@ table.hs-tbl input.num{font-family:var(--mono);text-align:right}
     </div>
   </div>
 
+  <div class="authbar" id="authBar"></div>
+
   <div class="setup" id="setupBar">
     <div class="setup-grid">
       <div class="fld">
@@ -528,7 +540,22 @@ table.hs-tbl input.num{font-family:var(--mono);text-align:right}
   </div>
 </div>
 
-<script>
+<script type="module">
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+/* ═════════════════════════════════════════════════════════════════════
+   SUPABASE CONFIG
+   Fill in your own two values from the Supabase dashboard, Settings ->
+   API: the Project URL and the anon / publishable key. Leave the
+   placeholders as they are and the page runs exactly as it did before,
+   localStorage only, no network calls, nothing else changes.
+   ═════════════════════════════════════════════════════════════════════ */
+var SUPABASE_URL = "REPLACE_WITH_YOUR_SUPABASE_PROJECT_URL";
+var SUPABASE_ANON_KEY = "REPLACE_WITH_YOUR_SUPABASE_ANON_KEY";
+var supa = (SUPABASE_URL.indexOf("REPLACE_WITH") === 0 || SUPABASE_ANON_KEY.indexOf("REPLACE_WITH") === 0)
+  ? null
+  : createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 (function(){
 "use strict";
 
@@ -1372,6 +1399,154 @@ var DB = {
     return Promise.resolve();
   }
 };
+
+/* ═════════════════════════════════════════════════════════════════════
+   CLOUD SYNC (Supabase)
+   Optional, layered on top of DB rather than inside it. With the
+   placeholders in SUPABASE CONFIG left untouched, every function below
+   resolves to null / no-ops, so the page behaves exactly as it did on
+   localStorage alone. Fill in the two values to turn this on.
+
+   localStorage stays the source of truth for instant UI feedback:
+   a checkbox click never waits on the network. Supabase is written to
+   in the background after every save, and read from on open and on
+   refresh, so the team sees each other's clients.
+   ═════════════════════════════════════════════════════════════════════ */
+var Cloud = (function(){
+  var session = null;
+  var listeners = [];
+
+  function enabled(){ return !!supa; }
+  function notify(){ listeners.forEach(function(fn){ fn(session); }); }
+  function onChange(fn){ listeners.push(fn); }
+
+  if(enabled()){
+    supa.auth.getSession().then(function(res){ session = res.data.session; notify(); });
+    supa.auth.onAuthStateChange(function(_event, s){ session = s; notify(); });
+  }
+
+  function signIn(email){
+    if(!enabled()) return Promise.reject(new Error("Cloud sync is not configured"));
+    return supa.auth.signInWithOtp({
+      email: email,
+      options: { emailRedirectTo: window.location.origin + window.location.pathname }
+    });
+  }
+  function signOut(){
+    return enabled() ? supa.auth.signOut() : Promise.resolve();
+  }
+
+  /* local record <-> Supabase row. collapsed (which phases are folded)
+     stays local only, it is UI state, not something to sync. */
+  function toRow(rec){
+    var t = totals(buildPhases(rec.pos), rec.items);
+    return {
+      client_name: rec.client, pos_provider: rec.pos,
+      go_live_target: rec.goLiveTarget || null,
+      special_note: rec.specialNote || "",
+      done_items: t.done, total_items: t.all,
+      complexity: rec.complexity || "",
+      go_live_manual: !!rec.goLiveManual,
+      health_sheet: rec.hs || {},
+      created_at: rec.createdAt, updated_at: rec.updatedAt
+    };
+  }
+  function fromRow(row, itemRows){
+    var items = {};
+    (itemRows || []).forEach(function(r){
+      var entry = { done: !!r.done };
+      if(r.done_at) entry.doneAt = r.done_at;
+      if(r.note) entry.note = r.note;
+      if(entry.done || entry.note) items[r.item_id] = entry;
+    });
+    var hs = (row.health_sheet && Object.keys(row.health_sheet).length) ? row.health_sheet : blankHS();
+    return {
+      client: row.client_name, pos: row.pos_provider,
+      createdAt: row.created_at, updatedAt: row.updated_at,
+      complexity: row.complexity || "",
+      goLiveTarget: row.go_live_target || "", goLiveManual: !!row.go_live_manual,
+      specialNote: row.special_note || "",
+      items: items, collapsed: {},
+      hs: hs
+    };
+  }
+
+  function fetchRecord(client, pos){
+    if(!enabled()) return Promise.resolve(null);
+    /* order + limit(1) rather than .maybeSingle(), so two staff who
+       both created "the same" client/POS pairing do not turn into a
+       hard error, the most recently touched row just wins */
+    return supa.from("checklists").select("*")
+      .eq("client_name", client).eq("pos_provider", pos)
+      .order("updated_at", { ascending:false }).limit(1)
+      .then(function(res){
+        var row = res.data && res.data[0];
+        if(res.error || !row) return null;
+        return supa.from("checklist_items").select("*").eq("checklist_id", row.id)
+          .then(function(ir){ return fromRow(row, ir.data || []); });
+      })
+      .catch(function(){ return null; });
+  }
+
+  function fetchIndex(){
+    if(!enabled()) return Promise.resolve(null);
+    return supa.from("checklists").select("*")
+      .order("updated_at", { ascending:false }).limit(200)
+      .then(function(res){
+        if(res.error || !res.data) return null;
+        return res.data.map(function(row){
+          return {
+            client: row.client_name, pos: row.pos_provider,
+            pct: row.total_items ? Math.round(row.done_items / row.total_items * 100) : 0,
+            done: row.done_items, all: row.total_items,
+            complexity: row.complexity || "",
+            createdAt: row.created_at, updatedAt: row.updated_at,
+            goLiveTarget: row.go_live_target || ""
+          };
+        });
+      })
+      .catch(function(){ return null; });
+  }
+
+  /* fire-and-forget: the local save already happened, so a failure
+     here (offline, not signed in, RLS denial) never blocks the UI */
+  function upsertRecord(rec){
+    if(!enabled() || !session) return Promise.resolve();
+    var row = toRow(rec);
+    return supa.from("checklists").upsert(row, { onConflict: "owner_id,client_name,pos_provider" })
+      .select().maybeSingle()
+      .then(function(res){
+        if(res.error || !res.data) return;
+        var checklistId = res.data.id;
+        var itemRows = Object.keys(rec.items || {}).map(function(id){
+          var it = rec.items[id];
+          return {
+            checklist_id: checklistId, item_id: id,
+            done: !!it.done, done_at: it.doneAt || null,
+            note: it.note || "", updated_at: nowISO()
+          };
+        });
+        if(itemRows.length) return supa.from("checklist_items").upsert(itemRows, { onConflict: "checklist_id,item_id" });
+      })
+      .catch(function(){});
+  }
+
+  function deleteRecord(client, pos){
+    if(!enabled() || !session) return Promise.resolve();
+    return supa.from("checklists").delete()
+      .eq("client_name", client).eq("pos_provider", pos)
+      .catch(function(){});
+  }
+
+  return {
+    enabled: enabled,
+    session: function(){ return session; },
+    onChange: onChange,
+    signIn: signIn, signOut: signOut,
+    fetchRecord: fetchRecord, fetchIndex: fetchIndex,
+    upsertRecord: upsertRecord, deleteRecord: deleteRecord
+  };
+})();
 
 /* ═════════════════════════════════════════════════════════════════════
    STATE
@@ -2450,6 +2625,9 @@ function renderTracker(){
   if(tracker.filter){
     h += '<button class="btn btn-ghost btn-sm" id="clearFilter">Clear ' + esc(HEALTH_META[tracker.filter].label) + ' filter</button>';
   }
+  if(Cloud.enabled()){
+    h += '<button class="btn btn-ghost btn-sm" id="cloudRefresh">Refresh from cloud</button>';
+  }
   h += '<span class="filter-note">' + shown.length + ' of ' + rows.length + ' clients</span></div>';
 
   if(!rows.length){
@@ -2510,6 +2688,12 @@ function wireTracker(){
   var cf = $("clearFilter");
   if(cf) cf.onclick = function(){ tracker.filter = null; renderTracker(); };
 
+  var cr = $("cloudRefresh");
+  if(cr) cr.onclick = function(){
+    cr.disabled = true;
+    refreshCloudIndex().then(function(){ toast("Synced"); }).catch(function(){ toast("Could not reach the cloud"); });
+  };
+
   var tq = $("tq");
   if(tq){
     tq.oninput = function(){
@@ -2569,6 +2753,8 @@ function save(){
   rest.unshift(indexEntry(cur));
   index = rest.slice(0, MAX_CLIENTS);
 
+  Cloud.upsertRecord(cur); /* fire-and-forget, never blocks the UI */
+
   return DB.set(k, cur).then(function(){ return DB.set("posck:index", index); });
 }
 
@@ -2576,6 +2762,7 @@ function deleteClient(client, pos){
   var k = key(client, pos);
   index = index.filter(function(x){ return key(x.client, x.pos) !== k; });
   var wasCurrent = cur && key(cur.client, cur.pos) === k;
+  Cloud.deleteRecord(client, pos);
   return DB.del(k).then(function(){
     return DB.set("posck:index", index);
   }).then(function(){
@@ -2596,8 +2783,18 @@ function openClient(name, pos, isNew){
   $("clientName").value = name;
   $("posSelect").value = pos;
 
-  return DB.get(key(name,pos)).then(function(saved){
-    cur = saved || blankRecord(name,pos);
+  /* Cloud is the shared source of truth when it is reachable, since a
+     colleague may have moved this client on since the local cache was
+     last written. Fall back to the local copy when offline or when
+     nothing has ever been synced for this client. */
+  return Promise.all([DB.get(key(name,pos)), Cloud.fetchRecord(name,pos)]).then(function(res){
+    var local = res[0], remote = res[1];
+    if(remote){
+      remote.collapsed = (local && local.collapsed) || {};
+      cur = remote;
+    }else{
+      cur = local || blankRecord(name,pos);
+    }
     cur.client = name;
     cur.pos = pos;
     cur.items = cur.items || {};
@@ -2684,6 +2881,62 @@ function pickCombo(i){
 }
 
 /* ═════════════════════════════════════════════════════════════════════
+   AUTH BAR
+   Shown above the setup bar. With Cloud disabled it just says so.
+   Signed out, it is an email field for a magic link. Signed in, it
+   shows the email and a sign-out link.
+   ═════════════════════════════════════════════════════════════════════ */
+function renderAuthBar(){
+  var el = $("authBar");
+  if(!el) return;
+  if(!Cloud.enabled()){
+    el.innerHTML = '<span class="authbar-off">Cloud sync is not set up on this page yet, ' +
+      'so nothing here leaves this browser. See SUPABASE.md.</span>';
+    return;
+  }
+  var s = Cloud.session();
+  if(s && s.user){
+    el.innerHTML = '<span class="authbar-on">Signed in as ' + esc(s.user.email) + '</span>' +
+      '<button class="link-btn" id="authSignOut">Sign out</button>';
+    var out = $("authSignOut");
+    if(out) out.onclick = function(){ Cloud.signOut(); };
+  }else{
+    el.innerHTML =
+      '<input type="email" id="authEmail" placeholder="you@supy.io" autocomplete="email"/>' +
+      '<button class="btn btn-primary btn-sm" id="authSend">Email me a sign-in link</button>' +
+      '<span class="authbar-msg" id="authMsg"></span>';
+    var email = $("authEmail"), send = $("authSend"), msg = $("authMsg");
+    email.onkeydown = function(ev){ if(ev.key === "Enter"){ ev.preventDefault(); send.click(); } };
+    send.onclick = function(){
+      var addr = email.value.trim();
+      if(!addr){ toast("Enter your email"); return; }
+      send.disabled = true;
+      Cloud.signIn(addr).then(function(res){
+        send.disabled = false;
+        msg.textContent = res.error ? res.error.message : "Check " + addr + " for the link.";
+      }).catch(function(){
+        send.disabled = false;
+        msg.textContent = "Could not send the link. Check your connection and try again.";
+      });
+    };
+  }
+}
+
+/* Cross-team view of the tracker: pull every signed-in staff member's
+   clients and merge in anything local that has not synced up yet. */
+function refreshCloudIndex(){
+  return Cloud.fetchIndex().then(function(remote){
+    if(!remote) return;
+    var seen = {};
+    remote.forEach(function(r){ seen[key(r.client, r.pos)] = true; });
+    var localOnly = index.filter(function(x){ return !seen[key(x.client, x.pos)]; });
+    index = remote.concat(localOnly).slice(0, MAX_CLIENTS);
+    DB.set("posck:index", index);
+    if(page === "tracker") renderTracker();
+  });
+}
+
+/* ═════════════════════════════════════════════════════════════════════
    NAV
    ═════════════════════════════════════════════════════════════════════ */
 var PAGE_HASH = { checklist:"#checklist", health:"#health-sheet", tracker:"#tracker" };
@@ -2757,10 +3010,17 @@ function pageFromHash(){
 
   window.addEventListener("hashchange", function(){ goPage(pageFromHash()); });
 
+  renderAuthBar();
+  Cloud.onChange(function(){
+    renderAuthBar();
+    refreshCloudIndex();
+  });
+
   DB.get("posck:index").then(function(ix){
     if(ix && Array.isArray(ix)) index = ix;
     var p = pageFromHash();
     goPage(p === "health" && !cur ? "checklist" : p);
+    refreshCloudIndex();
   });
 })();
 
