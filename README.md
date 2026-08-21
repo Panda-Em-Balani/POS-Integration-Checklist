@@ -9,16 +9,44 @@ provider, and the checklist builds itself from the provider data baked into the 
 
 ## What's in it
 
+Three pages, all in one file.
+
+**Checklist tab** builds an 11-phase checklist for the selected POS, with four hard gates.
+
 | Feature | Where |
 | --- | --- |
-| Per-POS checklist across 11 phases with hard gates | Checklist tab |
-| Credentials sidebar with per-credential checkboxes | right side (stacks below on mobile) |
-| Go-live target date and special case note | sidebar |
+| Provider brief: who you wait on, item mapping, documentation confidence, first move | top of the checklist |
+| Credentials sidebar, one checkbox per credential | right side, stacks below on mobile |
+| Complexity rating (Simple / Standard / Complex) | inline on the Phase 0 rating item |
+| Automatic go-live target date | sidebar, derived from first tick plus the complexity buffer |
 | Known limitations for the selected POS | sidebar |
+| Special case note | sidebar |
 | Per-item notes and completion dates | each checklist item |
-| Client health tracker with 4 health levels | Client Tracker tab |
-| Searchable client dropdown | client name field |
-| Print view, copy-as-text export | toolbar |
+| Print, copy as text, reset progress, delete client | toolbar |
+
+**Health Sheet tab** is the per-client record you sign your name to: scope and contacts,
+a gate log that reads its status from the checklist, a variance log that calculates the
+percentage against the 1% KPI, the Day 7 and Day 30 audit summaries, a friction log, the
+sign-off block and the Day 30 close.
+
+**Client Tracker tab** lists every saved client with a health status, sortable columns,
+search, and per-row delete. Health cards filter the table; clicking a row opens that
+client's checklist.
+
+## Go-live target dates
+
+The target is derived, not typed. It is the date you ticked your **first** checklist item
+plus the buffer the complexity rating carries:
+
+| Rating | Buffer | Reasoning |
+| --- | --- | --- |
+| Simple | 14 days | Charter baseline: go-live at the end of week 2 |
+| Standard | 21 days | One week of buffer |
+| Complex | 30 days | Two weeks of buffer, which is what rating it Complex is for |
+
+Before any item is ticked the field stays empty. Editing the date by hand pins it, and a
+link appears to go back to the automatic value. Buffers live in the `CX` array in
+`index.html`.
 
 ## Storage
 
@@ -26,8 +54,9 @@ Everything is saved in the browser's `localStorage`, under keys prefixed `posck:
 
 That means: **progress is per-browser and per-device.** Two people opening the same
 published URL see their own separate data, and clearing site data wipes it. Up to 100
-clients are kept in the index. If you need shared data across the team, that's what
-`SUPABASE.md` is for.
+clients are kept in the index. Deleting a client profile is permanent and there is no
+backup, so use Copy as text first if you want a record. If you need shared data across
+the team, that's what `SUPABASE.md` is for.
 
 ## Run it locally
 

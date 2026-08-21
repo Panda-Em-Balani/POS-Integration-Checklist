@@ -6,127 +6,154 @@
 <title>POS Integration Checklist</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
+/* ─────────────────────────────────────────────────────────────
+   Supy design system. Palette, type scale and radii follow the
+   brand guidelines. Noto Sans across the board, SF Mono for
+   numbers and identifiers.
+   ───────────────────────────────────────────────────────────── */
 :root{
+  /* primary */
   --navy:#321e57; --purple:#503390; --bright:#7b51bf; --action:#6C3FC5; --purple-dark:#4A2A8A;
+  /* secondary + tertiary */
   --yellow:#fcd34d; --blue:#109ae7; --orange:#fb763c; --red:#c2260c; --green:#40c798;
+  /* semantic badges */
   --bg-success:#E8FAF0; --tx-success:#1A8A5C;
   --bg-warning:#FEF9EC; --tx-warning:#B8860B;
   --bg-error:#FEE2E2;   --tx-error:#DC2626;
   --bg-info:#EBF3FC;    --tx-info:#1E5FA8;
   --bg-neutral:#EDE9FB; --tx-neutral:#6C3FC5;
   --bg-orange:#FFF1E8;  --tx-orange:#C2560F;
+  /* neutrals */
   --text:#1A1A2E; --border:#efedfa; --page:#f4f1fa; --card:#ffffff;
-  --mid:#888888; --light:#F6F5FA;
-  --font:'Noto Sans',system-ui,-apple-system,sans-serif;
+  --mid:#888888; --light:#F6F5FA; --lavender:#D0B4FF;
+  /* type */
+  --font:'Noto Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
   --mono:'SF Mono','Fira Code',ui-monospace,monospace;
+  /* elevation */
+  --sh-card:0 1px 3px rgba(0,0,0,.06);
+  --sh-modal:0 2px 8px rgba(0,0,0,.08);
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;background:var(--page)}
+body{font-family:var(--font);font-weight:400;font-size:14px;color:var(--text);
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 #supy-app{font-family:var(--font);color:var(--text);background:var(--page);padding:20px;line-height:1.5;
-  max-width:1400px;margin:0 auto}
-#supy-app h1,#supy-app h2,#supy-app h3,#supy-app p{margin:0}
+  max-width:1440px;margin:0 auto}
+#supy-app h1,#supy-app h2,#supy-app h3,#supy-app h4,#supy-app p{margin:0}
 
 /* ---------- Header + nav ---------- */
-.hd{background:var(--navy);border-radius:12px;padding:20px 24px;margin-bottom:16px}
+.hd{background:var(--navy);border-radius:12px;padding:22px 24px;margin-bottom:16px}
 .hd-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
-.hd h1{color:#fff;font-size:22px;font-weight:600;letter-spacing:-.01em}
-.hd p{color:#C9BEE0;font-size:12px;margin-top:4px}
+.hd h1{color:#fff;font-size:26px;font-weight:600;letter-spacing:-.015em;line-height:1.2}
+.hd p{color:#C9BEE0;font-size:12px;font-weight:400;margin-top:6px}
 .nav{display:flex;gap:6px;flex-shrink:0}
-.nav-tab{font-family:var(--font);font-size:13px;font-weight:600;padding:8px 16px;border-radius:8px;
-  border:1.5px solid rgba(255,255,255,.2);background:transparent;color:#C9BEE0;cursor:pointer;white-space:nowrap}
+.nav-tab{font-family:var(--font);font-size:13px;font-weight:600;padding:9px 16px;border-radius:8px;
+  border:1.5px solid rgba(255,255,255,.2);background:transparent;color:#C9BEE0;cursor:pointer;white-space:nowrap;
+  transition:background .2s ease-out,color .2s ease-out}
 .nav-tab:hover{background:rgba(255,255,255,.1);color:#fff}
 .nav-tab.on{background:#fff;color:var(--navy);border-color:#fff}
+.nav-tab:disabled{opacity:.4;cursor:not-allowed}
 
 /* ---------- Setup bar ---------- */
-.setup{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:16px}
+.setup{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:16px;
+  box-shadow:var(--sh-card)}
 .setup-grid{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end}
 .fld{display:flex;flex-direction:column;gap:5px;flex:1;min-width:190px}
 .fld label{font-size:11px;font-weight:600;color:var(--mid);text-transform:uppercase;letter-spacing:.06em}
-.fld input,.fld select,.fld textarea{font-family:var(--font);font-size:14px;padding:10px 12px;border:1.5px solid var(--border);
-  border-radius:8px;background:#fff;color:var(--text);outline:none;width:100%}
+.fld input,.fld select,.fld textarea{font-family:var(--font);font-size:14px;font-weight:400;padding:10px 12px;
+  border:1.5px solid var(--border);border-radius:8px;background:#fff;color:var(--text);outline:none;width:100%}
 .fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--action)}
 .fld select{cursor:pointer}
+.setup-hint{font-size:11.5px;color:var(--mid);margin-top:11px}
 
 .btn{font-family:var(--font);font-size:13px;font-weight:600;padding:10px 16px;border-radius:8px;
-  border:1.5px solid transparent;cursor:pointer;white-space:nowrap;transition:background .15s}
+  border:1.5px solid transparent;cursor:pointer;white-space:nowrap;transition:background .2s ease-out}
 .btn-primary{background:var(--action);color:#fff}
 .btn-primary:hover{background:var(--purple-dark)}
 .btn-ghost{background:#fff;color:var(--action);border-color:var(--border)}
-.btn-ghost:hover{background:var(--light)}
+.btn-ghost:hover{background:var(--bg-neutral)}
 .btn-danger{background:#fff;color:var(--tx-error);border-color:#F5C6C6}
 .btn-danger:hover{background:var(--bg-error)}
 .btn-solid-danger{background:var(--tx-error);color:#fff}
 .btn-solid-danger:hover{background:#B01E1E}
+.btn-sm{font-size:12px;padding:7px 12px}
 .btn:disabled{opacity:.4;cursor:not-allowed}
 
 /* ---------- Client search combo ---------- */
 .combo{position:relative}
 .combo-list{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1.5px solid var(--border);
-  border-radius:8px;box-shadow:0 8px 24px rgba(50,30,87,.14);z-index:60;max-height:260px;overflow-y:auto;display:none}
+  border-radius:8px;box-shadow:var(--sh-modal);z-index:60;max-height:280px;overflow-y:auto;display:none}
 .combo-list.open{display:block}
 .combo-opt{padding:9px 12px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;
   border-bottom:1px solid var(--border)}
 .combo-opt:last-child{border-bottom:none}
 .combo-opt:hover,.combo-opt.hi{background:var(--bg-neutral)}
 .combo-opt-n{font-size:13.5px;font-weight:600}
-.combo-opt-s{font-size:11.5px;color:var(--mid)}
-.combo-opt-p{font-family:var(--mono);font-size:11.5px;color:var(--tx-neutral);font-weight:600;flex-shrink:0}
+.combo-opt-s{font-size:11.5px;font-weight:400;color:var(--mid)}
+.combo-opt-p{font-family:var(--mono);font-size:12px;color:var(--tx-neutral);font-weight:600;flex-shrink:0}
 .combo-empty{padding:11px 12px;font-size:12.5px;color:var(--mid)}
-
-/* ---------- Saved clients ---------- */
-.saved{margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
-.saved-lbl{font-size:11px;font-weight:600;color:var(--mid);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
-.chips{display:flex;gap:8px;flex-wrap:wrap}
-.chip{background:var(--bg-neutral);color:var(--tx-neutral);border:1px solid #DDD3F5;border-radius:20px;
-  padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px}
-.chip:hover{background:#E0D6F8}
-.chip.on{background:var(--action);color:#fff;border-color:var(--action)}
-.chip .pct{font-family:var(--mono);font-size:11px;opacity:.85}
 
 /* ---------- Two-column layout ---------- */
 .layout{display:flex;gap:16px;align-items:flex-start}
 .col-main{flex:1;min-width:0}
-.col-side{width:330px;flex:0 0 330px;position:sticky;top:16px}
+/* Sticky, but the panel scrolls its own overflow so a tall sidebar never
+   traps content off-screen while the page keeps moving. */
+.col-side{width:330px;flex:0 0 330px;position:sticky;top:16px;
+  max-height:calc(100vh - 32px);overflow-y:auto;overscroll-behavior:contain;
+  scrollbar-width:thin;padding-right:2px}
+.col-side::-webkit-scrollbar{width:7px}
+.col-side::-webkit-scrollbar-thumb{background:#DDD3F5;border-radius:20px}
+.col-side::-webkit-scrollbar-track{background:transparent}
 
 /* ---------- Sidebar ---------- */
-.side-card{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.side-card{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;
+  overflow:hidden;box-shadow:var(--sh-card)}
 .side-hd{background:var(--navy);padding:12px 16px}
-.side-hd h3{color:#fff;font-size:13.5px;font-weight:600}
-.side-hd .side-sub{color:#C9BEE0;font-size:11.5px;margin-top:3px}
+.side-hd h3{color:#fff;font-size:14px;font-weight:600}
+.side-hd .side-sub{color:#C9BEE0;font-size:11.5px;font-weight:400;margin-top:3px}
 .side-body{padding:14px 16px}
-.side-sec-t{font-size:10.5px;font-weight:700;color:var(--mid);text-transform:uppercase;letter-spacing:.07em;margin-bottom:9px}
 .side-cred{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);align-items:flex-start}
 .side-cred:last-child{border-bottom:none}
 .side-cred-b{flex:1;min-width:0}
 .side-cred-n{font-size:12.5px;font-weight:600;line-height:1.35}
 .side-cred.on .side-cred-n{color:var(--mid);text-decoration:line-through}
-.side-cred-i{font-size:11.5px;color:#666;margin-top:3px}
+.side-cred-i{font-size:11.5px;font-weight:400;color:#666;margin-top:3px}
 .side-cred-ex{font-family:var(--mono);font-size:11px;color:var(--tx-neutral);background:var(--bg-neutral);
   border-radius:4px;padding:2px 6px;margin-top:4px;display:inline-block;word-break:break-all}
 .side-lim{font-size:12px;color:var(--tx-warning);background:var(--bg-warning);border-radius:6px;
   padding:8px 10px;margin-bottom:7px;line-height:1.45}
 .side-lim:last-child{margin-bottom:0}
-.side-none{font-size:12px;color:var(--mid);font-style:italic}
-.side-fld{margin-top:0}
-.side-fld label{font-size:10.5px;font-weight:700;color:var(--mid);text-transform:uppercase;letter-spacing:.07em;
+.side-none{font-size:12px;font-weight:400;color:#555;line-height:1.5}
+.side-none b{color:var(--text)}
+.side-fld label{font-size:11px;font-weight:600;color:var(--mid);text-transform:uppercase;letter-spacing:.06em;
   display:block;margin-bottom:5px}
-.side-fld input,.side-fld textarea{font-family:var(--font);font-size:13px;padding:9px 10px;border:1.5px solid var(--border);
-  border-radius:8px;background:#fff;color:var(--text);outline:none;width:100%;resize:vertical}
+.side-fld input,.side-fld textarea{font-family:var(--font);font-size:13px;font-weight:400;padding:9px 10px;
+  border:1.5px solid var(--border);border-radius:8px;background:#fff;color:var(--text);outline:none;width:100%;resize:vertical}
 .side-fld input:focus,.side-fld textarea:focus{border-color:var(--action)}
-.side-fld .hint{font-size:11px;color:var(--mid);margin-top:5px;line-height:1.4}
-.side-tag{display:inline-block;font-size:10px;font-weight:700;padding:3px 9px;border-radius:5px;
+.side-fld .hint{font-size:11px;color:var(--mid);margin-top:5px;line-height:1.45}
+.side-fld .hint b{color:var(--text);font-weight:600}
+.side-tag{display:inline-block;font-size:10px;font-weight:700;padding:3px 9px;border-radius:4px;
   text-transform:uppercase;letter-spacing:.05em}
+.side-row{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);
+  font-size:12px;align-items:baseline}
+.side-row:last-child{border-bottom:none}
+.side-row .k{color:var(--mid);font-weight:600;flex-shrink:0}
+.side-row .v{text-align:right;font-weight:400}
+.link-btn{background:none;border:none;padding:0;font-family:var(--font);font-size:11.5px;font-weight:600;
+  color:var(--action);cursor:pointer;text-decoration:underline}
+.link-btn:hover{color:var(--purple-dark)}
 
 /* ---------- Progress ---------- */
-.prog-wrap{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:16px}
+.prog-wrap{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:16px;
+  box-shadow:var(--sh-card)}
 .prog-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;flex-wrap:wrap;gap:8px}
-.prog-title{font-size:15px;font-weight:600}
-.prog-title .sub{color:var(--mid);font-weight:400;font-size:13px}
+.prog-title{font-size:20px;font-weight:600;letter-spacing:-.01em}
+.prog-title .sub{color:var(--mid);font-weight:400;font-size:14px}
 .prog-num{font-family:var(--mono);font-size:13px;color:var(--mid)}
 .bar{height:9px;background:var(--border);border-radius:20px;overflow:hidden}
-.bar-fill{height:100%;background:var(--action);border-radius:20px;transition:width .3s ease}
+.bar-fill{height:100%;background:var(--action);border-radius:20px;transition:width .28s ease-out}
 .bar-fill.done{background:var(--green)}
 .gate-warn{margin-top:12px;background:var(--bg-warning);border-left:3px solid var(--yellow);
   padding:10px 12px;border-radius:0 6px 6px 0;font-size:12.5px;color:var(--tx-warning)}
@@ -134,16 +161,17 @@ html,body{margin:0;padding:0;background:var(--page)}
   padding:10px 12px;border-radius:0 6px 6px 0;font-size:12.5px;color:var(--tx-success);font-weight:600}
 
 /* ---------- Phase ---------- */
-.phase{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.phase{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden;
+  box-shadow:var(--sh-card)}
 .phase-hd{background:var(--purple);padding:13px 18px;display:flex;align-items:center;gap:12px;cursor:pointer;user-select:none}
 .phase-hd:hover{background:var(--purple-dark)}
 .phase-n{background:rgba(255,255,255,.18);color:#fff;font-family:var(--mono);font-size:11px;font-weight:700;
   width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.phase-t{color:#fff;font-size:14.5px;font-weight:600;flex:1}
+.phase-t{color:#fff;font-size:15px;font-weight:600;flex:1}
 .phase-t .gate{background:var(--yellow);color:var(--navy);font-size:9.5px;font-weight:700;padding:2px 7px;
   border-radius:4px;margin-left:9px;text-transform:uppercase;letter-spacing:.05em;vertical-align:middle}
 .phase-c{font-family:var(--mono);font-size:11.5px;color:#D9CFF0;flex-shrink:0}
-.phase-ar{color:#fff;font-size:11px;opacity:.75;transition:transform .2s;flex-shrink:0}
+.phase-ar{color:#fff;font-size:11px;opacity:.75;transition:transform .2s ease-out;flex-shrink:0}
 .phase.closed .phase-ar{transform:rotate(-90deg)}
 .phase.closed .phase-body{display:none}
 .phase.complete .phase-hd{background:var(--tx-success)}
@@ -157,7 +185,7 @@ html,body{margin:0;padding:0;background:var(--page)}
 .item.checked .item-req{text-decoration:line-through;color:var(--mid)}
 
 .cb{width:20px;height:20px;border:2px solid #C9BEE0;border-radius:5px;cursor:pointer;flex-shrink:0;
-  margin-top:1px;display:flex;align-items:center;justify-content:center;background:#fff;transition:all .12s}
+  margin-top:1px;display:flex;align-items:center;justify-content:center;background:#fff;transition:all .12s ease-out}
 .cb:hover{border-color:var(--action)}
 .cb.on{background:var(--green);border-color:var(--green)}
 .cb.on::after{content:'';width:5px;height:9px;border:solid #fff;border-width:0 2.5px 2.5px 0;
@@ -169,12 +197,12 @@ html,body{margin:0;padding:0;background:var(--page)}
 .item-req{font-size:13.5px;font-weight:600;margin-bottom:3px}
 .item-req .cred{font-family:var(--mono);background:var(--bg-neutral);color:var(--tx-neutral);
   padding:1px 6px;border-radius:4px;font-size:12px;font-weight:600}
-.item-ins{font-size:12.5px;color:#555;margin-bottom:5px}
+.item-ins{font-size:12.5px;font-weight:400;color:#555;margin-bottom:5px}
 .item-ex{font-family:var(--mono);font-size:11.5px;color:var(--tx-neutral);background:var(--bg-neutral);
-  border-radius:5px;padding:3px 8px;display:inline-block;margin-top:2px;word-break:break-word}
+  border-radius:4px;padding:3px 8px;display:inline-block;margin-top:2px;word-break:break-word}
 .item-note{font-size:12px;background:var(--bg-warning);color:var(--tx-warning);border-radius:6px;
   padding:7px 10px;margin-top:6px;display:flex;gap:7px;align-items:flex-start}
-.item-note::before{content:'!';font-weight:800;flex-shrink:0;font-family:var(--mono)}
+.item-note::before{content:'!';font-weight:700;flex-shrink:0;font-family:var(--mono)}
 .item-note.info{background:var(--bg-info);color:var(--tx-info)}
 .item-note.info::before{content:'i'}
 
@@ -184,11 +212,24 @@ html,body{margin:0;padding:0;background:var(--page)}
   color:var(--action);cursor:pointer;text-decoration:underline}
 .note-btn:hover{color:var(--purple-dark)}
 .note-box{margin-top:8px}
-.note-box textarea{font-family:var(--font);font-size:12.5px;padding:9px 11px;border:1.5px solid #DDD3F5;
-  border-radius:8px;background:#fff;color:var(--text);outline:none;width:100%;min-height:64px;resize:vertical}
+.note-box textarea{font-family:var(--font);font-size:12.5px;font-weight:400;padding:9px 11px;
+  border:1.5px solid #DDD3F5;border-radius:8px;background:#fff;color:var(--text);outline:none;width:100%;
+  min-height:64px;resize:vertical}
 .note-box textarea:focus{border-color:var(--action)}
 .note-saved{font-size:12.5px;background:var(--bg-neutral);color:#4A3A6E;border-left:3px solid var(--action);
   border-radius:0 6px 6px 0;padding:7px 11px;margin-top:7px;white-space:pre-wrap;word-break:break-word}
+
+/* complexity picker, inline on the rating item */
+.cx-pick{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px;align-items:center}
+.cx-lbl{font-size:11px;font-weight:600;color:var(--mid);text-transform:uppercase;letter-spacing:.06em;margin-right:2px}
+.cx-chip{display:flex;align-items:center;gap:7px;background:#fff;border:1.5px solid var(--border);border-radius:8px;
+  padding:6px 11px;font-size:12.5px;font-weight:600;color:var(--text);cursor:pointer;transition:all .15s ease-out}
+.cx-chip:hover{border-color:var(--action);background:var(--light)}
+.cx-chip .dot{width:13px;height:13px;border-radius:50%;border:2px solid #C9BEE0;flex-shrink:0}
+.cx-chip.on{border-color:var(--action);background:var(--bg-neutral);color:var(--tx-neutral)}
+.cx-chip.on .dot{border-color:var(--action);background:var(--action);box-shadow:inset 0 0 0 2.5px #fff}
+.cx-chip .days{font-family:var(--mono);font-size:10.5px;font-weight:400;color:var(--mid)}
+.cx-chip.on .days{color:var(--tx-neutral)}
 
 .owner{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;
   text-transform:uppercase;letter-spacing:.04em;margin-left:8px;vertical-align:middle}
@@ -197,55 +238,69 @@ html,body{margin:0;padding:0;background:var(--page)}
 .ow-csm{background:var(--bg-warning);color:var(--tx-warning)}
 .ow-eng{background:var(--bg-error);color:var(--tx-error)}
 
-/* ---------- Provider banner ---------- */
-.pbanner{background:linear-gradient(135deg,#1A0B3D,#503390);border-radius:12px;padding:16px 20px;margin-bottom:16px}
-.pbanner-t{color:#fff;font-size:16px;font-weight:600;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.pbanner-tag{font-size:10px;font-weight:700;padding:3px 9px;border-radius:5px;text-transform:uppercase;letter-spacing:.05em}
+/* ---------- Provider brief ---------- */
+.pbanner{background:linear-gradient(135deg,#1A0B3D,#503390);border-radius:12px;padding:18px 20px;margin-bottom:16px}
+.pbanner-t{color:#fff;font-size:20px;font-weight:600;display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  letter-spacing:-.01em}
+.pbanner-tag{font-size:10px;font-weight:700;padding:3px 9px;border-radius:4px;text-transform:uppercase;letter-spacing:.05em}
 .tag-self{background:var(--bg-success);color:var(--tx-success)}
 .tag-assist{background:var(--bg-warning);color:var(--tx-warning)}
 .tag-tech{background:var(--bg-error);color:var(--tx-error)}
-.pbanner-n{color:#D0B4FF;font-size:12.5px;margin-top:8px;line-height:1.55}
-.pbanner-recon{margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.15);
-  color:#C9BEE0;font-size:12px;font-family:var(--mono)}
+.pbanner-n{color:var(--lavender);font-size:12.5px;font-weight:400;margin-top:9px;line-height:1.55}
+.pbanner-first{margin-top:12px;background:rgba(252,211,77,.14);border-left:3px solid var(--yellow);
+  border-radius:0 6px 6px 0;padding:9px 12px}
+.pbanner-first .eyebrow{color:var(--yellow);font-size:9.5px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.1em;display:block;margin-bottom:3px}
+.pbanner-first .txt{color:#fff;font-size:12.5px;font-weight:400;line-height:1.5}
+.pfacts{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px;margin-top:14px}
+.pfact{background:rgba(26,11,61,.42);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:10px 12px}
+.pfact .k{color:#C9BEE0;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;display:block}
+.pfact .v{color:#fff;font-size:12.5px;font-weight:400;margin-top:4px;line-height:1.4}
+.pfact .v.warn{color:var(--yellow)}
+.pbanner-recon{margin-top:12px;padding-top:11px;border-top:1px solid rgba(255,255,255,.15);
+  color:#C9BEE0;font-size:11.5px;font-family:var(--mono);line-height:1.55}
 
 /* ---------- Empty ---------- */
 .empty{background:var(--card);border:2px dashed var(--border);border-radius:12px;padding:48px 24px;text-align:center}
 .empty h3{font-size:16px;font-weight:600;margin-bottom:6px}
-.empty p{font-size:13px;color:var(--mid)}
+.empty p{font-size:13px;font-weight:400;color:var(--mid);max-width:520px;margin:0 auto}
 
 .toolbar{display:flex;gap:8px;justify-content:flex-end;margin-bottom:14px;flex-wrap:wrap}
 .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;
   padding:11px 20px;border-radius:8px;font-size:13px;font-weight:600;z-index:999;opacity:0;
-  transition:opacity .25s;pointer-events:none}
+  transition:opacity .2s ease-in-out;pointer-events:none;box-shadow:var(--sh-modal)}
 .toast.show{opacity:1}
 
 /* ---------- Health tracker ---------- */
 .hcards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
 .hcard{background:var(--card);border:1px solid var(--border);border-left:4px solid var(--mid);border-radius:12px;
-  padding:16px 18px;cursor:pointer;transition:box-shadow .15s,transform .15s}
+  padding:16px 18px;cursor:pointer;transition:box-shadow .2s ease-out,transform .2s ease-out;box-shadow:var(--sh-card)}
 .hcard:hover{box-shadow:0 6px 18px rgba(50,30,87,.1);transform:translateY(-1px)}
 .hcard.on{box-shadow:0 0 0 2px var(--action)}
 .hcard-n{font-family:var(--mono);font-size:28px;font-weight:700;line-height:1.1}
 .hcard-t{font-size:12.5px;font-weight:700;margin-top:4px}
-.hcard-d{font-size:11px;color:var(--mid);margin-top:5px;line-height:1.4}
+.hcard-d{font-size:11px;font-weight:400;color:var(--mid);margin-top:5px;line-height:1.45}
 .hcard.critical{border-left-color:var(--tx-error)} .hcard.critical .hcard-n,.hcard.critical .hcard-t{color:var(--tx-error)}
 .hcard.attention{border-left-color:var(--orange)} .hcard.attention .hcard-n,.hcard.attention .hcard-t{color:var(--tx-orange)}
 .hcard.ok{border-left-color:var(--green)} .hcard.ok .hcard-n,.hcard.ok .hcard-t{color:var(--tx-success)}
 .hcard.complete{border-left-color:var(--action)} .hcard.complete .hcard-n,.hcard.complete .hcard-t{color:var(--tx-neutral)}
 
 .tbar{display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
-.tbar input{font-family:var(--font);font-size:14px;padding:10px 12px;border:1.5px solid var(--border);
+.tbar input{font-family:var(--font);font-size:14px;font-weight:400;padding:10px 12px;border:1.5px solid var(--border);
   border-radius:8px;background:#fff;outline:none;flex:1;min-width:220px}
 .tbar input:focus{border-color:var(--action)}
 .tbar .filter-note{font-size:12.5px;color:var(--mid)}
 
-.tbl-wrap{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow-x:auto}
-table.tbl{width:100%;border-collapse:collapse;min-width:860px}
-table.tbl th{background:var(--light);font-size:10.5px;font-weight:700;color:var(--mid);text-transform:uppercase;
-  letter-spacing:.06em;text-align:left;padding:11px 14px;border-bottom:1px solid var(--border);cursor:pointer;white-space:nowrap}
-table.tbl th:hover{color:var(--action)}
-table.tbl th .ar{opacity:.5;font-size:9px;margin-left:4px}
-table.tbl td{padding:12px 14px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle}
+.tbl-wrap{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow-x:auto;box-shadow:var(--sh-card)}
+table.tbl{width:100%;border-collapse:collapse;min-width:920px}
+table.tbl th{background:var(--purple);font-size:11px;font-weight:600;color:#fff;
+  text-align:left;padding:12px 14px;cursor:pointer;white-space:nowrap;letter-spacing:.02em}
+table.tbl th:first-child{border-radius:11px 0 0 0}
+table.tbl th:last-child{border-radius:0 11px 0 0;cursor:default}
+table.tbl th:hover{background:var(--purple-dark)}
+table.tbl th:last-child:hover{background:var(--purple)}
+table.tbl th .ar{opacity:.65;font-size:9px;margin-left:4px}
+table.tbl td{padding:12px 14px;border-bottom:1px solid var(--border);font-size:13px;font-weight:400;vertical-align:middle}
 table.tbl tr:last-child td{border-bottom:none}
 table.tbl tbody tr{cursor:pointer}
 table.tbl tbody tr:hover{background:var(--light)}
@@ -254,7 +309,7 @@ table.tbl tbody tr:hover{background:var(--light)}
 .mini-bar{height:6px;background:var(--border);border-radius:20px;overflow:hidden;width:78px;margin-top:5px}
 .mini-fill{height:100%;border-radius:20px}
 .td-pct{font-family:var(--mono);font-size:12.5px;font-weight:600}
-.hbadge{display:inline-block;font-size:10px;font-weight:700;padding:3px 9px;border-radius:5px;
+.hbadge{display:inline-block;font-size:10px;font-weight:700;padding:3px 9px;border-radius:4px;
   text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
 .hb-critical{background:var(--bg-error);color:var(--tx-error)}
 .hb-attention{background:var(--bg-orange);color:var(--tx-orange)}
@@ -262,45 +317,112 @@ table.tbl tbody tr:hover{background:var(--light)}
 .hb-complete{background:var(--bg-neutral);color:var(--tx-neutral)}
 .td-dim{color:var(--mid);font-size:12.5px}
 .td-late{color:var(--tx-error);font-weight:600;font-size:12.5px}
+.row-del{background:none;border:1.5px solid var(--border);color:var(--mid);border-radius:6px;width:26px;height:26px;
+  font-size:14px;line-height:1;cursor:pointer;font-family:var(--font);padding:0}
+.row-del:hover{border-color:#F5C6C6;background:var(--bg-error);color:var(--tx-error)}
+
+/* ---------- Health sheet ---------- */
+.hs-hd{background:linear-gradient(135deg,#1A0B3D,#503390);border-radius:12px;padding:20px;margin-bottom:16px}
+.hs-hd h2{color:#fff;font-size:20px;font-weight:600;letter-spacing:-.01em}
+.hs-hd .eyebrow{color:var(--yellow);font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;
+  display:block;margin-bottom:6px}
+.hs-hd .hs-sub{color:var(--lavender);font-size:12.5px;font-weight:400;margin-top:6px;line-height:1.55}
+.hs-meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:16px}
+.hs-mcell{background:rgba(26,11,61,.42);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:10px 12px}
+.hs-mcell .k{color:#C9BEE0;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;display:block}
+.hs-mcell .v{color:#fff;font-size:14px;font-weight:600;margin-top:4px}
+.hs-mcell .v.mono{font-family:var(--mono);font-size:13px}
+
+.hs-card{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;
+  overflow:hidden;box-shadow:var(--sh-card)}
+.hs-card-hd{background:var(--purple);padding:12px 18px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.hs-card-hd h3{color:#fff;font-size:16px;font-weight:600;flex:1}
+.hs-card-hd .hint{color:#D9CFF0;font-size:11.5px;font-weight:400;width:100%;line-height:1.5}
+.hs-body{padding:18px}
+.hs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+.hs-f label{font-size:11px;font-weight:600;color:var(--mid);text-transform:uppercase;letter-spacing:.06em;
+  display:block;margin-bottom:5px}
+.hs-f input,.hs-f select,.hs-f textarea{font-family:var(--font);font-size:13.5px;font-weight:400;padding:9px 11px;
+  border:1.5px solid var(--border);border-radius:8px;background:#fff;color:var(--text);outline:none;width:100%;resize:vertical}
+.hs-f input:focus,.hs-f select:focus,.hs-f textarea:focus{border-color:var(--action)}
+.hs-f select{cursor:pointer}
+.hs-f .sub{font-size:11px;color:var(--mid);margin-top:5px;line-height:1.45}
+.hs-f.wide{grid-column:1 / -1}
+
+.hs-gate{display:flex;gap:12px;align-items:flex-start;padding:13px 0;border-bottom:1px solid var(--border)}
+.hs-gate:last-child{border-bottom:none}
+.hs-gate-b{flex:1;min-width:0}
+.hs-gate-t{font-size:13.5px;font-weight:600}
+.hs-gate-s{font-size:11.5px;color:var(--mid);margin-top:3px}
+.hs-gate textarea{margin-top:8px;min-height:46px}
+.gbadge{display:inline-block;font-size:10px;font-weight:700;padding:3px 9px;border-radius:4px;
+  text-transform:uppercase;letter-spacing:.04em;flex-shrink:0;white-space:nowrap}
+.gb-pass{background:var(--bg-success);color:var(--tx-success)}
+.gb-open{background:var(--bg-warning);color:var(--tx-warning)}
+
+table.hs-tbl{width:100%;border-collapse:collapse;min-width:620px}
+table.hs-tbl th{background:var(--light);font-size:10.5px;font-weight:700;color:var(--mid);text-transform:uppercase;
+  letter-spacing:.06em;text-align:left;padding:9px 10px;border-bottom:1px solid var(--border);white-space:nowrap}
+table.hs-tbl td{padding:7px 10px;border-bottom:1px solid var(--border);vertical-align:middle}
+table.hs-tbl tr:last-child td{border-bottom:none}
+table.hs-tbl input,table.hs-tbl select{font-family:var(--font);font-size:12.5px;font-weight:400;padding:7px 9px;
+  border:1.5px solid var(--border);border-radius:6px;background:#fff;color:var(--text);outline:none;width:100%}
+table.hs-tbl input:focus,table.hs-tbl select:focus{border-color:var(--action)}
+table.hs-tbl input.num{font-family:var(--mono);text-align:right}
+.var-out{font-family:var(--mono);font-size:13px;font-weight:700;white-space:nowrap}
+.var-out.pass{color:var(--tx-success)}
+.var-out.fail{color:var(--tx-error)}
+.var-out.none{color:var(--mid);font-weight:400}
+.hs-scroll{overflow-x:auto}
+.hs-addrow{margin-top:12px}
+.hs-emptyrow{font-size:12.5px;color:var(--mid);padding:14px 2px;line-height:1.5}
 
 /* ---------- Modal ---------- */
 .mask{position:fixed;inset:0;background:rgba(26,11,61,.5);z-index:900;display:none;align-items:center;
   justify-content:center;padding:20px}
 .mask.open{display:flex}
-.modal{background:#fff;border-radius:14px;padding:24px;max-width:440px;width:100%;box-shadow:0 20px 50px rgba(26,11,61,.3)}
-.modal h3{font-size:16.5px;font-weight:600;margin-bottom:9px}
-.modal p{font-size:13.5px;color:#555;line-height:1.55}
-.modal-btns{display:flex;gap:9px;justify-content:flex-end;margin-top:20px}
+.modal{background:#fff;border-radius:12px;padding:24px;max-width:460px;width:100%;box-shadow:0 20px 50px rgba(26,11,61,.3)}
+.modal h3{font-size:20px;font-weight:600;margin-bottom:9px;letter-spacing:-.01em}
+.modal p{font-size:13.5px;font-weight:400;color:#555;line-height:1.55}
+.modal-sum{background:var(--light);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-top:14px}
+.modal-sum .r{display:flex;justify-content:space-between;gap:12px;font-size:13px;padding:4px 0}
+.modal-sum .r .k{color:var(--mid);font-weight:600}
+.modal-sum .r .v{font-weight:600;text-align:right}
+.modal-btns{display:flex;gap:9px;justify-content:flex-end;margin-top:20px;flex-wrap:wrap}
 
 /* ---------- Responsive ---------- */
 @media (max-width:900px){
   #supy-app{padding:14px}
   .layout{flex-direction:column}
-  .col-side{width:100%;flex:1 1 auto;position:static;order:2}
+  .col-side{width:100%;flex:1 1 auto;position:static;order:2;max-height:none;overflow:visible}
   .col-main{order:1;width:100%}
   .hcards{grid-template-columns:repeat(2,1fr)}
   .hd-top{flex-direction:column}
   .nav{width:100%}
-  .nav-tab{flex:1;text-align:center}
+  .nav-tab{flex:1;text-align:center;padding:9px 8px}
+  .pfacts,.hs-meta{grid-template-columns:repeat(2,1fr)}
 }
 @media (max-width:600px){
   #supy-app{padding:10px}
-  .hd{padding:16px 16px}
-  .hd h1{font-size:18px}
+  .hd{padding:16px}
+  .hd h1{font-size:20px}
   .setup{padding:14px}
   .fld{flex:1 1 100%;min-width:0}
-  .fld div.combo{width:100%}
   .setup-grid .fld[data-btn]{width:100%}
   .setup-grid .fld[data-btn] .btn{width:100%}
   .hcards{grid-template-columns:1fr}
+  .pfacts,.hs-meta,.hs-grid{grid-template-columns:1fr}
   .item{padding:12px 13px;gap:10px}
   .phase-hd{padding:11px 13px;gap:9px}
-  .phase-t{font-size:13.5px}
+  .phase-t{font-size:14px}
   .item-req{font-size:13px}
   .item-ins{font-size:12px}
-  .prog-wrap,.pbanner{padding:14px}
+  .prog-wrap,.pbanner,.hs-body,.hs-hd{padding:14px}
+  .prog-title{font-size:17px}
+  .pbanner-t{font-size:17px}
   .toolbar{justify-content:stretch}
   .toolbar .btn{flex:1 1 auto}
+  .modal{padding:18px}
 }
 
 /* ---------- Print ---------- */
@@ -308,26 +430,39 @@ table.tbl tbody tr:hover{background:var(--light)}
   @page{margin:14mm}
   html,body{background:#fff}
   #supy-app{background:#fff;padding:0;max-width:none}
-  .nav,.setup,.toolbar,.col-side,.toast,.mask,#trackerPage,.note-btn{display:none !important}
+  .nav,.setup,.toolbar,.col-side,.toast,.mask,.note-btn,.cx-chip:not(.on),
+  .row-del,.tbar,.hs-addrow,.link-btn{display:none !important}
   .layout{display:block}
   .col-main{width:100%}
-  .hd{background:#fff;border:1px solid #ccc;padding:0 0 10px 0;margin-bottom:12px;border-width:0 0 1px 0}
-  .hd h1{color:#000;font-size:18px}
+  .hd{background:#fff;border:0;border-bottom:1px solid #ccc;padding:0 0 10px 0;margin-bottom:12px}
+  .hd h1{color:#000;font-size:19px}
   .hd p{color:#555}
-  .phase{break-inside:auto;page-break-inside:auto;border:1px solid #ccc;margin-bottom:10px}
+  .phase{break-inside:auto;page-break-inside:auto;border:1px solid #ccc;margin-bottom:10px;box-shadow:none}
   .phase.closed .phase-body{display:block !important}
-  .phase.closed .phase-ar,.phase-ar{display:none}
+  .phase-ar{display:none}
   .phase-hd{background:#503390 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .phase.complete .phase-hd{background:#1A8A5C !important}
   .item{break-inside:avoid;page-break-inside:avoid}
   .item:hover{background:transparent}
   .cb{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .cb.on{background:#40c798 !important;border-color:#40c798 !important}
-  .pbanner{background:#f4f1fa !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;border:1px solid #ccc}
-  .pbanner-t{color:#321e57}
-  .pbanner-n{color:#4A3A6E}
-  .pbanner-recon{color:#555}
-  .item-note,.note-saved,.item-ex{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .pbanner,.hs-hd{background:#f4f1fa !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;
+    border:1px solid #ccc}
+  .pbanner-t,.hs-hd h2{color:#321e57}
+  .pbanner-n,.hs-hd .hs-sub{color:#4A3A6E}
+  .pbanner-recon,.pbanner-first .txt{color:#333}
+  .pbanner-first .eyebrow,.hs-hd .eyebrow{color:#B8860B}
+  .pfact,.hs-mcell{background:#fff !important;border:1px solid #ddd}
+  .pfact .k,.hs-mcell .k{color:#666}
+  .pfact .v,.hs-mcell .v{color:#1A1A2E}
+  .item-note,.note-saved,.item-ex,.hbadge,.gbadge,.side-lim{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .hs-card{break-inside:avoid;page-break-inside:avoid;border:1px solid #ccc;box-shadow:none}
+  .hs-card-hd{background:#503390 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .hs-f input,.hs-f select,.hs-f textarea,table.hs-tbl input,table.hs-tbl select{border-color:#ccc}
+  .tbl-wrap{overflow:visible;box-shadow:none}
+  table.tbl{min-width:0}
+  table.tbl th{background:#503390 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  table.tbl th:last-child,table.tbl td:last-child{display:none}
 }
 </style>
 </head>
@@ -342,53 +477,53 @@ table.tbl tbody tr:hover{background:var(--light)}
       </div>
       <div class="nav">
         <button class="nav-tab on" id="tabChecklist">Checklist</button>
+        <button class="nav-tab" id="tabHealth">Health Sheet</button>
         <button class="nav-tab" id="tabTracker">Client Tracker</button>
       </div>
     </div>
   </div>
 
-  <div id="checklistPage">
-    <div class="setup">
-      <div class="setup-grid">
-        <div class="fld">
-          <label>Client / retailer name</label>
-          <div class="combo">
-            <input id="clientName" type="text" placeholder="Search saved clients, or type a new name" autocomplete="off"/>
-            <div class="combo-list" id="comboList"></div>
-          </div>
-        </div>
-        <div class="fld">
-          <label>POS provider</label>
-          <select id="posSelect"><option value="">Select a POS...</option></select>
-        </div>
-        <div class="fld" data-btn style="flex:0 0 auto;min-width:auto">
-          <button class="btn btn-primary" id="loadBtn">Load checklist</button>
+  <div class="setup" id="setupBar">
+    <div class="setup-grid">
+      <div class="fld">
+        <label>Client / retailer name</label>
+        <div class="combo">
+          <input id="clientName" type="text" placeholder="Start typing to search, or enter a new name" autocomplete="off"/>
+          <div class="combo-list" id="comboList"></div>
         </div>
       </div>
-      <div class="saved" id="savedWrap" style="display:none">
-        <div class="saved-lbl">Saved clients</div>
-        <div class="chips" id="chips"></div>
+      <div class="fld">
+        <label>POS provider</label>
+        <select id="posSelect"><option value="">Select a POS...</option></select>
+      </div>
+      <div class="fld" data-btn style="flex:0 0 auto;min-width:auto">
+        <button class="btn btn-primary" id="loadBtn">Open checklist</button>
       </div>
     </div>
+    <div class="setup-hint">Existing clients open straight away. A name and POS pairing that does not exist yet asks you to confirm before it creates a new profile.</div>
+  </div>
 
+  <div id="checklistPage">
     <div class="layout">
       <div class="col-main" id="main"></div>
       <div class="col-side" id="side"></div>
     </div>
   </div>
 
+  <div id="healthPage" style="display:none"></div>
   <div id="trackerPage" style="display:none"></div>
 </div>
 
 <div class="toast" id="toast"></div>
 
-<div class="mask" id="resetMask">
+<div class="mask" id="confirmMask">
   <div class="modal">
-    <h3>Reset this checklist?</h3>
-    <p id="resetTxt"></p>
+    <h3 id="cfTitle">Create a new client profile?</h3>
+    <p id="cfBody"></p>
+    <div class="modal-sum" id="cfSum"></div>
     <div class="modal-btns">
-      <button class="btn btn-ghost" id="resetCancel">Cancel</button>
-      <button class="btn btn-solid-danger" id="resetGo">Reset</button>
+      <button class="btn btn-ghost" id="cfCancel">Cancel</button>
+      <button class="btn btn-primary" id="cfGo">Confirm</button>
     </div>
   </div>
 </div>
@@ -403,6 +538,9 @@ table.tbl tbody tr:hover{background:var(--light)}
    note   : plain-language summary of how setup works
    limits : array of known limitations (shown in the sidebar)
    recon  : where to pull the comparison report from in the POS
+   mapping: how item mapping works, only set where it differs from the
+            default of syncing straight from the POS
+   lead   : documented waiting time on a third party, where one exists
    creds  : [{r: field name, i: what it is / where it goes, ex: format example,
               n: warning note, nt: '' | 'info'}]
    ═════════════════════════════════════════════════════════════════════ */
@@ -427,6 +565,7 @@ var P = {
   ]},
 
 "Castle IT":{type:"assist",auth:"API (Supy assists)",
+  mapping:"Manual upload with the Menu Items Template, no POS sync",lead:"About 48 hours for Supy to finish authentication",
   note:"The client asks their Castle IT contact for these, then hands them to the CSM. Supy finishes the connection, usually within 48 hours.",
   limits:["Item mapping is manual for Castle IT. Items get uploaded using the Menu Items Template instead of syncing from the POS, so plan extra time for it.","We have no documentation on how Castle IT handles discounts and modifiers. Check the behaviour yourself before you promise either to the client."],
   creds:[
@@ -476,6 +615,7 @@ var P = {
   ]},
 
 "Eats365":{type:"assist",auth:"API (Supy assists)",
+  mapping:"Syncs from the POS, but only after Item Access Permission is switched on",
   note:"The order of steps matters here. The CSM has to start with Eats365 support and send an access token to the client's Eats365 contact, who redeems it on the merchant portal. Only after that can the client connect. Start this on day one.",
   limits:["Sales types are not pulled in automatically. Each one has to be typed in by hand, by code and name (pick_up, delivery, dine_in). If the client adds a new order type later, someone has to remember to add it here too, or those sales arrive with no type on them."],
   creds:[
@@ -494,6 +634,7 @@ var P = {
   ]},
 
 "Flex Catering":{type:"self",auth:"API (key + host)",
+  mapping:"Syncs from the POS, but breaks if any product has a blank or duplicate SKU",
   note:"Ask the client to get both from their Flex Catering contact.",
   limits:["Every product in Flex Catering needs its own SKU, and none can be blank, or item mapping breaks. Check the client's SKU list before you start mapping, not after.","Only orders marked 'invoiced' get pulled in. Payment status does not matter, invoiced status does.","Combo contents and item attributes are not recorded item by item, so you cannot see what was inside a combo."],
   creds:[
@@ -515,6 +656,7 @@ var P = {
   ]},
 
 "ForkPOS":{type:"assist",auth:"API (Supy assists)",
+  lead:"About 48 hours for Supy to finish authentication",
   note:"The client asks their ForkPOS contact for the Location IDs and hands them to the CSM. Supy finishes the connection, usually within 48 hours.",
   limits:["Discount and modifier handling is not documented. Confirm how it behaves before committing to either."],
   creds:[
@@ -539,6 +681,7 @@ var P = {
   ]},
 
 "Grubtech (via API)":{type:"tech",auth:"API (Supy Engineering)",
+  mapping:"Syncs from the POS, unless one Location ID covers several stores, then it goes manual",
   note:"Supy Integrations sets this one up, not you. The client either asks their Grubtech contact for the credentials, or emails Grubtech directly with the CSM copied in.",
   limits:["If one Grubtech Location ID covers several stores, item mapping cannot sync automatically and items have to be uploaded by hand. Find this out early, because it changes the plan.","Schedule the sales sync at least 3 hours after the last shift closes, or you will pull incomplete days.","Grubtech only supports cancelling a whole order. Partial cancellations and returns do not come through."],
   recon:"Real-Time Reports > Sales > Locations. Net Sales = Total Sales Excl. Tax, and it may include delivery charges. Gross Sales = Total Sales Incl. Tax. Discounts = Total Discount Value.",
@@ -551,6 +694,7 @@ var P = {
   ]},
 
 "Grubtech (via Webhooks)":{type:"tech",auth:"Webhook (Supy Engineering)",
+  mapping:"Done inside Grubtech, not in Supy. Supy recipe codes go in the Grubtech external ID field",lead:"About 48 hours from handing over the branch details",
   note:"Supy Integrations builds the webhook connection, usually within 48 hours of getting the branch details. Supy gives Grubtech the endpoint to push to.",
   limits:["Item mapping happens inside Grubtech, not in Supy. The Supy recipe code has to be typed into the 'external ID' field on each Grubtech item.","There is no Sync button and no way to re-fetch a day. If Supy is briefly unreachable when Grubtech pushes, that push is lost and cannot be recovered.","Delivery fees land on a dedicated 'delivery fee' recipe, which has to be created in Supy first or the fees have nowhere to go."],
   creds:[
@@ -602,6 +746,7 @@ var P = {
   ]},
 
 "Linga POS":{type:"assist",auth:"API (Supy assists with mapping)",
+  lead:"Branch mapping needs CSM time, so it is not instant",
   note:"The client asks their Linga POS contact for the Store ID and API Key. The CSM has to help with branch mapping.",
   limits:["Linga's own sales reports fold modifier returns into the parent item's total, while Supy records them per modifier. On any day with returns the two reports will differ. That is expected, not a bug, so do not raise it as an issue."],
   recon:"Reports > Sales. Download both the menu items report and the modifiers report, you need both. Sale Amount = Total Sales Excl. Tax. Quantity = Quantity Sold. Discount = Total Discount Value.",
@@ -666,6 +811,7 @@ var P = {
   ]},
 
 "Oracle Micros Simphony":{type:"tech",auth:"API (Supy Engineering)",
+  lead:"Engineering-dependent, get a committed date before promising one",
   note:"Supy Integrations sets this one up. The client gets the access details from whoever administers their Oracle or Simphony system and passes them to the CSM.",
   limits:["Our documentation is incomplete, and the exact values needed change depending on how the client's Simphony is configured. Confirm the specific list with the Integrations team before you go to the client, otherwise you will ask twice.","This one needs engineering time. Build that dependency into the timeline rather than promising a date first."],
   creds:[
@@ -746,6 +892,7 @@ var P = {
   ]},
 
 "Shopify":{type:"tech",auth:"API (Supy Engineering)",
+  lead:"Engineering-dependent, get a committed date before promising one",
   note:"Supy Integrations sets this one up. The client gives the store access details to the CSM.",
   limits:["Our documentation is incomplete. Confirm exactly what is needed with the Integrations team before you go to the client."],
   creds:[
@@ -817,6 +964,7 @@ var P = {
   ]},
 
 "Toast POS":{type:"tech",auth:"API (Supy Engineering)",
+  lead:"Engineering-dependent, get a committed date before promising one",
   note:"Supy Integrations sets this one up. The client asks their Toast contact for the credentials and passes them to the CSM.",
   limits:["This one needs engineering time. Get a timeline from the Integrations team before you promise the client a go-live date."],
   creds:[
@@ -859,6 +1007,23 @@ var P = {
 };
 
 /* ═════════════════════════════════════════════════════════════════════
+   COMPLEXITY RATING
+   The rating exists to change the timeline, so each level carries the
+   number of days it adds. Charter baseline is go-live at the end of
+   week 2, which is the 14 days on Simple. Standard and Complex add the
+   buffer the rating is supposed to buy.
+   ═════════════════════════════════════════════════════════════════════ */
+var CX = [
+  {k:"Simple",   days:14, d:"1 to 3 branches, light modifier use, one brand"},
+  {k:"Standard", days:21, d:"4 to 10 branches, moderate modifiers, or a second pillar in scope"},
+  {k:"Complex",  days:30, d:"11+ branches, heavy modifiers, multi-brand, or engineering-handled POS"}
+];
+function cxDays(name){
+  for(var i=0;i<CX.length;i++) if(CX[i].k === name) return CX[i].days;
+  return CX[0].days;
+}
+
+/* ═════════════════════════════════════════════════════════════════════
    LIFECYCLE PHASES
    Every item carries a stable `id`. Progress is stored against that id,
    never against an array position, so reordering or inserting items
@@ -898,11 +1063,12 @@ function buildPhases(posName){
       i:"Each brand or separate POS account becomes its own tenant in Supy. Example: one group running a cafe brand and a burger brand on two Foodics accounts means two tenants, not one.",o:"client"},
     {id:"k-pillars",r:"Listed which other Supy pillars are in scope",
       i:"Accounting, supplier connectivity, Open API, Delta Share, MCP. Each one adds its own setup and testing time on top of the POS work."},
-    {id:"k-rating",r:"Assigned a complexity rating: Simple, Standard or Complex",
-      i:"Work through the six scoring questions. If it comes out Complex, add buffer to the timeline now, before anyone commits to a date.",
-      n:"This is a decision, not a label. The rating is meant to change the timeline."},
+    {id:"k-rating",r:"Assigned a complexity rating",
+      i:"Work through the six scoring questions, then pick a level below. The level you pick sets the default go-live target, so this is the moment the timeline gets decided.",
+      n:"This is a decision, not a label. If it comes out Complex, the extra buffer is the whole point of rating it.",
+      cx:true},
     {id:"k-sheet",r:"Opened the Integration Health Sheet",
-      i:"One sheet per implementation. Opened at kickoff, closed at Day 30."}
+      i:"Use the Health Sheet tab at the top. It opens at kickoff and closes at Day 30, and it is where the gate evidence, variance history and sign-off live."}
   ]},
 
   {n:"1", t:"Prerequisites", gate:"", items:[
@@ -977,14 +1143,14 @@ function buildPhases(posName){
     {id:"rec-report",r:"Pulled the matching sales report out of the POS",
       i: p.recon ? "For "+esc(posName)+": "+p.recon : "Pull the equivalent sales report from "+esc(posName)+" for exactly the same dates and exactly the same branches.",nt:"info"},
     {id:"rec-var",r:"Worked out the variance against the POS report",
-      i:"Compare Total Sales Excl. Tax and Total Sales Incl. Tax, line by line. Worked example: the POS reports AED 482,600 for the week and Supy reports AED 479,100. The gap is 3,500. 3,500 divided by 482,600 = 0.73%. That passes."},
+      i:"Compare Total Sales Excl. Tax and Total Sales Incl. Tax, line by line. Worked example: the POS reports AED 482,600 for the week and Supy reports AED 479,100. The gap is 3,500. 3,500 divided by 482,600 = 0.73%. That passes. Log the numbers in the Health Sheet variance log so the Day 30 trend has something to compare against."},
     {id:"rec-1pct",r:"Variance is under 1%",
       i:"This is the charter KPI. If it is over 1%, stop and find the cause before going any further. The usual suspects, in order: business day cutoff mismatch, unmapped items, modifier handling, timezone.",
       n:"Charter gate: 3 to 7 days of real sales at under 1% variance before go-live. This is the hard number and it is not negotiable."},
     {id:"rec-cause",r:"Wrote down what caused whatever variance is left",
       i:"Even a passing 0.4% deserves an explanation. Log it in the Health Sheet. Example: '0.4% is service charge, which Supy excludes by design.'"},
     {id:"rec-deplete",r:"Spot-checked stock depletion on 3 high-volume items",
-      i:"Take a busy item, multiply the recipe by units sold, and check that is what came out of stock. Example: 120 burgers sold at 150g of patty each means 18kg of beef should be gone.",
+      i:"Take a busy item, multiply the recipe by units sold, and check that is what came out of stock. Example: 120 burgers sold at 150g of patty each means 18kg of beef should be gone. Write down which 3 items you picked, because you re-check the same ones at Day 7.",
       n:"Matching revenue does not prove depletion is right. They fail in completely different ways."}
   ]},
 
@@ -1007,56 +1173,130 @@ function buildPhases(posName){
 
   {n:"8", t:"Go-live sign-off", gate:"GO / NO-GO", items:[
     {id:"gl-gates",r:"Every earlier gate passed",
-      i:"Complexity rated, live data from all locations, variance under 1%, recipes audited, in-scope pillars tested."},
+      i:"Complexity rated, live data from all locations, variance under 1%, recipes audited, in-scope pillars tested. The Health Sheet gate log shows you which are still open."},
     {id:"gl-unmapped",r:"Zero unmapped items",
       i:"One last look before you sign anything."},
     {id:"gl-limits",r:"Known limitations written down and told to the client",
-      i:"Anything this POS cannot do goes to the client in writing before go-live. Example: 'Addictive does not send discount data, so discount reporting will not be available in Supy.' Finding this out afterwards costs trust you will not get back easily."},
+      i:"Anything this POS cannot do goes to the client in writing before go-live. The sidebar lists what we have documented for this provider. Example: 'Addictive does not send discount data, so discount reporting will not be available in Supy.' Finding this out afterwards costs trust you will not get back easily."},
     {id:"gl-auto",r:"Watched Automated Sync run on its own at least once",
       i:"Do not take the toggle's word for it. Wait for one scheduled run to fire with nobody touching it, then check the result."},
-    {id:"gl-sheet",r:"Health Sheet fully filled in",
-      i:"Every gate section answered. No blanks."},
+    {id:"gl-sheet",r:"Health Sheet complete up to sign-off",
+      i:"Every gate section answered, the variance log filled in, and no blanks."},
     {id:"gl-sign",r:"Sign-off recorded, with the date",
-      i:"You are a required approver on the integration milestone, not a cc. Record the decision and the date it was made.",
+      i:"You are a required approver on the integration milestone, not a cc. Record the decision and the date in the Health Sheet sign-off block.",
       n:"Never sign off because something looks connected. Sign off because it has been tested, reconciled and documented."},
     {id:"gl-playbook",r:"Anything that took more than 30 minutes to solve added to the playbook",
       i:"Charter working rule: the documentation is the deliverable. Add it the same week, while you still remember the detail."}
   ]},
 
   {n:"9", t:"Day 7 audit", gate:"", items:[
-    {id:"d7-gaps",r:"Sync ran every day since go-live, with no missing dates",
-      i:"Check the Imports page for gaps. One missing day is a warning sign, not a rounding error."},
-    {id:"d7-var",r:"Variance re-checked against the POS",
-      i:"Still under 1%? Drift in the first week almost always means the client changed the menu and nobody mapped the new items."},
-    {id:"d7-new",r:"New or changed menu items mapped",
-      i:"Clients change menus constantly. Anything added since go-live needs mapping."},
-    {id:"d7-tickets",r:"Looked at the integration tickets raised in week one",
-      i:"Check Gleap. Several tickets in the first week usually points at a config gap, not users making mistakes."},
-    {id:"d7-log",r:"Day 7 audit logged in the Health Sheet",
-      i:"Charter target: 95% or more of Day 7 audits completed."}
+    {id:"d7-gaps",r:"Every day since go-live has a completed sync, with no missing dates",
+      i:"Open the Imports page and count. Seven days live means seven sync records. A single gap is not a rounding error, it is a day of sales that never arrived."},
+    {id:"d7-partial",r:"Checked for partial syncs, not just missing ones",
+      i:"A sync can finish with a green tick and still return nothing for one branch. Compare the record count per branch, day over day. A branch that drops from 400 rows to 3 has a problem the total will hide."},
+    {id:"d7-branches",r:"Every branch is still returning data",
+      i:"Go branch by branch, not by group total. Example: a 10-branch client where one stopped on day 3 still looks broadly right at group level until month end."},
+    {id:"d7-var",r:"Re-ran the variance check on a fresh window, not the pre-go-live one",
+      i:"Pull the last 3 days since go-live and recalculate against the POS report. Reusing the window you validated with before go-live proves nothing. Log the result in the Health Sheet variance log."},
+    {id:"d7-var-pass",r:"Fresh variance is still under 1%",
+      i:"If it moved, the usual cause is a menu change nobody mapped. Second most likely is a business day cutoff someone adjusted on the POS side after go-live."},
+    {id:"d7-new",r:"New or changed menu items since go-live are mapped",
+      i:"Check the Unmapped tab again. Clients launch specials and promos in week one, and every new item lands unmapped by default."},
+    {id:"d7-deplete",r:"Re-checked depletion on the same 3 items from the pre-go-live spot check",
+      i:"Same items, new week's numbers. If depletion drifted on an item that was right before go-live, a recipe or a mapping changed underneath you."},
+    {id:"d7-negative",r:"Checked for negative or impossible stock movements",
+      i:"Negative on-hand on a tracked item almost always means a wrong recipe quantity or a unit conversion error, not theft. Find it now, before the client runs a stock count and loses confidence in the numbers."},
+    {id:"d7-schedule",r:"Confirmed the automated sync is still firing at its scheduled time",
+      i:"Check the actual run timestamps, not the toggle. A sync that quietly slipped to a different hour can start clipping the business day cutoff."},
+    {id:"d7-tickets",r:"Reviewed and tagged the integration tickets raised in week one",
+      i:"Check Gleap. A cluster in week one points at a config gap, not users making mistakes. Tag them as integration tickets now, otherwise the Day 30 trend has nothing to count."},
+    {id:"d7-client",r:"Asked the client directly whether the numbers look right to them",
+      i:"One question to the named contact: does this match what you see on your POS? They will spot things no report surfaces. Silence is not confirmation, so get an actual answer."},
+    {id:"d7-open",r:"Every issue found today has an owner and a date",
+      i:"An audit that produces a list and no owners produces nothing. Assign each item to yourself, the CSM or the client, with a date."},
+    {id:"d7-log",r:"Day 7 audit outcome written into the Health Sheet",
+      i:"Charter target: 95% or more of Day 7 audits completed. Record what you checked and what you found, not just that you did it."}
   ]},
 
   {n:"10", t:"Day 30 audit and close", gate:"CLOSE", items:[
-    {id:"d30-all",r:"Re-checked every gate",
-      i:"Connection, branch mapping, item mapping, recipes, variance, in-scope pillars. All of it, again."},
-    {id:"d30-trend",r:"Reviewed the 30-day variance trend",
-      i:"Stable, improving, or drifting? Example: 0.3% then 0.5% then 0.9% across three weeks is drifting, and it will cross 1% soon. Find out why now, not next month."},
-    {id:"d30-tickets",r:"Checked whether ticket volume is going down",
-      i:"Charter KPI: integration tickets should trend downward over the first 60 days after go-live."},
-    {id:"d30-friction",r:"Logged the friction points",
-      i:"Anything that was harder than it should have been. This feeds the monthly friction report to Product. Example: 'spent 9 days chasing the client for the API key'."},
-    {id:"d30-playbook",r:"Playbook updated with what you learned",
-      i:"If this job taught you something about "+esc(posName)+", the playbook should say so before you close it."},
-    {id:"d30-close",r:"Health Sheet closed and archived",
-      i:"Charter: the Health Sheet closes at Day 30."}
+    {id:"d30-gates",r:"Re-ran every gate check from scratch",
+      i:"Connection, branch mapping, item mapping, recipes, variance, in-scope pillars. Do not trust a tick from four weeks ago. Menus, staff and POS settings have all moved since then."},
+    {id:"d30-var-trend",r:"Plotted variance week by week across the full 30 days",
+      i:"Four numbers, not a verdict. Example: 0.3%, then 0.5%, then 0.9% is drifting and will cross 1% next week, even though every single week passed. Record all four in the Health Sheet variance log."},
+    {id:"d30-var-now",r:"Current-week variance is still under 1%",
+      i:"The KPI applies after go-live too, not just at the gate."},
+    {id:"d30-unmapped",r:"Unmapped count is still zero after a month of menu changes",
+      i:"Zero at go-live means nothing if nobody watched it since. This is the single number most likely to have quietly grown."},
+    {id:"d30-recipes",r:"Sampled 5 recipes against what the kitchen actually does today",
+      i:"Recipes drift. Portions change, suppliers change pack sizes, chefs adjust. A recipe that was audited correctly on day one can be wrong by day 30 without anyone touching Supy."},
+    {id:"d30-count",r:"Compared one branch's real stock count against Supy's theoretical on-hand",
+      i:"This is the actual test of whether depletion works. Revenue reconciling under 1% does not prove it. Pick one branch, take their last count, and compare. Explain any gap before you close."},
+    {id:"d30-tickets",r:"Counted integration tickets in week 1 versus week 4",
+      i:"Charter KPI: a downward trend across the first 60 days. Write both numbers in the Health Sheet. 'Trending down' without two numbers behind it is not a measurement."},
+    {id:"d30-syncfail",r:"Counted failed sync runs across the 30 days",
+      i:"One failure a week is a pattern, not bad luck. If there were any, find out whether they self-recovered or whether someone re-ran them by hand."},
+    {id:"d30-pillars",r:"Re-verified every in-scope pillar is still pushing data",
+      i:"Accounting syncs in particular fail quietly after a period close or a token expiry. Push one more test document rather than assuming."},
+    {id:"d30-limits",r:"Checked whether the client has hit a limitation nobody warned them about",
+      i:"Ask the contact directly. If they have, that is a gap in our documentation for this POS, and it goes in the playbook the same week."},
+    {id:"d30-friction",r:"Friction log written up for the monthly report to Product",
+      i:"Anything that was harder than it should have been, with rough hours lost. Example: 'nine days waiting on the client's API key' is a process problem worth reporting, not just a delay."},
+    {id:"d30-playbook",r:"Playbook updated with what this implementation taught us about "+posName,
+      i:"If nothing new came up, write that down too. A playbook entry saying 'ran clean, no surprises' is useful signal for the next person quoting a timeline."},
+    {id:"d30-handover",r:"Ongoing ownership handed to the CSM in writing",
+      i:"Name who watches the variance from here, how often, and what number triggers escalation back to you. Without that, 'closed' means nobody is watching."},
+    {id:"d30-close",r:"Health Sheet closed, archived, and the close date recorded",
+      i:"Charter: the Health Sheet closes at Day 30. Fill in the close block on the Health Sheet tab and mark it archived."}
   ]}
   ];
+}
+
+/* ═════════════════════════════════════════════════════════════════════
+   PROVIDER BRIEF
+   Everything here is derived from the provider data above, so nothing
+   is asserted that is not already documented somewhere.
+   ═════════════════════════════════════════════════════════════════════ */
+function providerBrief(pos){
+  var p = P[pos];
+  var text = (p.note || "") + " " + (p.limits || []).join(" ");
+  /* word boundaries matter: without \b, "nothing" matches "thin" */
+  var thin = /\bincomplete\b|\bundocumented\b|not fully documented|no documentation|not documented|\bthin\b|\bminimal\b|\bpartial\b/i.test(text);
+
+  var waiting = p.type === "tech" ? "Supy Engineering, plus the POS provider for credentials"
+              : p.type === "assist" ? "The CSM, plus the POS provider for credentials"
+              : /popup|logs in|signs into/i.test(p.note) ? "Only the client, they log in themselves"
+              : "The POS provider, to issue the credentials";
+
+  var first = /^The order (of steps )?matters|Sequencing matters|The CSM (has to|must)/i.test(p.note)
+      ? "Start with the CSM request described below. Nothing else can move until it is done."
+    : p.type === "tech"
+      ? "Raise the request with the Integrations team and get a committed date before you promise the client anything."
+    : /popup|logs in|signs into/i.test(p.note)
+      ? "Book time with the client's contact. They sign in themselves, so you cannot do this part without them on the call."
+      : "Ask the client to request the " + p.creds.length + " item" + (p.creds.length === 1 ? "" : "s") + " listed in the sidebar from their " + pos + " contact.";
+
+  return {
+    type: p.type === "self" ? "Self-service" : p.type === "assist" ? "Assisted setup" : "Engineering-handled",
+    auth: p.auth,
+    waiting: waiting,
+    docs: thin ? "Partial. Confirm current behaviour with the Supy team before you commit to anything" : "Documented",
+    docsWarn: thin,
+    creds: p.creds.length + " to collect",
+    mapping: p.mapping || "Syncs from the POS",
+    mappingWarn: !!p.mapping,
+    recon: p.recon ? "Report path documented" : "Not documented, ask the Supy team where to pull it",
+    reconWarn: !p.recon,
+    lead: p.lead || "",
+    limits: (p.limits || []).length,
+    first: first
+  };
 }
 
 /* ═════════════════════════════════════════════════════════════════════
    HELPERS
    ═════════════════════════════════════════════════════════════════════ */
 var MAX_CLIENTS = 100;
+var VARIANCE_KPI = 1;               /* charter: under 1% */
 
 var $ = function(id){return document.getElementById(id);};
 var key = function(c,p){return "posck:rec:"+String(c).trim().toLowerCase()+"::"+p;};
@@ -1072,6 +1312,17 @@ function fmtDate(v){
   if(isNaN(d.getTime())) return "";
   return d.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
 }
+function ymd(d){
+  var m = String(d.getMonth()+1); if(m.length < 2) m = "0"+m;
+  var day = String(d.getDate());  if(day.length < 2) day = "0"+day;
+  return d.getFullYear()+"-"+m+"-"+day;
+}
+function addDays(v, n){
+  var d = new Date(v);
+  if(isNaN(d.getTime())) return "";
+  d.setDate(d.getDate() + n);
+  return ymd(d);
+}
 function daysSince(v){
   if(!v) return 0;
   var d = new Date(v).getTime();
@@ -1085,11 +1336,14 @@ function daysUntilTarget(dateStr){
   return Math.ceil((d - Date.now()) / 86400000);
 }
 function relDays(v){
-  if(!v) return "—";
+  if(!v) return "Not recorded";
   var n = daysSince(v);
   if(n <= 0) return "Today";
   if(n === 1) return "Yesterday";
   return n + " days ago";
+}
+function each(sel, fn){
+  Array.prototype.forEach.call(document.querySelectorAll(sel), fn);
 }
 
 /* ═════════════════════════════════════════════════════════════════════
@@ -1121,39 +1375,78 @@ var DB = {
 
 /* ═════════════════════════════════════════════════════════════════════
    STATE
-   cur   : the record being edited, or null
-   index : denormalised summary of every saved client, for the tracker
    ═════════════════════════════════════════════════════════════════════ */
 var cur = null;
 var index = [];
 var page = "checklist";
-var openNotes = {};                       // itemId -> true while the editor is showing
+var openNotes = {};
 var tracker = { q:"", filter:null, sort:"health", dir:1 };
 var combo = { open:false, hi:-1, matches:[] };
 var saveTimer = null;
+var confirmAction = null;
 
+function blankHS(){
+  return {
+    contactName:"", contactEmail:"", contactPhone:"",
+    branches:"", brands:"", modLoad:"", pillars:"",
+    actualGoLive:"",
+    gates:{},
+    variance:[],
+    d7date:"", d7notes:"",
+    d30date:"", d30notes:"",
+    friction:[],
+    signDecision:"", signDate:"", signApprover:"", signConditions:"",
+    closeDate:"", closeTickets1:"", closeTickets4:"", closeArchived:""
+  };
+}
 function blankRecord(name,pos){
   return {
     client:name, pos:pos,
     createdAt:nowISO(), updatedAt:nowISO(),
-    goLiveTarget:"", specialNote:"",
-    items:{},          // id -> {done:true, doneAt:ISO, note:"..."}
-    collapsed:{}
+    complexity:"",
+    goLiveTarget:"", goLiveManual:false,
+    specialNote:"",
+    items:{},
+    collapsed:{},
+    hs:blankHS()
   };
 }
-function itemState(id){
-  return (cur && cur.items && cur.items[id]) || null;
-}
-function isDone(id){
-  var s = itemState(id);
-  return !!(s && s.done);
-}
+function itemState(id){ return (cur && cur.items && cur.items[id]) || null; }
+function isDone(id){ var s = itemState(id); return !!(s && s.done); }
 
 function toast(msg){
   var t = $("toast");
   t.textContent = msg;
   t.classList.add("show");
-  setTimeout(function(){ t.classList.remove("show"); }, 1800);
+  setTimeout(function(){ t.classList.remove("show"); }, 1900);
+}
+
+/* ═════════════════════════════════════════════════════════════════════
+   GO-LIVE TARGET
+   The target is derived from the day work actually started, which is
+   the first item ticked on the checklist, plus the buffer the
+   complexity rating carries. Editing the date by hand pins it.
+   ═════════════════════════════════════════════════════════════════════ */
+function kickoffAnchor(rec){
+  rec = rec || cur;
+  if(!rec || !rec.items) return "";
+  var earliest = "";
+  Object.keys(rec.items).forEach(function(k){
+    var at = rec.items[k] && rec.items[k].doneAt;
+    if(at && (!earliest || at < earliest)) earliest = at;
+  });
+  return earliest;
+}
+function defaultTarget(rec){
+  rec = rec || cur;
+  var anchor = kickoffAnchor(rec);
+  if(!anchor) return "";
+  return addDays(anchor, cxDays(rec.complexity));
+}
+function applyDefaultTarget(){
+  if(!cur || cur.goLiveManual) return;
+  var d = defaultTarget(cur);
+  if(d) cur.goLiveTarget = d;
 }
 
 /* ═════════════════════════════════════════════════════════════════════
@@ -1222,20 +1515,45 @@ function barColor(h){
          h === "complete" ? "var(--action)" : "var(--green)";
 }
 
+/* The four hard gates, by phase index */
+var GATES = [
+  {i:0, label:"Kickoff reviewed and complexity rated"},
+  {i:4, label:"Live data from every location, before UAT"},
+  {i:6, label:"Variance under 1% on 3 to 7 days of real sales"},
+  {i:8, label:"Go-live sign-off"}
+];
+function gateStatus(phases, gi){
+  var ph = phases[gi];
+  var latest = "", open = 0;
+  ph.items.forEach(function(it){
+    var st = itemState(it.id);
+    if(st && st.done){ if(st.doneAt && st.doneAt > latest) latest = st.doneAt; }
+    else open++;
+  });
+  return { passed: open === 0, open: open, total: ph.items.length, at: latest, title: ph.t };
+}
+
 /* ═════════════════════════════════════════════════════════════════════
    CHECKLIST RENDER
    ═════════════════════════════════════════════════════════════════════ */
 function render(){
+  $("checklistPage").style.display = page === "checklist" ? "" : "none";
+  $("healthPage").style.display    = page === "health"    ? "" : "none";
+  $("trackerPage").style.display   = page === "tracker"   ? "" : "none";
+  $("setupBar").style.display      = page === "tracker"   ? "none" : "";
+
   if(page === "tracker"){ renderTracker(); return; }
+  if(page === "health"){ renderHealth(); return; }
+  renderChecklist();
+}
 
-  $("checklistPage").style.display = "";
-  $("trackerPage").style.display = "none";
-
+function renderChecklist(){
   var main = $("main"), side = $("side");
 
   if(!cur){
-    main.innerHTML = '<div class="empty"><h3>No checklist loaded</h3>' +
-      '<p>Type a client name (start typing to search the ones you already have), pick their POS provider, and hit Load checklist.</p></div>';
+    main.innerHTML = '<div class="empty"><h3>No checklist open</h3>' +
+      '<p>Start typing a client name to search the profiles you already have, or enter a new name and pick a POS provider. ' +
+      'The Client Tracker tab lists everything saved, with its health status.</p></div>';
     side.innerHTML = "";
     return;
   }
@@ -1243,37 +1561,51 @@ function render(){
   var p = P[cur.pos];
   var phases = buildPhases(cur.pos);
   var t = totals(phases, cur.items);
+  var brief = providerBrief(cur.pos);
 
   var tagCls = p.type === "self" ? "tag-self" : p.type === "assist" ? "tag-assist" : "tag-tech";
-  var tagTxt = p.type === "self" ? "Self-service" : p.type === "assist" ? "Assisted setup" : "Engineering-handled";
 
   var h = "";
 
   h += '<div class="toolbar">' +
-       '<button class="btn btn-ghost" id="expandAll">Expand all</button>' +
-       '<button class="btn btn-ghost" id="collapseAll">Collapse all</button>' +
-       '<button class="btn btn-ghost" id="copyBtn">Copy as text</button>' +
-       '<button class="btn btn-ghost" id="printBtn">Print</button>' +
-       '<button class="btn btn-danger" id="resetBtn">Reset</button></div>';
+       '<button class="btn btn-ghost btn-sm" id="expandAll">Expand all</button>' +
+       '<button class="btn btn-ghost btn-sm" id="collapseAll">Collapse all</button>' +
+       '<button class="btn btn-ghost btn-sm" id="copyBtn">Copy as text</button>' +
+       '<button class="btn btn-ghost btn-sm" id="printBtn">Print</button>' +
+       '<button class="btn btn-danger btn-sm" id="resetBtn">Reset progress</button>' +
+       '<button class="btn btn-danger btn-sm" id="delBtn">Delete client</button></div>';
 
+  /* provider brief */
   h += '<div class="pbanner"><div class="pbanner-t">' + esc(cur.pos) +
-       '<span class="pbanner-tag ' + tagCls + '">' + tagTxt + '</span>' +
+       '<span class="pbanner-tag ' + tagCls + '">' + esc(brief.type) + '</span>' +
        '<span class="pbanner-tag" style="background:rgba(255,255,255,.15);color:#fff">' + esc(p.auth) + '</span></div>';
   h += '<div class="pbanner-n">' + esc(p.note) + '</div>';
+  h += '<div class="pbanner-first"><span class="eyebrow">Start here</span>' +
+       '<span class="txt">' + esc(brief.first) + '</span></div>';
+
+  h += '<div class="pfacts">';
+  h += pfact("Who you wait on", brief.waiting, false);
+  h += pfact("Credentials", brief.creds, false);
+  h += pfact("Item mapping", brief.mapping, brief.mappingWarn);
+  h += pfact("Reconciliation report", brief.recon, brief.reconWarn);
+  h += pfact("Our documentation", brief.docs, brief.docsWarn);
+  h += pfact("Known limitations", brief.limits ? brief.limits + " documented, listed in the sidebar" : "None documented yet", brief.limits > 0);
+  if(brief.lead) h += pfact("Expected wait", brief.lead, true);
+  h += '</div>';
+
   if(p.recon) h += '<div class="pbanner-recon">Reconcile against: ' + esc(p.recon) + '</div>';
   h += '</div>';
 
+  /* progress */
   h += '<div class="prog-wrap"><div class="prog-top">' +
        '<div class="prog-title">' + esc(cur.client) + ' <span class="sub">on ' + esc(cur.pos) + '</span></div>' +
        '<div class="prog-num">' + t.done + ' of ' + t.all + ' complete &middot; ' + t.pct + '%</div></div>' +
        '<div class="bar"><div class="bar-fill' + (t.pct === 100 ? " done" : "") + '" style="width:' + t.pct + '%"></div></div>';
 
-  var gateIdx = [0,4,6,8];
   var openGates = [];
-  gateIdx.forEach(function(gi){
-    var ph = phases[gi];
-    var incomplete = ph.items.some(function(it){ return !isDone(it.id); });
-    if(incomplete) openGates.push(ph.t);
+  GATES.forEach(function(g){
+    var st = gateStatus(phases, g.i);
+    if(!st.passed) openGates.push(st.title);
   });
   if(t.pct === 100){
     h += '<div class="gate-ok">All gates passed. This implementation is fully documented and signed off.</div>';
@@ -1282,6 +1614,7 @@ function render(){
   }
   h += '</div>';
 
+  /* phases */
   phases.forEach(function(ph,pi){
     var dn = ph.items.filter(function(it){ return isDone(it.id); }).length;
     var complete = ph.items.length > 0 && dn === ph.items.length;
@@ -1298,8 +1631,13 @@ function render(){
   });
 
   main.innerHTML = h;
-  side.innerHTML = sidebarHTML(p, phases, t);
-  wire(phases, p);
+  side.innerHTML = sidebarHTML(p, phases, t, brief);
+  wireChecklist(phases, p);
+}
+
+function pfact(k, v, warn){
+  return '<div class="pfact"><span class="k">' + esc(k) + '</span>' +
+         '<span class="v' + (warn ? " warn" : "") + '">' + esc(v) + '</span></div>';
 }
 
 function itemHTML(it){
@@ -1316,6 +1654,23 @@ function itemHTML(it){
   h += '<div class="item-ins">' + it.i + '</div>';
   if(it.ex) h += '<div class="item-ex">Example: ' + esc(it.ex) + '</div>';
   if(it.n) h += '<div class="item-note' + (it.nt === "info" ? " info" : "") + '"><span>' + esc(it.n) + '</span></div>';
+
+  /* complexity picker sits inline on the rating item */
+  if(it.cx){
+    h += '<div class="cx-pick"><span class="cx-lbl">Rating</span>';
+    CX.forEach(function(c){
+      var sel = cur.complexity === c.k;
+      h += '<button class="cx-chip' + (sel ? " on" : "") + '" data-cx="' + esc(c.k) + '" title="' + esc(c.d) + '">' +
+           '<span class="dot"></span>' + esc(c.k) +
+           '<span class="days">+' + c.days + 'd</span></button>';
+    });
+    h += '</div>';
+    if(cur.complexity){
+      var picked = CX.filter(function(c){ return c.k === cur.complexity; })[0];
+      h += '<div class="item-note info"><span>' + esc(cur.complexity) + ': ' + esc(picked.d) +
+           '. Go-live target defaults to ' + picked.days + ' days from the day you ticked your first item.</span></div>';
+    }
+  }
 
   h += '<div class="item-meta">';
   if(on && st.doneAt) h += '<span class="done-at">Completed ' + esc(fmtDate(st.doneAt)) + '</span>';
@@ -1335,24 +1690,37 @@ function itemHTML(it){
   return h;
 }
 
-function sidebarHTML(p, phases, t){
+function sidebarHTML(p, phases, t, brief){
   var tagCls = p.type === "self" ? "tag-self" : p.type === "assist" ? "tag-assist" : "tag-tech";
-  var tagTxt = p.type === "self" ? "Self-service" : p.type === "assist" ? "Assisted setup" : "Engineering-handled";
   var credDone = p.creds.filter(function(_,i){ return isDone("cred-" + i); }).length;
   var row = {
     pct:t.pct, done:t.done, all:t.all,
     createdAt:cur.createdAt, updatedAt:cur.updatedAt, goLiveTarget:cur.goLiveTarget
   };
   var hh = healthOf(row);
+  var anchor = kickoffAnchor(cur);
 
   var h = "";
+
+  /* status */
+  h += '<div class="side-card"><div class="side-body">';
+  h += '<div class="side-row"><span class="k">Health</span><span class="v">' +
+       '<span class="hbadge hb-' + hh + '">' + esc(HEALTH_META[hh].label) + '</span></span></div>';
+  h += '<div class="side-row"><span class="k">Complexity</span><span class="v">' +
+       (cur.complexity ? esc(cur.complexity) : '<span style="color:var(--tx-warning);font-weight:600">Not rated yet</span>') +
+       '</span></div>';
+  h += '<div class="side-row"><span class="k">Work started</span><span class="v">' +
+       (anchor ? esc(fmtDate(anchor)) : "No items ticked yet") + '</span></div>';
+  h += '<div class="side-row"><span class="k">Progress</span><span class="v" style="font-family:var(--mono)">' +
+       t.done + ' / ' + t.all + '</span></div>';
+  h += '</div></div>';
 
   /* credentials */
   h += '<div class="side-card">';
   h += '<div class="side-hd"><h3>Credentials to collect</h3>' +
        '<div class="side-sub">' + esc(cur.pos) + ' &middot; ' + credDone + ' of ' + p.creds.length + ' done</div></div>';
   h += '<div class="side-body">';
-  h += '<div style="margin-bottom:12px"><span class="side-tag ' + tagCls + '">' + tagTxt + '</span> ' +
+  h += '<div style="margin-bottom:12px"><span class="side-tag ' + tagCls + '">' + esc(brief.type) + '</span> ' +
        '<span class="side-tag" style="background:var(--bg-neutral);color:var(--tx-neutral)">' + esc(p.auth) + '</span></div>';
   p.creds.forEach(function(c,i){
     var id = "cred-" + i, on = isDone(id);
@@ -1371,19 +1739,30 @@ function sidebarHTML(p, phases, t){
   h += '<div class="side-card"><div class="side-body">';
   h += '<div class="side-fld" style="margin-bottom:16px"><label>Go-live target date</label>' +
        '<input type="date" id="sideTarget" value="' + esc(cur.goLiveTarget || "") + '"/>';
+
   var toTarget = daysUntilTarget(cur.goLiveTarget);
-  if(toTarget !== null){
-    h += '<div class="hint" style="color:' + (toTarget < 0 ? "var(--tx-error)" : toTarget <= 7 ? "var(--tx-orange)" : "var(--mid)") + '">' +
-      (toTarget < 0 ? Math.abs(toTarget) + " days past target" :
-       toTarget === 0 ? "Target is today" : toTarget + " days to target") +
-      ' &middot; ' + t.pct + '% complete &middot; ' + esc(HEALTH_META[hh].label) + '</div>';
+  if(!anchor){
+    h += '<div class="hint">Set automatically once you tick your first checklist item. ' +
+         'The default is <b>first tick plus ' + cxDays(cur.complexity) + ' days</b>' +
+         (cur.complexity ? ' for a ' + esc(cur.complexity) + ' job' : ', which assumes Simple until you rate it') + '.</div>';
   }else{
-    h += '<div class="hint">Set a date and this client starts showing a health status on the Client Tracker.</div>';
+    var col = toTarget !== null && toTarget < 0 ? "var(--tx-error)" : toTarget !== null && toTarget <= 7 ? "var(--tx-orange)" : "var(--mid)";
+    h += '<div class="hint" style="color:' + col + '">' +
+      (toTarget === null ? "No target set" :
+       toTarget < 0 ? Math.abs(toTarget) + " days past target" :
+       toTarget === 0 ? "Target is today" : toTarget + " days to target") +
+      ' &middot; ' + t.pct + '% complete</div>';
+    h += '<div class="hint">' + (cur.goLiveManual
+        ? 'Set by hand. <button class="link-btn" id="tgtAuto">Use the default instead</button> (' +
+          esc(fmtDate(defaultTarget(cur))) + ', from ' + esc(fmtDate(anchor)) + ' plus ' + cxDays(cur.complexity) + ' days)'
+        : 'Automatic: <b>' + esc(fmtDate(anchor)) + '</b> plus ' + cxDays(cur.complexity) + ' days' +
+          (cur.complexity ? ' for a ' + esc(cur.complexity) + ' job' : ' (Simple default, rate the job in Phase 0 to adjust)') +
+          '. Edit the date to pin it.') + '</div>';
   }
   h += '</div>';
 
   h += '<div class="side-fld"><label>Special case note</label>' +
-       '<textarea id="sideNote" rows="4" placeholder="Example: client&#39;s own IT team is doing the integration, we only validate. Or: they will not share the API key, so credentials go through their CTO."></textarea>' +
+       '<textarea id="sideNote" rows="4" placeholder="Example: the client&#39;s own IT team is running the integration, we only validate. Or: they will not share the API key, so credentials go through their CTO."></textarea>' +
        '<div class="hint">Use this when the client wants to run the integration themselves, or has unusual credential requirements. It is included in Copy as text.</div></div>';
   h += '</div></div>';
 
@@ -1395,7 +1774,11 @@ function sidebarHTML(p, phases, t){
   if(p.limits && p.limits.length){
     p.limits.forEach(function(l){ h += '<div class="side-lim">' + esc(l) + '</div>'; });
   }else{
-    h += '<div class="side-none">No limitations recorded for ' + esc(cur.pos) + '. That means none are documented, not that none exist. If you hit one, add it to the playbook.</div>';
+    h += '<div class="side-none">We have not documented any for ' + esc(cur.pos) + ' yet. ' +
+         'That is a gap in our playbook, not a clean bill of health. Before go-live, test the four things that ' +
+         'usually break and confirm each one with real data: <b>discounts</b>, <b>modifiers</b>, ' +
+         '<b>refunds and voids</b>, and <b>orders either side of the business day cutoff</b>. ' +
+         'Anything you find goes straight into the playbook.</div>';
   }
   h += '</div></div>';
 
@@ -1403,15 +1786,11 @@ function sidebarHTML(p, phases, t){
 }
 
 /* ═════════════════════════════════════════════════════════════════════
-   WIRING
+   CHECKLIST WIRING
    ═════════════════════════════════════════════════════════════════════ */
-function each(sel, fn){
-  Array.prototype.forEach.call(document.querySelectorAll(sel), fn);
-}
-
-function wire(phases, p){
-  /* checkboxes: one handler covers both the checklist and the sidebar,
-     so ticking a credential in either place updates the other */
+function wireChecklist(phases, p){
+  /* one handler covers the checklist and the sidebar, so ticking a
+     credential in either place updates the other */
   each("[data-check]", function(el){
     el.onclick = function(){
       var id = el.getAttribute("data-check");
@@ -1425,6 +1804,22 @@ function wire(phases, p){
         cur.items[id].done = true;
         cur.items[id].doneAt = nowISO();
       }
+      applyDefaultTarget();
+      save().then(render);
+    };
+  });
+
+  each("[data-cx]", function(el){
+    el.onclick = function(){
+      var k = el.getAttribute("data-cx");
+      cur.complexity = (cur.complexity === k) ? "" : k;
+      /* picking a rating is the act of assigning it */
+      if(cur.complexity && !isDone("k-rating")){
+        cur.items["k-rating"] = cur.items["k-rating"] || {};
+        cur.items["k-rating"].done = true;
+        cur.items["k-rating"].doneAt = nowISO();
+      }
+      applyDefaultTarget();
       save().then(render);
     };
   });
@@ -1449,7 +1844,7 @@ function wire(phases, p){
     };
   });
 
-  /* typing in a note never re-renders, or the caret would jump */
+  /* typing never re-renders, or the caret would jump */
   each("[data-noteinput]", function(el){
     el.oninput = function(){
       var id = el.getAttribute("data-noteinput");
@@ -1463,6 +1858,13 @@ function wire(phases, p){
   var target = $("sideTarget");
   if(target) target.onchange = function(){
     cur.goLiveTarget = target.value;
+    cur.goLiveManual = true;
+    save().then(render);
+  };
+  var tgtAuto = $("tgtAuto");
+  if(tgtAuto) tgtAuto.onclick = function(){
+    cur.goLiveManual = false;
+    applyDefaultTarget();
     save().then(render);
   };
 
@@ -1479,8 +1881,9 @@ function wire(phases, p){
     save().then(render);
   };
   $("printBtn").onclick = function(){ window.print(); };
-  $("resetBtn").onclick = function(){ openReset(); };
   $("copyBtn").onclick = function(){ copyAsText(phases, p); };
+  $("resetBtn").onclick = function(){ askReset(); };
+  $("delBtn").onclick = function(){ askDelete(cur.client, cur.pos); };
 }
 
 function debounceSave(){
@@ -1489,16 +1892,308 @@ function debounceSave(){
 }
 
 /* ═════════════════════════════════════════════════════════════════════
-   COPY AS TEXT
+   HEALTH SHEET
+   One per implementation. Opens at kickoff, closes at Day 30. This is
+   where gate evidence, the variance history, the audits, the friction
+   log and the sign-off live, so the checklist stays a checklist.
    ═════════════════════════════════════════════════════════════════════ */
+function variancePct(pos, supy){
+  var a = parseFloat(pos), b = parseFloat(supy);
+  if(!isFinite(a) || !isFinite(b) || a === 0) return null;
+  return Math.abs(a - b) / Math.abs(a) * 100;
+}
+function varCell(v){
+  if(v.pos === "" || v.supy === "" || v.pos == null || v.supy == null)
+    return '<span class="var-out none">Enter both</span>';
+  var pct = variancePct(v.pos, v.supy);
+  if(pct === null) return '<span class="var-out none">Check numbers</span>';
+  var pass = pct < VARIANCE_KPI;
+  return '<span class="var-out ' + (pass ? "pass" : "fail") + '">' + pct.toFixed(2) + '% ' +
+         (pass ? "pass" : "FAIL") + '</span>';
+}
+
+function hsf(type, path, label, opts){
+  opts = opts || {};
+  var hs = cur.hs;
+  var val = hs[path] == null ? "" : hs[path];
+  var h = '<div class="hs-f' + (opts.wide ? " wide" : "") + '"><label>' + esc(label) + '</label>';
+  if(type === "textarea"){
+    h += '<textarea data-hs="' + path + '" rows="' + (opts.rows || 3) + '" placeholder="' +
+         esc(opts.ph || "") + '">' + esc(val) + '</textarea>';
+  }else if(type === "select"){
+    h += '<select data-hs="' + path + '"><option value="">Not set</option>';
+    (opts.options || []).forEach(function(o){
+      h += '<option value="' + esc(o) + '"' + (val === o ? " selected" : "") + '>' + esc(o) + '</option>';
+    });
+    h += '</select>';
+  }else{
+    h += '<input type="' + type + '" data-hs="' + path + '" value="' + esc(val) + '" placeholder="' +
+         esc(opts.ph || "") + '"' + (type === "number" ? ' step="any"' : '') + '/>';
+  }
+  if(opts.sub) h += '<div class="sub">' + opts.sub + '</div>';
+  h += '</div>';
+  return h;
+}
+
+function renderHealth(){
+  var wrap = $("healthPage");
+
+  if(!cur){
+    wrap.innerHTML = '<div class="empty"><h3>No client open</h3>' +
+      '<p>The Health Sheet belongs to one client. Open a checklist first, then come back to this tab.</p></div>';
+    return;
+  }
+
+  cur.hs = cur.hs || blankHS();
+  var hs = cur.hs;
+  var phases = buildPhases(cur.pos);
+  var t = totals(phases, cur.items);
+  var anchor = kickoffAnchor(cur);
+  var row = {pct:t.pct, done:t.done, all:t.all, createdAt:cur.createdAt,
+             updatedAt:cur.updatedAt, goLiveTarget:cur.goLiveTarget};
+  var hh = healthOf(row);
+
+  var status = t.done === t.all && t.all > 0 ? "Closed"
+             : /^GO/.test(hs.signDecision || "") ? "Live, in post-go-live audit"
+             : "In progress";
+
+  var h = "";
+
+  /* toolbar */
+  h += '<div class="toolbar">' +
+       '<button class="btn btn-ghost btn-sm" id="hsCopy">Copy as text</button>' +
+       '<button class="btn btn-ghost btn-sm" id="hsPrint">Print</button>' +
+       '<button class="btn btn-ghost btn-sm" id="hsToChecklist">Back to checklist</button></div>';
+
+  /* header */
+  h += '<div class="hs-hd"><span class="eyebrow">Integration health sheet</span>';
+  h += '<h2>' + esc(cur.client) + ' &middot; ' + esc(cur.pos) + '</h2>';
+  h += '<div class="hs-sub">Opened at kickoff, closed at Day 30. Everything on this page is evidence: what was ' +
+       'checked, what the numbers were, and who decided what. The checklist tracks the work, this sheet is what ' +
+       'you sign your name to.</div>';
+  h += '<div class="hs-meta">';
+  h += hsMeta("Status", status);
+  h += hsMeta("Health", HEALTH_META[hh].label);
+  h += hsMeta("Complexity", cur.complexity || "Not rated");
+  h += hsMeta("Checklist", t.done + " / " + t.all + " (" + t.pct + "%)", true);
+  h += hsMeta("Work started", anchor ? fmtDate(anchor) : "Not started");
+  h += hsMeta("Go-live target", cur.goLiveTarget ? fmtDate(cur.goLiveTarget) : "Not set");
+  h += hsMeta("Actual go-live", hs.actualGoLive ? fmtDate(hs.actualGoLive) : "Not yet");
+  h += hsMeta("Days open", anchor ? String(daysSince(anchor)) : "0", true);
+  h += '</div></div>';
+
+  /* 1. scope and contact */
+  h += hsCard("Scope and contacts", "Captured at kickoff. These are the answers that drove the complexity rating, so write down what you were actually told, not what you assumed.");
+  h += '<div class="hs-grid">';
+  h += hsf("text","contactName","Client contact name",{ph:"Full name, not a team"});
+  h += hsf("text","contactEmail","Contact email",{ph:"name@company.com"});
+  h += hsf("text","contactPhone","Contact phone",{ph:"+971 50 123 4567"});
+  h += hsf("number","branches","Branch count",{ph:"e.g. 8"});
+  h += hsf("number","brands","Brands / tenants",{ph:"e.g. 2",sub:"Each brand or separate POS account is its own tenant"});
+  h += hsf("select","modLoad","Modifier and combo load",{options:["Minimal","Moderate (10 to 30%)","Heavy (30%+)"]});
+  h += hsf("textarea","pillars","Other pillars in scope",{wide:true,rows:2,
+    ph:"Accounting (Xero), supplier connectivity, Open API, Delta Share, MCP. Write N/A where nothing applies.",
+    sub:"Anything not listed here is out of scope, and that is the version you will be held to at sign-off."});
+  h += '</div>';
+  h += hsCardEnd();
+
+  /* 2. gate log */
+  h += hsCard("Gate log", "Status comes straight from the checklist and cannot be typed over. The note is where the evidence goes: what you checked, what you saw, and anything you accepted with a caveat.");
+  GATES.forEach(function(g){
+    var st = gateStatus(phases, g.i);
+    h += '<div class="hs-gate">';
+    h += '<span class="gbadge ' + (st.passed ? "gb-pass" : "gb-open") + '">' + (st.passed ? "Passed" : st.open + " open") + '</span>';
+    h += '<div class="hs-gate-b"><div class="hs-gate-t">' + esc(st.title) + '</div>';
+    h += '<div class="hs-gate-s">' + esc(g.label) + ' &middot; ' +
+         (st.passed ? "cleared " + (st.at ? esc(fmtDate(st.at)) : "date not recorded")
+                    : st.open + " of " + st.total + " items outstanding") + '</div>';
+    h += '<textarea data-hs="gate' + g.i + '" placeholder="Evidence and anything you accepted with a caveat. Example: variance 0.73% on 5 days across all 8 branches, residual is service charge."></textarea>';
+    h += '</div></div>';
+  });
+  h += hsCardEnd();
+
+  /* 3. variance log */
+  h += hsCard("Variance log", "The 1% KPI is a trend, not a single reading. Add a row for the pre-go-live check, one at Day 7, and one per week up to Day 30. The percentage calculates itself.");
+  h += '<div class="hs-scroll"><table class="hs-tbl"><thead><tr>' +
+       '<th style="width:120px">From</th><th style="width:120px">To</th>' +
+       '<th style="width:130px">POS total</th><th style="width:130px">Supy total</th>' +
+       '<th style="width:120px">Variance</th><th>Cause or note</th><th style="width:44px"></th>' +
+       '</tr></thead><tbody>';
+  if(!hs.variance.length){
+    h += '<tr><td colspan="7" class="hs-emptyrow">No entries yet. Add the pre-go-live check first: the 3 to 7 day ' +
+         'window you validated the gate with, and the numbers you compared.</td></tr>';
+  }
+  hs.variance.forEach(function(v,i){
+    h += '<tr>';
+    h += '<td><input type="date" data-hsr="variance|' + i + '|from" value="' + esc(v.from || "") + '"/></td>';
+    h += '<td><input type="date" data-hsr="variance|' + i + '|to" value="' + esc(v.to || "") + '"/></td>';
+    h += '<td><input type="number" step="any" class="num" data-hsr="variance|' + i + '|pos" value="' + esc(v.pos || "") + '" placeholder="482600"/></td>';
+    h += '<td><input type="number" step="any" class="num" data-hsr="variance|' + i + '|supy" value="' + esc(v.supy || "") + '" placeholder="479100"/></td>';
+    h += '<td data-varout="' + i + '">' + varCell(v) + '</td>';
+    h += '<td><input type="text" data-hsr="variance|' + i + '|cause" value="' + esc(v.cause || "") + '" placeholder="Service charge excluded by design"/></td>';
+    h += '<td><button class="row-del" data-hsdel="variance|' + i + '" title="Remove row">&times;</button></td>';
+    h += '</tr>';
+  });
+  h += '</tbody></table></div>';
+  h += '<div class="hs-addrow"><button class="btn btn-ghost btn-sm" data-hsadd="variance">+ Add variance entry</button></div>';
+  h += hsCardEnd();
+
+  /* 4. audits */
+  h += hsCard("Day 7 and Day 30 audits", "The checklist has the item-by-item audit. This is the summary you would hand someone who asks what state the integration is in.");
+  h += '<div class="hs-grid">';
+  h += hsf("date","d7date","Day 7 audit completed",{});
+  h += hsf("date","d30date","Day 30 audit completed",{});
+  h += hsf("textarea","d7notes","Day 7 findings",{wide:true,rows:3,
+    ph:"What you found, and who owns each open item with a date. Example: branch 4 stopped syncing on day 3, CSM re-authenticated Aug 18, backfilled."});
+  h += hsf("textarea","d30notes","Day 30 findings",{wide:true,rows:3,
+    ph:"Variance trend across the four weeks, stock count comparison result, ticket counts week 1 versus week 4."});
+  h += '</div>';
+  h += hsCardEnd();
+
+  /* 5. friction log */
+  h += hsCard("Friction log", "Anything that was harder than it should have been. This is the input to the monthly friction report to Product, so rough hours are more useful than a perfect description.");
+  h += '<div class="hs-scroll"><table class="hs-tbl"><thead><tr>' +
+       '<th style="width:130px">Date</th><th>What happened</th>' +
+       '<th style="width:100px">Hours lost</th><th style="width:150px">In the playbook?</th><th style="width:44px"></th>' +
+       '</tr></thead><tbody>';
+  if(!hs.friction.length){
+    h += '<tr><td colspan="5" class="hs-emptyrow">No entries yet. Charter working rule: anything that took more than ' +
+         '30 minutes to solve belongs here and in the playbook.</td></tr>';
+  }
+  hs.friction.forEach(function(f,i){
+    h += '<tr>';
+    h += '<td><input type="date" data-hsr="friction|' + i + '|date" value="' + esc(f.date || "") + '"/></td>';
+    h += '<td><input type="text" data-hsr="friction|' + i + '|what" value="' + esc(f.what || "") + '" placeholder="Nine days waiting on the client to get their API key"/></td>';
+    h += '<td><input type="number" step="any" class="num" data-hsr="friction|' + i + '|hours" value="' + esc(f.hours || "") + '" placeholder="4"/></td>';
+    h += '<td><select data-hsr="friction|' + i + '|playbook">' +
+         '<option value=""' + (!f.playbook ? " selected" : "") + '>Not yet</option>' +
+         '<option value="Added"' + (f.playbook === "Added" ? " selected" : "") + '>Added</option>' +
+         '<option value="Not needed"' + (f.playbook === "Not needed" ? " selected" : "") + '>Not needed</option>' +
+         '</select></td>';
+    h += '<td><button class="row-del" data-hsdel="friction|' + i + '" title="Remove row">&times;</button></td>';
+    h += '</tr>';
+  });
+  h += '</tbody></table></div>';
+  h += '<div class="hs-addrow"><button class="btn btn-ghost btn-sm" data-hsadd="friction">+ Add friction entry</button></div>';
+  h += hsCardEnd();
+
+  /* 6. sign-off */
+  h += hsCard("Go-live sign-off", "You are a required approver here, not a cc. A conditional GO is a legitimate answer, but the conditions have to be written down and dated or they are not conditions.");
+  h += '<div class="hs-grid">';
+  h += hsf("select","signDecision","Decision",{options:["GO","GO with conditions","NO-GO"]});
+  h += hsf("date","signDate","Decision date",{});
+  h += hsf("text","signApprover","Approved by",{ph:"Your name"});
+  h += hsf("date","actualGoLive","Actual go-live date",{sub:"Fill this in when the client is genuinely live, not when the connection was made"});
+  h += hsf("textarea","signConditions","Conditions and known limitations communicated",{wide:true,rows:3,
+    ph:"What the client was told, in writing, and when. Example: told the client on Aug 14 that Addictive does not send discount data, so discount reporting will not be available. Confirmed by email."});
+  h += '</div>';
+  h += hsCardEnd();
+
+  /* 7. close */
+  h += hsCard("Day 30 close", "The sheet closes at Day 30. Two ticket numbers, not a verdict: the charter KPI is a downward trend, and a trend needs two readings.");
+  h += '<div class="hs-grid">';
+  h += hsf("number","closeTickets1","Integration tickets, week 1",{ph:"e.g. 6"});
+  h += hsf("number","closeTickets4","Integration tickets, week 4",{ph:"e.g. 1"});
+  h += hsf("date","closeDate","Sheet closed on",{});
+  h += hsf("select","closeArchived","Archived",{options:["Yes","Not yet"]});
+  h += '</div>';
+  h += hsCardEnd();
+
+  wrap.innerHTML = h;
+  wireHealth();
+}
+
+function hsMeta(k,v,mono){
+  return '<div class="hs-mcell"><span class="k">' + esc(k) + '</span>' +
+         '<span class="v' + (mono ? " mono" : "") + '">' + esc(v) + '</span></div>';
+}
+function hsCard(title, hint){
+  return '<div class="hs-card"><div class="hs-card-hd"><h3>' + esc(title) + '</h3>' +
+         (hint ? '<div class="hint">' + esc(hint) + '</div>' : '') + '</div><div class="hs-body">';
+}
+function hsCardEnd(){ return '</div></div>'; }
+
+function wireHealth(){
+  /* scalar fields: save on input, never re-render mid-typing */
+  each("[data-hs]", function(el){
+    var path = el.getAttribute("data-hs");
+    var isSelect = el.tagName === "SELECT";
+    var isDate = el.type === "date";
+    var handler = function(){ cur.hs[path] = el.value; debounceSave(); };
+    if(isSelect || isDate){
+      el.onchange = function(){ cur.hs[path] = el.value; save().then(renderHealth); };
+    }else{
+      el.oninput = handler;
+    }
+  });
+
+  /* repeating rows */
+  each("[data-hsr]", function(el){
+    var parts = el.getAttribute("data-hsr").split("|");
+    var list = parts[0], i = +parts[1], f = parts[2];
+    var write = function(){
+      var rowObj = cur.hs[list][i];
+      if(!rowObj) return;
+      rowObj[f] = el.value;
+      /* live-update the calculated variance cell without a re-render */
+      if(list === "variance" && (f === "pos" || f === "supy")){
+        var cell = document.querySelector('[data-varout="' + i + '"]');
+        if(cell) cell.innerHTML = varCell(rowObj);
+      }
+      debounceSave();
+    };
+    if(el.tagName === "SELECT" || el.type === "date") el.onchange = write;
+    else el.oninput = write;
+  });
+
+  each("[data-hsadd]", function(el){
+    el.onclick = function(){
+      var list = el.getAttribute("data-hsadd");
+      if(list === "variance") cur.hs.variance.push({from:"",to:"",pos:"",supy:"",cause:""});
+      else cur.hs.friction.push({date:"",what:"",hours:"",playbook:""});
+      save().then(renderHealth);
+    };
+  });
+  each("[data-hsdel]", function(el){
+    el.onclick = function(){
+      var parts = el.getAttribute("data-hsdel").split("|");
+      cur.hs[parts[0]].splice(+parts[1], 1);
+      save().then(renderHealth);
+    };
+  });
+
+  $("hsPrint").onclick = function(){ window.print(); };
+  $("hsToChecklist").onclick = function(){ goPage("checklist"); };
+  $("hsCopy").onclick = function(){ copyHealthSheet(); };
+}
+
+/* ═════════════════════════════════════════════════════════════════════
+   TEXT EXPORTS
+   ═════════════════════════════════════════════════════════════════════ */
+function toClipboard(text){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(
+      function(){ toast("Copied to clipboard"); },
+      function(){ toast("Could not copy, check browser permissions"); }
+    );
+  }else{
+    toast("Clipboard not available in this browser");
+  }
+}
+
 function copyAsText(phases, p){
   var t = totals(phases, cur.items);
-  var out = cur.client + " — " + cur.pos + "\n" + "=".repeat(60) + "\n";
+  var brief = providerBrief(cur.pos);
+  var anchor = kickoffAnchor(cur);
+  var out = cur.client + " on " + cur.pos + "\n" + "=".repeat(60) + "\n";
   out += "Progress: " + t.done + " of " + t.all + " (" + t.pct + "%)\n";
-  out += "Integration type: " + (p.type === "self" ? "Self-service" : p.type === "assist" ? "Assisted setup" : "Engineering-handled") + "\n";
-  out += "Kickoff: " + (fmtDate(cur.createdAt) || "—") + "\n";
-  out += "Last activity: " + (fmtDate(cur.updatedAt) || "—") + "\n";
-  out += "Go-live target: " + (cur.goLiveTarget ? fmtDate(cur.goLiveTarget) : "not set") + "\n";
+  out += "Complexity: " + (cur.complexity || "not rated") + "\n";
+  out += "Integration type: " + brief.type + "\n";
+  out += "Profile created: " + (fmtDate(cur.createdAt) || "not recorded") + "\n";
+  out += "Work started: " + (anchor ? fmtDate(anchor) : "no items ticked yet") + "\n";
+  out += "Last activity: " + (fmtDate(cur.updatedAt) || "not recorded") + "\n";
+  out += "Go-live target: " + (cur.goLiveTarget ? fmtDate(cur.goLiveTarget) +
+         (cur.goLiveManual ? " (set by hand)" : " (automatic)") : "not set") + "\n";
   if(cur.specialNote && cur.specialNote.trim()){
     out += "\nSPECIAL CASE NOTE\n" + cur.specialNote.trim() + "\n";
   }
@@ -1511,6 +2206,7 @@ function copyAsText(phases, p){
       var mark = st.done ? "[x]" : "[ ]";
       var label = (it.plain || it.r).replace(/<[^>]+>/g, "");
       out += "  " + mark + " " + label;
+      if(it.cx && cur.complexity) out += "   -> " + cur.complexity;
       if(st.done && st.doneAt) out += "   (completed " + fmtDate(st.doneAt) + ")";
       out += "\n";
       if(st.note && st.note.trim()){
@@ -1521,30 +2217,175 @@ function copyAsText(phases, p){
   });
 
   if(p.limits && p.limits.length){
-    out += "KNOWN LIMITATIONS — " + cur.pos + "\n";
+    out += "KNOWN LIMITATIONS, " + cur.pos + "\n";
     p.limits.forEach(function(l){ out += "  - " + l + "\n"; });
     out += "\n";
   }
+  toClipboard(out);
+}
 
-  if(navigator.clipboard && navigator.clipboard.writeText){
-    navigator.clipboard.writeText(out).then(
-      function(){ toast("Copied to clipboard"); },
-      function(){ toast("Could not copy — check browser permissions"); }
-    );
-  }else{
-    toast("Clipboard not available in this browser");
-  }
+function copyHealthSheet(){
+  var hs = cur.hs, phases = buildPhases(cur.pos), t = totals(phases, cur.items);
+  var anchor = kickoffAnchor(cur);
+  var o = "INTEGRATION HEALTH SHEET\n" + cur.client + " on " + cur.pos + "\n" + "=".repeat(60) + "\n\n";
+  o += "Complexity: " + (cur.complexity || "not rated") + "\n";
+  o += "Checklist: " + t.done + " of " + t.all + " (" + t.pct + "%)\n";
+  o += "Work started: " + (anchor ? fmtDate(anchor) : "not started") + "\n";
+  o += "Go-live target: " + (cur.goLiveTarget ? fmtDate(cur.goLiveTarget) : "not set") + "\n";
+  o += "Actual go-live: " + (hs.actualGoLive ? fmtDate(hs.actualGoLive) : "not yet") + "\n\n";
+
+  o += "SCOPE AND CONTACTS\n";
+  o += "  Contact: " + (hs.contactName || "not set") +
+       (hs.contactEmail ? " / " + hs.contactEmail : "") +
+       (hs.contactPhone ? " / " + hs.contactPhone : "") + "\n";
+  o += "  Branches: " + (hs.branches || "not set") + "\n";
+  o += "  Brands / tenants: " + (hs.brands || "not set") + "\n";
+  o += "  Modifier load: " + (hs.modLoad || "not set") + "\n";
+  o += "  Other pillars: " + (hs.pillars || "not set") + "\n\n";
+
+  o += "GATE LOG\n";
+  GATES.forEach(function(g){
+    var st = gateStatus(phases, g.i);
+    o += "  [" + (st.passed ? "PASSED" : st.open + " OPEN") + "] " + st.title;
+    if(st.passed && st.at) o += " (" + fmtDate(st.at) + ")";
+    o += "\n";
+    var note = hs["gate" + g.i];
+    if(note && note.trim()) note.trim().split("\n").forEach(function(l){ o += "        " + l + "\n"; });
+  });
+  o += "\n";
+
+  o += "VARIANCE LOG\n";
+  if(!hs.variance.length) o += "  No entries.\n";
+  hs.variance.forEach(function(v){
+    var pct = variancePct(v.pos, v.supy);
+    o += "  " + (v.from || "?") + " to " + (v.to || "?") + ": POS " + (v.pos || "?") +
+         " vs Supy " + (v.supy || "?") + " = " +
+         (pct === null ? "not calculated" : pct.toFixed(2) + "% " + (pct < VARIANCE_KPI ? "pass" : "FAIL"));
+    if(v.cause) o += "  [" + v.cause + "]";
+    o += "\n";
+  });
+  o += "\n";
+
+  o += "AUDITS\n";
+  o += "  Day 7 completed: " + (hs.d7date ? fmtDate(hs.d7date) : "not yet") + "\n";
+  if(hs.d7notes) o += "    " + hs.d7notes.replace(/\n/g, "\n    ") + "\n";
+  o += "  Day 30 completed: " + (hs.d30date ? fmtDate(hs.d30date) : "not yet") + "\n";
+  if(hs.d30notes) o += "    " + hs.d30notes.replace(/\n/g, "\n    ") + "\n";
+  o += "\n";
+
+  o += "FRICTION LOG\n";
+  if(!hs.friction.length) o += "  No entries.\n";
+  hs.friction.forEach(function(f){
+    o += "  " + (f.date || "?") + ": " + (f.what || "") +
+         (f.hours ? "  (" + f.hours + "h)" : "") +
+         "  playbook: " + (f.playbook || "not yet") + "\n";
+  });
+  o += "\n";
+
+  o += "SIGN-OFF\n";
+  o += "  Decision: " + (hs.signDecision || "not recorded") + "\n";
+  o += "  Date: " + (hs.signDate ? fmtDate(hs.signDate) : "not recorded") + "\n";
+  o += "  Approved by: " + (hs.signApprover || "not recorded") + "\n";
+  if(hs.signConditions) o += "  Conditions: " + hs.signConditions + "\n";
+  o += "\n";
+
+  o += "CLOSE\n";
+  o += "  Tickets week 1: " + (hs.closeTickets1 || "not recorded") +
+       "   week 4: " + (hs.closeTickets4 || "not recorded") + "\n";
+  o += "  Closed on: " + (hs.closeDate ? fmtDate(hs.closeDate) : "not closed") + "\n";
+  o += "  Archived: " + (hs.closeArchived || "Not yet") + "\n";
+
+  toClipboard(o);
 }
 
 /* ═════════════════════════════════════════════════════════════════════
-   RESET MODAL
+   CONFIRM DIALOG
+   One modal serves create, reset and delete.
    ═════════════════════════════════════════════════════════════════════ */
-function openReset(){
-  $("resetTxt").textContent =
-    "This will uncheck all items and clear all notes for " + cur.client + ". This action cannot be undone.";
-  $("resetMask").classList.add("open");
+function confirmDialog(o){
+  $("cfTitle").textContent = o.title;
+  $("cfBody").textContent = o.body;
+  var sum = $("cfSum");
+  if(o.rows && o.rows.length){
+    sum.style.display = "";
+    sum.innerHTML = o.rows.map(function(r){
+      return '<div class="r"><span class="k">' + esc(r[0]) + '</span><span class="v">' + esc(r[1]) + '</span></div>';
+    }).join("");
+  }else{
+    sum.style.display = "none";
+    sum.innerHTML = "";
+  }
+  var go = $("cfGo");
+  go.textContent = o.cta || "Confirm";
+  go.className = "btn " + (o.danger ? "btn-solid-danger" : "btn-primary");
+  confirmAction = o.onGo;
+  $("confirmMask").classList.add("open");
 }
-function closeReset(){ $("resetMask").classList.remove("open"); }
+function closeConfirm(){
+  $("confirmMask").classList.remove("open");
+  confirmAction = null;
+}
+
+function askReset(){
+  var c = cur.client, pos = cur.pos;
+  confirmDialog({
+    title:"Reset progress for this client?",
+    body:"This unchecks every item, clears all notes and completion dates, and clears the complexity rating. " +
+         "The Health Sheet and the client profile are kept. This cannot be undone.",
+    rows:[["Client", c], ["POS provider", pos]],
+    cta:"Reset progress", danger:true,
+    onGo:function(){
+      cur.items = {};
+      cur.complexity = "";
+      if(!cur.goLiveManual) cur.goLiveTarget = "";
+      openNotes = {};
+      closeConfirm();
+      save().then(render);
+      toast("Progress reset for " + c);
+    }
+  });
+}
+
+function askDelete(client, pos){
+  confirmDialog({
+    title:"Delete this client profile?",
+    body:"This permanently deletes the whole profile: the checklist, every note and completion date, the special " +
+         "case note and the entire Health Sheet. It cannot be undone, and there is no backup unless you copied it out first.",
+    rows:[["Client", client], ["POS provider", pos]],
+    cta:"Delete permanently", danger:true,
+    onGo:function(){
+      closeConfirm();
+      deleteClient(client, pos).then(function(){
+        toast("Deleted " + client + " on " + pos);
+      });
+    }
+  });
+}
+
+function askCreate(name, pos){
+  var sameName = index.filter(function(x){
+    return x.client.trim().toLowerCase() === name.trim().toLowerCase();
+  });
+  var body = "No profile exists for this client and POS pairing yet. Creating one starts a fresh checklist and it " +
+             "will appear on the Client Tracker.";
+  if(sameName.length){
+    body += " Note that " + name + " already has a profile on " +
+            sameName.map(function(x){ return x.pos; }).join(", ") +
+            ". A second profile is correct only if this is genuinely a separate POS or tenant.";
+  }
+  confirmDialog({
+    title:"Create a new client profile?",
+    body:body,
+    rows:[["Client", name], ["POS provider", pos],
+          ["Integration type", providerBrief(pos).type],
+          ["Checklist items", String(totals(buildPhases(pos), {}).all)]],
+    cta:"Create profile",
+    onGo:function(){
+      closeConfirm();
+      openClient(name, pos, true);
+    }
+  });
+}
 
 /* ═════════════════════════════════════════════════════════════════════
    CLIENT TRACKER
@@ -1554,6 +2395,7 @@ function trackerRows(){
     var row = {
       client:x.client, pos:x.pos, pct:x.pct || 0,
       done:x.done || 0, all:x.all || 0,
+      complexity:x.complexity || "",
       createdAt:x.createdAt, updatedAt:x.updatedAt, goLiveTarget:x.goLiveTarget || ""
     };
     row.health = healthOf(row);
@@ -1564,9 +2406,6 @@ function trackerRows(){
 var HORDER = { critical:0, attention:1, ok:2, complete:3 };
 
 function renderTracker(){
-  $("checklistPage").style.display = "none";
-  $("trackerPage").style.display = "";
-
   var rows = trackerRows();
   var counts = { critical:0, attention:0, ok:0, complete:0 };
   rows.forEach(function(r){ counts[r.health]++; });
@@ -1609,21 +2448,21 @@ function renderTracker(){
   h += '<div class="tbar">' +
        '<input id="tq" type="text" placeholder="Search by client name or POS provider" value="' + esc(tracker.q) + '"/>';
   if(tracker.filter){
-    h += '<button class="btn btn-ghost" id="clearFilter">Clear ' + esc(HEALTH_META[tracker.filter].label) + ' filter</button>';
+    h += '<button class="btn btn-ghost btn-sm" id="clearFilter">Clear ' + esc(HEALTH_META[tracker.filter].label) + ' filter</button>';
   }
   h += '<span class="filter-note">' + shown.length + ' of ' + rows.length + ' clients</span></div>';
 
   if(!rows.length){
     h += '<div class="empty"><h3>No clients saved yet</h3>' +
-         '<p>Load a checklist on the Checklist tab and it will show up here.</p></div>';
+         '<p>Open a checklist on the Checklist tab and the client will appear here with its health status.</p></div>';
     $("trackerPage").innerHTML = h;
     wireTracker();
     return;
   }
 
   var cols = [
-    ["client","Client"], ["pos","POS"], ["pct","Progress"], ["health","Health"],
-    ["createdAt","Started"], ["updatedAt","Last activity"], ["goLiveTarget","Go-live target"]
+    ["client","Client"], ["pos","POS"], ["complexity","Complexity"], ["pct","Progress"],
+    ["health","Health"], ["createdAt","Started"], ["updatedAt","Last activity"], ["goLiveTarget","Go-live target"]
   ];
   h += '<div class="tbl-wrap"><table class="tbl"><thead><tr>';
   cols.forEach(function(c){
@@ -1631,10 +2470,10 @@ function renderTracker(){
     h += '<th data-sort="' + c[0] + '">' + esc(c[1]) +
          '<span class="ar">' + (active ? (tracker.dir === 1 ? "▲" : "▼") : "▵") + '</span></th>';
   });
-  h += '</tr></thead><tbody>';
+  h += '<th></th></tr></thead><tbody>';
 
   if(!shown.length){
-    h += '<tr><td colspan="7" class="td-dim" style="padding:22px 14px">Nothing matches that search and filter.</td></tr>';
+    h += '<tr><td colspan="9" class="td-dim" style="padding:22px 14px">Nothing matches that search and filter.</td></tr>';
   }
   shown.forEach(function(r){
     var toTarget = daysUntilTarget(r.goLiveTarget);
@@ -1642,13 +2481,16 @@ function renderTracker(){
     h += '<td><div class="td-client">' + esc(r.client) + '</div>' +
          '<div class="td-dim" style="font-size:11.5px">' + esc(r.reason) + '</div></td>';
     h += '<td class="td-pos">' + esc(r.pos) + '</td>';
+    h += '<td class="' + (r.complexity ? "td-pos" : "td-dim") + '">' + esc(r.complexity || "Not rated") + '</td>';
     h += '<td><div class="td-pct">' + r.pct + '%</div>' +
          '<div class="mini-bar"><div class="mini-fill" style="width:' + r.pct + '%;background:' + barColor(r.health) + '"></div></div></td>';
     h += '<td><span class="hbadge hb-' + r.health + '">' + esc(HEALTH_META[r.health].label) + '</span></td>';
-    h += '<td class="td-dim">' + esc(fmtDate(r.createdAt) || "—") + '</td>';
+    h += '<td class="td-dim">' + esc(fmtDate(r.createdAt) || "Not recorded") + '</td>';
     h += '<td class="td-dim">' + esc(relDays(r.updatedAt || r.createdAt)) + '</td>';
     h += '<td class="' + (toTarget !== null && toTarget < 0 && r.health !== "complete" ? "td-late" : "td-dim") + '">' +
          (r.goLiveTarget ? esc(fmtDate(r.goLiveTarget)) : "Not set") + '</td>';
+    h += '<td><button class="row-del" data-del="' + esc(r.client) + '" data-delpos="' + esc(r.pos) +
+         '" title="Delete this client profile">&times;</button></td>';
     h += '</tr>';
   });
   h += '</tbody></table></div>';
@@ -1688,13 +2530,17 @@ function wireTracker(){
     };
   });
 
+  /* delete must not also trigger the row's open handler */
+  each("[data-del]", function(el){
+    el.onclick = function(ev){
+      ev.stopPropagation();
+      askDelete(el.getAttribute("data-del"), el.getAttribute("data-delpos"));
+    };
+  });
+
   each("[data-open]", function(el){
     el.onclick = function(){
-      var c = el.getAttribute("data-open"), pos = el.getAttribute("data-openpos");
-      $("clientName").value = c;
-      $("posSelect").value = pos;
-      goPage("checklist");
-      load();
+      openClient(el.getAttribute("data-open"), el.getAttribute("data-openpos"), false);
     };
   });
 }
@@ -1702,59 +2548,53 @@ function wireTracker(){
 /* ═════════════════════════════════════════════════════════════════════
    PERSISTENCE
    ═════════════════════════════════════════════════════════════════════ */
+function indexEntry(rec){
+  var t = totals(buildPhases(rec.pos), rec.items);
+  return {
+    client:rec.client, pos:rec.pos,
+    pct:t.pct, done:t.done, all:t.all,
+    complexity:rec.complexity || "",
+    createdAt:rec.createdAt, updatedAt:rec.updatedAt,
+    goLiveTarget:rec.goLiveTarget || ""
+  };
+}
+
 function save(){
   if(!cur) return Promise.resolve();
   cur.updatedAt = nowISO();
   if(!cur.createdAt) cur.createdAt = cur.updatedAt;
 
   var k = key(cur.client, cur.pos);
-  var phases = buildPhases(cur.pos);
-  var t = totals(phases, cur.items);
-
   var rest = index.filter(function(x){ return key(x.client, x.pos) !== k; });
-  rest.unshift({
-    client:cur.client, pos:cur.pos,
-    pct:t.pct, done:t.done, all:t.all,
-    createdAt:cur.createdAt, updatedAt:cur.updatedAt,
-    goLiveTarget:cur.goLiveTarget || ""
-  });
+  rest.unshift(indexEntry(cur));
   index = rest.slice(0, MAX_CLIENTS);
 
-  return DB.set(k, cur).then(function(){
+  return DB.set(k, cur).then(function(){ return DB.set("posck:index", index); });
+}
+
+function deleteClient(client, pos){
+  var k = key(client, pos);
+  index = index.filter(function(x){ return key(x.client, x.pos) !== k; });
+  var wasCurrent = cur && key(cur.client, cur.pos) === k;
+  return DB.del(k).then(function(){
     return DB.set("posck:index", index);
   }).then(function(){
-    renderChips();
+    if(wasCurrent){
+      cur = null;
+      openNotes = {};
+      $("clientName").value = "";
+      $("posSelect").value = "";
+      goPage(page === "health" ? "checklist" : page);
+    }
+    render();
   });
 }
 
-function renderChips(){
-  var w = $("savedWrap"), c = $("chips");
-  if(!index.length){ w.style.display = "none"; return; }
-  w.style.display = "block";
-  c.innerHTML = index.map(function(x,i){
-    var on = cur && key(cur.client, cur.pos) === key(x.client, x.pos);
-    return '<div class="chip' + (on ? " on" : "") + '" data-i="' + i + '">' + esc(x.client) +
-           ' <span class="pct">' + (x.pct || 0) + '%</span></div>';
-  }).join("");
-  each("#chips .chip", function(el){
-    el.onclick = function(){
-      var x = index[+el.getAttribute("data-i")];
-      $("clientName").value = x.client;
-      $("posSelect").value = x.pos;
-      load();
-    };
-  });
-}
-
-function load(){
-  var name = $("clientName").value.trim();
-  var pos = $("posSelect").value;
-  if(!name){ toast("Enter a client name"); return Promise.resolve(); }
-  if(!pos){ toast("Select a POS provider"); return Promise.resolve(); }
-  if(!P[pos]){ toast("Unknown POS provider"); return Promise.resolve(); }
-
+function openClient(name, pos, isNew){
   closeCombo();
   openNotes = {};
+  $("clientName").value = name;
+  $("posSelect").value = pos;
 
   return DB.get(key(name,pos)).then(function(saved){
     cur = saved || blankRecord(name,pos);
@@ -1762,14 +2602,31 @@ function load(){
     cur.pos = pos;
     cur.items = cur.items || {};
     cur.collapsed = cur.collapsed || {};
+    cur.hs = cur.hs || blankHS();
+    cur.complexity = cur.complexity || "";
     cur.specialNote = cur.specialNote || "";
     cur.goLiveTarget = cur.goLiveTarget || "";
+    cur.goLiveManual = !!cur.goLiveManual;
     cur.createdAt = cur.createdAt || nowISO();
-    goPage("checklist");
-    render();
-    renderChips();
+    applyDefaultTarget();
     return save();
+  }).then(function(){
+    goPage("checklist");
+    if(isNew) toast("Created " + name + " on " + pos);
   });
+}
+
+/* Open, or ask first if this pairing does not exist yet */
+function requestOpen(){
+  var name = $("clientName").value.trim();
+  var pos = $("posSelect").value;
+  if(!name){ toast("Enter a client name"); return; }
+  if(!pos){ toast("Select a POS provider"); return; }
+  if(!P[pos]){ toast("Unknown POS provider"); return; }
+
+  var exists = index.some(function(x){ return key(x.client, x.pos) === key(name, pos); });
+  if(exists) openClient(name, pos, false);
+  else askCreate(name, pos);
 }
 
 /* ═════════════════════════════════════════════════════════════════════
@@ -1793,7 +2650,7 @@ function openCombo(){
     list.innerHTML = combo.matches.map(function(x,i){
       return '<div class="combo-opt" data-ci="' + i + '">' +
              '<div><div class="combo-opt-n">' + esc(x.client) + '</div>' +
-             '<div class="combo-opt-s">' + esc(x.pos) + '</div></div>' +
+             '<div class="combo-opt-s">' + esc(x.pos) + (x.complexity ? " &middot; " + esc(x.complexity) : "") + '</div></div>' +
              '<div class="combo-opt-p">' + (x.pct || 0) + '%</div></div>';
     }).join("");
     each("#comboList .combo-opt", function(el){
@@ -1822,23 +2679,28 @@ function highlight(n){
 function pickCombo(i){
   var x = combo.matches[i];
   if(!x) return;
-  $("clientName").value = x.client;
-  $("posSelect").value = x.pos;
   closeCombo();
-  load();
+  openClient(x.client, x.pos, false);
 }
 
 /* ═════════════════════════════════════════════════════════════════════
    NAV
    ═════════════════════════════════════════════════════════════════════ */
+var PAGE_HASH = { checklist:"#checklist", health:"#health-sheet", tracker:"#tracker" };
 function goPage(p){
   page = p;
   $("tabChecklist").classList.toggle("on", p === "checklist");
+  $("tabHealth").classList.toggle("on", p === "health");
   $("tabTracker").classList.toggle("on", p === "tracker");
-  if(location.hash !== (p === "tracker" ? "#tracker" : "#checklist")){
-    try{ history.replaceState(null, "", p === "tracker" ? "#tracker" : "#checklist"); }catch(e){}
+  if(location.hash !== PAGE_HASH[p]){
+    try{ history.replaceState(null, "", PAGE_HASH[p]); }catch(e){}
   }
   render();
+}
+function pageFromHash(){
+  if(location.hash === "#tracker") return "tracker";
+  if(location.hash === "#health-sheet") return "health";
+  return "checklist";
 }
 
 /* ═════════════════════════════════════════════════════════════════════
@@ -1852,21 +2714,19 @@ function goPage(p){
     sel.appendChild(o);
   });
 
-  $("loadBtn").onclick = function(){ load(); };
+  $("loadBtn").onclick = function(){ requestOpen(); };
   $("tabChecklist").onclick = function(){ goPage("checklist"); };
-  $("tabTracker").onclick = function(){ goPage("tracker"); };
-  $("resetCancel").onclick = closeReset;
-  $("resetMask").onclick = function(ev){ if(ev.target === $("resetMask")) closeReset(); };
-  $("resetGo").onclick = function(){
-    if(!cur) return closeReset();
-    cur.items = {};
-    openNotes = {};
-    closeReset();
-    save().then(render);
-    toast("Checklist reset for " + cur.client);
+  $("tabHealth").onclick = function(){
+    if(!cur){ toast("Open a client first, the Health Sheet belongs to one client"); return; }
+    goPage("health");
   };
+  $("tabTracker").onclick = function(){ goPage("tracker"); };
+
+  $("cfCancel").onclick = closeConfirm;
+  $("cfGo").onclick = function(){ if(confirmAction) confirmAction(); };
+  $("confirmMask").onclick = function(ev){ if(ev.target === $("confirmMask")) closeConfirm(); };
   document.addEventListener("keydown", function(ev){
-    if(ev.key === "Escape" && $("resetMask").classList.contains("open")) closeReset();
+    if(ev.key === "Escape" && $("confirmMask").classList.contains("open")) closeConfirm();
   });
 
   var ci = $("clientName");
@@ -1874,7 +2734,7 @@ function goPage(p){
   ci.onfocus = function(){ openCombo(); };
   ci.onkeydown = function(ev){
     if(!combo.open){
-      if(ev.key === "Enter"){ ev.preventDefault(); load(); }
+      if(ev.key === "Enter"){ ev.preventDefault(); requestOpen(); }
       return;
     }
     if(ev.key === "ArrowDown"){
@@ -1886,7 +2746,7 @@ function goPage(p){
     }else if(ev.key === "Enter"){
       ev.preventDefault();
       if(combo.hi >= 0) pickCombo(combo.hi);
-      else { closeCombo(); load(); }
+      else { closeCombo(); requestOpen(); }
     }else if(ev.key === "Escape"){
       closeCombo();
     }
@@ -1895,14 +2755,12 @@ function goPage(p){
     if(!ev.target.closest || !ev.target.closest(".combo")) closeCombo();
   });
 
-  window.addEventListener("hashchange", function(){
-    goPage(location.hash === "#tracker" ? "tracker" : "checklist");
-  });
+  window.addEventListener("hashchange", function(){ goPage(pageFromHash()); });
 
   DB.get("posck:index").then(function(ix){
     if(ix && Array.isArray(ix)) index = ix;
-    renderChips();
-    goPage(location.hash === "#tracker" ? "tracker" : "checklist");
+    var p = pageFromHash();
+    goPage(p === "health" && !cur ? "checklist" : p);
   });
 })();
 
