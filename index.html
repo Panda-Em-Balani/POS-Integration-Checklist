@@ -364,7 +364,18 @@ table.tbl tbody tr:hover{background:var(--light)}
 .hs-gate-b{flex:1;min-width:0}
 .hs-gate-t{font-size:13.5px;font-weight:600}
 .hs-gate-s{font-size:11.5px;color:var(--mid);margin-top:3px}
-.hs-gate textarea{margin-top:8px;min-height:46px}
+.hs-gate textarea{margin-top:8px;min-height:46px;font-family:var(--font);font-size:13.5px;font-weight:400;
+  padding:9px 11px;border:1.5px solid var(--border);border-radius:8px;background:#fff;color:var(--text);
+  outline:none;width:100%;resize:vertical;box-sizing:border-box}
+.hs-gate textarea:focus{border-color:var(--action)}
+.hs-gate-s{margin-bottom:0}
+.hs-hl{background:var(--bg-info);border-left:3px solid var(--action);border-radius:0 8px 8px 0;
+  padding:10px 12px;margin-bottom:10px;font-size:12.5px;color:var(--tx-info);line-height:1.5}
+.hs-hl b{color:var(--text)}
+.hs-hl-tag{display:inline-block;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;
+  color:var(--mid);margin-bottom:3px}
+.hcard-steps{margin:8px 0 0;padding-left:15px;font-size:10.5px;color:var(--mid);line-height:1.55}
+.hcard-steps li{margin-bottom:1px}
 .gbadge{display:inline-block;font-size:10px;font-weight:700;padding:3px 9px;border-radius:4px;
   text-transform:uppercase;letter-spacing:.04em;flex-shrink:0;white-space:nowrap}
 .gb-pass{background:var(--bg-success);color:var(--tx-success)}
@@ -1664,10 +1675,22 @@ function healthOf(row){
   return "ok";
 }
 var HEALTH_META = {
-  critical:{label:"Critical", desc:"Past target date, quiet 7+ days under 80%, or 30+ days in under 70%"},
-  attention:{label:"Needs attention", desc:"Target close with low progress, quiet 5+ days, or slow since kickoff"},
-  ok:{label:"On track", desc:"Moving along inside the expected timeline"},
-  complete:{label:"Complete", desc:"Every checklist item done"}
+  critical:{label:"Critical", desc:"Past target date, quiet 7+ days under 80%, or 30+ days in under 70%",
+    actions:["Contact the client today, not another automated check-in",
+             "Escalate to your manager or CSM with the reason and a recovery date",
+             "Log the cause in the Health Sheet friction log"]},
+  attention:{label:"Needs attention", desc:"Target close with low progress, quiet 5+ days, or slow since kickoff",
+    actions:["Reach out this week and confirm the current blocker and its owner",
+             "Sanity-check whether the go-live target is still realistic",
+             "Note the risk in the Health Sheet so it is not a surprise later"]},
+  ok:{label:"On track", desc:"Moving along inside the expected timeline",
+    actions:["Keep the normal cadence, no intervention needed",
+             "Confirm the next milestone and who owns it",
+             "Watch for the gate coming up next"]},
+  complete:{label:"Complete", desc:"Every checklist item done",
+    actions:["Confirm the Day 7 and Day 30 audits are logged",
+             "Confirm the sign-off block is filled in and dated",
+             "Close and archive the Health Sheet"]}
 };
 function healthReason(row){
   var h = healthOf(row);
@@ -2121,6 +2144,7 @@ function renderHealth(){
 
   cur.hs = cur.hs || blankHS();
   var hs = cur.hs;
+  var p = P[cur.pos];
   var phases = buildPhases(cur.pos);
   var t = totals(phases, cur.items);
   var anchor = kickoffAnchor(cur);
@@ -2160,16 +2184,46 @@ function renderHealth(){
   /* 1. scope and contact */
   h += hsCard("Scope and contacts", "Captured at kickoff. These are the answers that drove the complexity rating, so write down what you were actually told, not what you assumed.");
   h += '<div class="hs-grid">';
-  h += hsf("text","contactName","Client contact name",{ph:"Full name, not a team"});
+  h += hsf("text","contactName","Client contact name",{ph:"Full name, not a team",
+    sub:"The person who actually answers when something breaks, not whoever signed the contract"});
   h += hsf("text","contactEmail","Contact email",{ph:"name@company.com"});
-  h += hsf("text","contactPhone","Contact phone",{ph:"+971 50 123 4567"});
-  h += hsf("number","branches","Branch count",{ph:"e.g. 8"});
+  h += hsf("text","contactPhone","Contact phone",{ph:"+971 50 123 4567",
+    sub:"For the day this needs a phone call instead of an email"});
+  h += hsf("number","branches","Branch count",{ph:"e.g. 8",
+    sub:"Every branch counted here needs live data before the branch mapping gate can pass"});
   h += hsf("number","brands","Brands / tenants",{ph:"e.g. 2",sub:"Each brand or separate POS account is its own tenant"});
-  h += hsf("select","modLoad","Modifier and combo load",{options:["Minimal","Moderate (10 to 30%)","Heavy (30%+)"]});
+  h += hsf("select","modLoad","Modifier and combo load",{options:["Minimal","Moderate (10 to 30%)","Heavy (30%+)"],
+    sub:"Heavy load is what usually drives the complexity rating up and stretches the item mapping phase"});
   h += hsf("textarea","pillars","Other pillars in scope",{wide:true,rows:2,
     ph:"Accounting (Xero), supplier connectivity, Open API, Delta Share, MCP. Write N/A where nothing applies.",
     sub:"Anything not listed here is out of scope, and that is the version you will be held to at sign-off."});
   h += '</div>';
+  h += hsCardEnd();
+
+  /* 1.5 checklist highlights, pulled from the checklist so this sheet reflects
+     this client rather than a blank template */
+  var itemNotes = [];
+  phases.forEach(function(ph){
+    ph.items.forEach(function(it){
+      var st = itemState(it.id);
+      if(st && st.note && st.note.trim()) itemNotes.push({phase:ph.t, label:it.r, note:st.note.trim(), done:!!st.done});
+    });
+  });
+  h += hsCard("Checklist highlights", "Pulled from the Checklist tab: the special case note and any per-item notes left there, plus what we already know about this POS. Edit the source on the Checklist tab, not here.");
+  if(cur.specialNote && cur.specialNote.trim()){
+    h += '<div class="hs-hl"><span class="hs-hl-tag">Special case</span><br>' + esc(cur.specialNote.trim()) + '</div>';
+  }
+  itemNotes.forEach(function(n){
+    h += '<div class="hs-hl"><span class="hs-hl-tag">' + esc(n.phase) + (n.done ? "" : " &middot; still open") + '</span><br>' +
+         '<b>' + esc(n.label) + ':</b> ' + esc(n.note) + '</div>';
+  });
+  if(p.limits && p.limits.length){
+    h += '<div class="hs-hl"><span class="hs-hl-tag">Known limitations for ' + esc(cur.pos) + ' &middot; provider-wide, not client-specific</span><br>' +
+         p.limits.map(esc).join('<br>') + '</div>';
+  }
+  if(!(cur.specialNote && cur.specialNote.trim()) && !itemNotes.length && !(p.limits && p.limits.length)){
+    h += '<div class="hs-emptyrow">Nothing flagged yet. Add a special case note or a per-item note on the Checklist tab and it appears here automatically.</div>';
+  }
   h += hsCardEnd();
 
   /* 2. gate log */
@@ -2216,8 +2270,8 @@ function renderHealth(){
   /* 4. audits */
   h += hsCard("Day 7 and Day 30 audits", "The checklist has the item-by-item audit. This is the summary you would hand someone who asks what state the integration is in.");
   h += '<div class="hs-grid">';
-  h += hsf("date","d7date","Day 7 audit completed",{});
-  h += hsf("date","d30date","Day 30 audit completed",{});
+  h += hsf("date","d7date","Day 7 audit completed",{sub:"Rerun the reconciliation on the last 3 days, do not reuse the pre-go-live window"});
+  h += hsf("date","d30date","Day 30 audit completed",{sub:"This date is what closes the Health Sheet"});
   h += hsf("textarea","d7notes","Day 7 findings",{wide:true,rows:3,
     ph:"What you found, and who owns each open item with a date. Example: branch 4 stopped syncing on day 3, CSM re-authenticated Aug 18, backfilled."});
   h += hsf("textarea","d30notes","Day 30 findings",{wide:true,rows:3,
@@ -2255,9 +2309,10 @@ function renderHealth(){
   /* 6. sign-off */
   h += hsCard("Go-live sign-off", "You are a required approver here, not a cc. A conditional GO is a legitimate answer, but the conditions have to be written down and dated or they are not conditions.");
   h += '<div class="hs-grid">';
-  h += hsf("select","signDecision","Decision",{options:["GO","GO with conditions","NO-GO"]});
+  h += hsf("select","signDecision","Decision",{options:["GO","GO with conditions","NO-GO"],
+    sub:"Marking GO here is what unblocks this deal's go-live status in HubSpot. Nothing else does."});
   h += hsf("date","signDate","Decision date",{});
-  h += hsf("text","signApprover","Approved by",{ph:"Your name"});
+  h += hsf("text","signApprover","Approved by",{ph:"Your name",sub:"You, as the required approver, not the CSM"});
   h += hsf("date","actualGoLive","Actual go-live date",{sub:"Fill this in when the client is genuinely live, not when the connection was made"});
   h += hsf("textarea","signConditions","Conditions and known limitations communicated",{wide:true,rows:3,
     ph:"What the client was told, in writing, and when. Example: told the client on Aug 14 that Addictive does not send discount data, so discount reporting will not be available. Confirmed by email."});
@@ -2267,10 +2322,13 @@ function renderHealth(){
   /* 7. close */
   h += hsCard("Day 30 close", "The sheet closes at Day 30. Two ticket numbers, not a verdict: the charter KPI is a downward trend, and a trend needs two readings.");
   h += '<div class="hs-grid">';
-  h += hsf("number","closeTickets1","Integration tickets, week 1",{ph:"e.g. 6"});
-  h += hsf("number","closeTickets4","Integration tickets, week 4",{ph:"e.g. 1"});
-  h += hsf("date","closeDate","Sheet closed on",{});
-  h += hsf("select","closeArchived","Archived",{options:["Yes","Not yet"]});
+  h += hsf("number","closeTickets1","Integration tickets, week 1",{ph:"e.g. 6",
+    sub:"Count tickets tied to this integration only, not general POS or account issues"});
+  h += hsf("number","closeTickets4","Integration tickets, week 4",{ph:"e.g. 1",
+    sub:"A downward trend from week 1 is the charter KPI, not a specific target number"});
+  h += hsf("date","closeDate","Sheet closed on",{sub:"Should match, or follow shortly after, the Day 30 audit date above"});
+  h += hsf("select","closeArchived","Archived",{options:["Yes","Not yet"],
+    sub:"Mark Yes once this sheet is filed away and no longer needs active tracking"});
   h += '</div>';
   h += hsCardEnd();
 
@@ -2616,7 +2674,10 @@ function renderTracker(){
     h += '<div class="hcard ' + k + (tracker.filter === k ? " on" : "") + '" data-hfilter="' + k + '">' +
          '<div class="hcard-n">' + counts[k] + '</div>' +
          '<div class="hcard-t">' + esc(HEALTH_META[k].label) + '</div>' +
-         '<div class="hcard-d">' + esc(HEALTH_META[k].desc) + '</div></div>';
+         '<div class="hcard-d">' + esc(HEALTH_META[k].desc) + '</div>' +
+         '<ul class="hcard-steps">' + (HEALTH_META[k].actions || []).map(function(a){
+           return '<li>' + esc(a) + '</li>';
+         }).join("") + '</ul></div>';
   });
   h += '</div>';
 

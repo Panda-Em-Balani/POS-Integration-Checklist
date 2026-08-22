@@ -61,6 +61,34 @@ client to a shared Supabase project, and the Client Tracker shows the whole team
 clients. Up to 100 clients are kept in the local index either way. Deleting a client
 profile is permanent, in both places, so use Copy as text first if you want a record.
 
+## Integration Owner role
+
+This tool is the system of record for the Integration Owner charter (reports to Randhir).
+Most of the charter was already built in before this was written down anywhere; this table
+just makes the mapping explicit.
+
+| Duty | Where it lives here |
+| --- | --- |
+| On every implementation from kickoff, complexity rating within 48h | Phase 0 rating item, sidebar complexity field |
+| Owns the pre-go-live checklist for every client | The whole app |
+| Formal go-live sign-off — required approver, not cc, no go-live without it | Phase 8 "Go-live sign-off" gate + the Health Sheet sign-off block |
+| Day 7 / Day 30 audit: sales variance, recipe depletion, ticket trend | Phases 9-10 + the Health Sheet variance log and Day 7/30 fields |
+| Business-day cutoff time — the single highest-priority failure mode | Called out at Phase 1, Phase 6, both post-go-live audits, and the sidebar |
+| Living POS playbook: quirks, mapping conventions, failure modes | "Known limitations" sidebar, per provider — empty ones are flagged as a playbook gap, not a clean bill of health |
+| Ranked friction log feeding the monthly report to Product | Health Sheet friction log |
+
+Two things the charter calls for that have no home here yet, because they need real input
+rather than a guess:
+
+- **Square POS, Redcat, and Revel have empty "known limitations" entries.** These are the
+  three named as priority POS to get hands-on with (combos, sizing, real-time behaviour).
+  Once tested, their quirks go in the `limits` array for that provider in `index.html`.
+- **No recipe-building standard yet** — naming conventions, yield handling, modifier
+  mapping, sub-recipe structure, unit-of-measure rules. This is a standard to define, not
+  something to infer from the code, so it's not stubbed in here. Once it exists, it likely
+  belongs as its own reference next to "Known limitations," or a linked doc CSMs are
+  pointed to from there.
+
 ## Run it locally
 
 ```bash
