@@ -2689,6 +2689,9 @@ function renderTracker(){
   if(Cloud.enabled()){
     h += '<button class="btn btn-ghost btn-sm" id="cloudRefresh">Refresh from cloud</button>';
   }
+  if(Cloud.enabled() && Cloud.session()){
+    h += '<button class="btn btn-ghost btn-sm" id="cloudPushAll">Push local clients to cloud</button>';
+  }
   h += '<span class="filter-note">' + shown.length + ' of ' + rows.length + ' clients</span></div>';
 
   if(!rows.length){
@@ -2753,6 +2756,17 @@ function wireTracker(){
   if(cr) cr.onclick = function(){
     cr.disabled = true;
     refreshCloudIndex().then(function(){ toast("Synced"); }).catch(function(){ toast("Could not reach the cloud"); });
+  };
+
+  var cp = $("cloudPushAll");
+  if(cp) cp.onclick = function(){
+    cp.disabled = true;
+    pushAllLocalToCloud().then(function(n){
+      toast(n ? ("Pushed " + n + " client" + (n === 1 ? "" : "s") + " to the cloud") : "Nothing local to push");
+      return refreshCloudIndex();
+    }).catch(function(){
+      toast("Could not reach the cloud");
+    }).then(function(){ cp.disabled = false; });
   };
 
   var tq = $("tq");
@@ -2981,6 +2995,19 @@ function renderAuthBar(){
       });
     };
   }
+}
+
+/* One-time migration helper: upload every locally-saved client (e.g. test
+   accounts created before signing in, or before cloud sync existed) to
+   Supabase. Cloud.upsertRecord silently no-ops without a session, so this
+   is only wired up in the UI once one exists. */
+function pushAllLocalToCloud(){
+  var keys = index.map(function(x){ return key(x.client, x.pos); });
+  return Promise.all(keys.map(function(k){ return DB.get(k); })).then(function(recs){
+    var valid = recs.filter(Boolean);
+    return Promise.all(valid.map(function(rec){ return Cloud.upsertRecord(rec); }))
+      .then(function(){ return valid.length; });
+  });
 }
 
 /* Cross-team view of the tracker: pull every signed-in staff member's
