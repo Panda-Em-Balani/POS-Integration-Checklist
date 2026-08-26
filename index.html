@@ -579,6 +579,8 @@ var supa = (SUPABASE_URL.indexOf("REPLACE_WITH") === 0 || SUPABASE_ANON_KEY.inde
    mapping: how item mapping works, only set where it differs from the
             default of syncing straight from the POS
    lead   : documented waiting time on a third party, where one exists
+   who    : '' | 'login' (client signs in at the POS during setup) |
+            'portal' (client reads the values out of their own POS portal)
    creds  : [{r: field name, i: what it is / where it goes, ex: format example,
               n: warning note, nt: '' | 'info'}]
    ═════════════════════════════════════════════════════════════════════ */
@@ -593,7 +595,7 @@ var P = {
     {r:"Password",i:"The password for that same Addictive account. Goes in the 'Enter Password' field."}
   ]},
 
-"AI Menu":{type:"self",auth:"API (key + secret)",
+"AI Menu":{type:"self",auth:"API (client ID + secret)",
   note:"Ask the client to get both values from their AI Menu contact.",
   limits:["A refund with no matching sale on the same day gets dropped from Supy sales data, unless someone marks it as wastage."],
   recon:"Administration > View History > Custom Sales Report. Settled Gross Total = Total Sales Incl. Tax. Net Total = Total Sales Excl. Tax. Total Discount = Total Discount Value.",
@@ -795,33 +797,36 @@ var P = {
     {r:"Branch details for the CSM",i:"For each branch, send the CSM: retailer ID, the Linga store name (used as the tenant name), the Linga store ID, the Supy branch name, and the date and time sales should start from."}
   ]},
 
-"Loyverse":{type:"self",auth:"OAuth (client logs in)",
-  note:"Nothing to request. The client signs into their own Loyverse account in a popup.",
-  limits:[],
+"Loyverse":{type:"self",auth:"API (username + password)",
+  note:"Ask the client to get both from their Loyverse contact, or from whoever manages their Loyverse account.",
+  limits:["Discount and modifier behaviour is not documented separately for Loyverse. If the client leans on either, confirm the behaviour with the CSM before go-live."],
   creds:[
-    {r:"Loyverse login",i:"The client logs in directly through the Loyverse popup during setup. You never handle the credentials."}
+    {r:"Username",i:"The username on the client's Loyverse account. Goes in Supy when you add Loyverse."},
+    {r:"Password",i:"The password for that same Loyverse account."}
   ]},
 
-"LS Retail":{type:"self",auth:"API (key + secret)",
-  note:"Ask the client to get both from their LS Retail contact.",
-  limits:["Our documentation for LS Retail is incomplete. Check the current screens and behaviour with the Supy team before you walk a client through the setup."],
+"LS Retail":{type:"self",auth:"API (host + client ID + login)",
+  note:"Ask the client to get all four from their LS Retail contact.",
+  limits:["Discount and modifier support is not documented for LS Retail. Confirm the current behaviour with the CSM before you promise the client either."],
   creds:[
-    {r:"API Key",i:"Goes in Supy when you add LS Retail."},
-    {r:"Secret",i:"Goes in Supy alongside the key."}
+    {r:"Host URL",i:"The client's own LS Retail address. Goes in the Host URL field in Supy."},
+    {r:"Client ID",i:"The client ID for the client's LS Retail tenant."},
+    {r:"Username",i:"The username on the client's LS Retail account."},
+    {r:"Password",i:"The password for that same LS Retail account."}
   ]},
 
-"Marn":{type:"self",auth:"OAuth (client logs in)",
-  note:"Nothing to request. The client signs into their own Marn account in a popup.",
-  limits:[],
+"Marn":{type:"self",auth:"API (brand key)",
+  note:"Ask the client to get their Brand Key from their Marn contact. The CSM has a short video walkthrough on finding it, available on request.",
+  limits:["Automated Sync is required. The manual sync button does not work for Marn, so turn on Auto-Sales Sync in the branch mapping dropdown for every branch you connect.","Only order-level discounts come through. Item-level discounts are not supported.","Some voided orders do not return item-level detail, so the integration cannot always reflect the voided items individually.","Complimentary items look odd in raw Marn reports: sale amount at full price, tax as a matching negative, grand total zero. That is expected, not a bug."],
   creds:[
-    {r:"Marn login",i:"The client logs in directly through the Marn popup during setup."}
+    {r:"Brand Key",i:"Goes in Supy when you add Marn. This is the only value needed."}
   ]},
 
-"MobiPOS":{type:"self",auth:"API (key)",
-  note:"Ask the client to get this from their MobiPOS contact.",
-  limits:["Our documentation for MobiPOS is incomplete. Confirm the current screens with the Supy team first."],
+"MobiPOS":{type:"self",who:"portal",auth:"API (access token)",
+  note:"The client can get this themselves: log in to MobiPOS, go to the API access section and copy the token. Their MobiPOS contact can also provide it.",
+  limits:["Refunds are not linked back to the original order, so you cannot always trace a refund to the sale it came from.","Modifiers can come through as ordinary menu items rather than as sub-items of a parent product. Treat modifier support as unreliable here.","Discount handling is not fully confirmed. Check it with the CSM before promising the client discount reporting."],
   creds:[
-    {r:"API Key",i:"Goes in Supy when you add MobiPOS. This is the only value needed."}
+    {r:"API Access Token",i:"Goes in Supy when you add MobiPOS. This is the only value needed."}
   ]},
 
 "Ninja":{type:"self",auth:"API (confirm internally first)",
@@ -832,37 +837,42 @@ var P = {
     {r:"Credentials collected from the client",i:"Once you know what to ask for, request it from the client's Ninja contact."}
   ]},
 
-"Omega POS":{type:"self",auth:"API (key + secret)",
-  note:"Ask the client to get both from their Omega POS contact.",
-  limits:[],
+"Omega POS":{type:"self",auth:"API (key + branch IDs)",
+  note:"Ask the client to get both from their Omega POS contact. Request early, because Omega is one of the slower providers to respond.",
+  limits:["Omega POS may charge the client a fee to hand over the credentials, and their support can be slow on integration questions. Build lead time into the plan rather than assuming a same-week turnaround.","Voided and cancelled items show up as a negative quantity in Omega sales data.","The error 'Branch License not valid or expired' means the key is dead. Ask the Omega contact to issue a new one."],
   creds:[
-    {r:"Client ID",i:"Goes in Supy when you add Omega POS."},
-    {r:"Client Secret",i:"Goes in Supy alongside the ID."}
+    {r:"API Key",i:"The only value entered at connect. Goes in Supy when you add Omega POS."},
+    {r:"Branch ID (one per branch)",i:"One ID for each branch the client wants connected. Used at branch mapping, not at connect, but collect it in the same request."}
   ]},
 
-"Oolio":{type:"self",auth:"API (key + secret)",
-  note:"Ask the client to get both from their Oolio contact.",
+"Oolio":{type:"self",auth:"API (email + password)",
+  note:"Ask the client for the login on the account they use to manage Oolio, or get it from their Oolio contact.",
   limits:[],
   creds:[
-    {r:"API Key",i:"Goes in Supy when you add Oolio."},
-    {r:"API Secret",i:"Goes in Supy alongside the key."}
+    {r:"Email",i:"The email on the client's Oolio account. Goes in Supy when you add Oolio."},
+    {r:"Password",i:"The password for that same Oolio account."}
   ]},
 
 "Oracle Micros Simphony":{type:"tech",auth:"API (Supy Engineering)",
   lead:"Engineering-dependent, get a committed date before promising one",
-  note:"Supy Integrations sets this one up. The client gets the access details from whoever administers their Oracle or Simphony system and passes them to the CSM.",
-  limits:["Our documentation is incomplete, and the exact values needed change depending on how the client's Simphony is configured. Confirm the specific list with the Integrations team before you go to the client, otherwise you will ask twice.","This one needs engineering time. Build that dependency into the timeline rather than promising a date first."],
+  note:"The client creates a Business Intelligence API account in their Oracle Micros Reporting & Analysis portal, under Administration > System > API Accounts, and passes the values to the CSM. The CSM has a step-by-step guide for this. Supy Integrations then makes the connection.",
+  limits:["Confirm the client's Simphony is cloud-based and that they hold a BIAPI license before you request anything. Without both, the integration cannot go ahead.","This one needs engineering time. Build that dependency into the timeline rather than promising a date first."],
   creds:[
-    {r:"Simphony environment access details",i:"Collect from the client's Oracle or Simphony administrator and pass to the CSM.",n:"Check the exact fields with the Integrations team first. They differ from one Simphony setup to the next."},
+    {r:"User Name",i:"From the API account the client creates in Reporting & Analysis."},
+    {r:"Password",i:"For that same API account."},
+    {r:"Organization Name",i:"The client's Oracle Micros organization name."},
+    {r:"Default Location ID",i:"The default location on the client's Micros setup."},
+    {r:"Client ID",i:"Issued with the API account."},
+    {r:"Reporting & Analysis Host URL",i:"The client's own Reporting & Analysis address."},
+    {r:"Authentication Host URL",i:"The client's own authentication address."},
     {r:"Integrations team engaged",i:"Raise the request and get a timeline from the Integrations team before you promise the client any date."}
   ]},
 
-"Papaya":{type:"self",auth:"API (key + secret)",
-  note:"Ask the client to get both from their Papaya contact.",
-  limits:[],
+"Papaya":{type:"self",who:"portal",auth:"API (key)",
+  note:"The client can create this themselves: in Papaya, go to Settings > Open API, create a new key and select the Inventory Management use case. Their Papaya contact can also provide it.",
+  limits:["Papaya's API does not return refund details. Refunds will not come through at all, so account for them separately at reconciliation."],
   creds:[
-    {r:"API Key",i:"Goes in Supy when you add Papaya."},
-    {r:"Secret Key",i:"Goes in Supy alongside the key."}
+    {r:"API Key",i:"Goes in Supy when you add Papaya. This is the only value needed."}
   ]},
 
 "Poster":{type:"self",auth:"OAuth (confirm flow first)",
@@ -873,173 +883,177 @@ var P = {
     {r:"Poster login",i:"The client logs in directly through the Poster popup."}
   ]},
 
-"Prologic First":{type:"self",auth:"API (key + secret)",
-  note:"Ask the client to get both from their Prologic First contact.",
-  limits:[],
+"Prologic First":{type:"self",auth:"API (property ID + auth key)",
+  note:"Ask the client to get both from their Prologic contact.",
+  limits:["A void code in the check header voids the whole check, not just the item.","Condiment and modifier categories come through as CO, MO and OP codes in Prologic and are treated as modifiers on the Supy side."],
   creds:[
-    {r:"Client ID",i:"Goes in Supy when you add Prologic First."},
-    {r:"Client Secret",i:"Goes in Supy alongside the ID."}
+    {r:"Property ID",i:"Goes in the Store ID field in Supy, not a field called Property ID."},
+    {r:"Authorization Key",i:"Goes in the Key field in Supy."}
   ]},
 
-"QU POS":{type:"self",auth:"API (key + secret)",
-  note:"Ask the client to get both from their QU POS contact.",
+"QU POS":{type:"self",auth:"API (client ID + secret + integration ID)",
+  note:"Ask the client to get all three from their QU POS contact.",
   limits:[],
   creds:[
-    {r:"API Key",i:"Goes in Supy when you add QU POS."},
-    {r:"Secret Key",i:"Goes in Supy alongside the key."}
+    {r:"Client ID",i:"Goes in Supy when you add QU POS."},
+    {r:"Client Secret",i:"Goes in Supy alongside the ID."},
+    {r:"X-Integration ID",i:"Goes in the Service ID field in Supy, not a field called X-Integration ID."}
   ]},
 
-"Quadranet":{type:"self",auth:"API (username + password)",
-  note:"Ask the client to get both from their Quadranet contact.",
-  limits:[],
+"Quadranet":{type:"self",auth:"API (login + brand ID + site ID)",
+  note:"Ask the client to get all four from their Quadranet contact.",
+  limits:["Leave the sales sync schedule on and set it to 9:30 AM or later, so the previous business day has fully closed before it runs.","If a POS item arrives with no item ID, Supy uses the item name as the code instead. The tooltip saying so is expected. Fixing historical data means deleting the affected records and re-pulling them.","Discount and modifier support is not documented for Quadranet. Confirm with the CSM if either matters to the client."],
   creds:[
     {r:"Username",i:"Goes in Supy when you add Quadranet."},
-    {r:"Password",i:"Goes in Supy alongside the username."}
+    {r:"Password",i:"Goes in Supy alongside the username."},
+    {r:"Brand ID",i:"Goes in the Provider Brand Id field in Supy."},
+    {r:"Site ID",i:"Used later for branch mapping, so collect it in the same request rather than going back a second time."}
   ]},
 
-"Quantic POS":{type:"self",auth:"API (key)",
-  note:"Ask the client to get this from their Quantic POS contact.",
+"Quantic POS":{type:"self",who:"portal",auth:"API (merchant ID)",
+  note:"The client finds this themselves: in the Quantic merchant portal, go to App Store > Third Party Apps > Supy > Subscribe, then open the settings icon. The Merchant ID shows there once they have subscribed.",
   limits:[],
   creds:[
-    {r:"API Key",i:"Goes in Supy when you add Quantic POS. This is the only value needed."}
+    {r:"Merchant ID",i:"Goes in the POS Merchant ID field in Supy. This is the only value needed."}
   ]},
 
-"Redcat":{type:"self",auth:"API (key + host)",
-  note:"Ask the client to get both from their Redcat contact.",
-  limits:[],
+"Redcat":{type:"self",auth:"API (host + login)",
+  note:"Ask the client to get all three from their Redcat contact.",
+  limits:["Discount and modifier behaviour is not documented separately for Redcat. If either matters to the client's reporting, confirm the current behaviour with the CSM before go-live."],
   creds:[
-    {r:"API Key",i:"Goes in Supy when you add Redcat."},
-    {r:"Host URL",i:"The client's own Redcat address.",ex:"yourcompany.redcatcloud.com.au"}
+    {r:"Host URL",i:"The client's own Redcat address. Goes in Supy when you add Redcat.",ex:"yourcompany.redcatcloud.com.au"},
+    {r:"Username",i:"The username for the client's Redcat account."},
+    {r:"Password",i:"The password for that same Redcat account."}
   ]},
 
-"Revel":{type:"self",auth:"API (key + secret + domain)",
-  note:"Ask the client to get all three from their Revel contact.",
-  limits:[],
+"Revel":{type:"self",auth:"API (key + secret + host)",
+  note:"Ask the client to get all three from their Revel contact, or from Revel support directly with the Supy contact kept in the loop.",
+  limits:["Revenue rung up through Revel's 'Special Request' feature cannot be captured, because no product ID or name is passed. Get the client to create a real product or modifier instead.","Renaming a menu item in Revel rewrites the name retroactively across all past Revel reports, but the integration keeps the name that was live at the time of each sale. Item codes still match, so mapping is fine, but names will look inconsistent.","The Product Mix report can split one product code across several rows while Supy aggregates it into one. Sum the split rows before you call it a variance."],
   creds:[
     {r:"API Key",i:"Goes in Supy when you add Revel."},
     {r:"API Secret",i:"Goes in Supy alongside the key."},
-    {r:"Revel domain URL",i:"The client's own Revel address.",ex:"yourbusiness.revelup.com"}
+    {r:"Revel Host",i:"The client's own Revel address.",ex:"yourbusiness.revelup.com"}
   ]},
 
-"Roller":{type:"self",auth:"API (key + secret)",
+"Roller":{type:"self",auth:"API (client ID + secret)",
   note:"Ask the client to get both from their Roller contact.",
   limits:[],
   creds:[
-    {r:"API Key",i:"Goes in Supy when you add Roller."},
-    {r:"Secret Key",i:"Goes in Supy alongside the key."}
+    {r:"Client ID",i:"Goes in the Key field in Supy, not a field called Client ID."},
+    {r:"Client Secret",i:"Goes in the Secret field in Supy."}
   ]},
 
-"Shopify":{type:"tech",auth:"API (Supy Engineering)",
+"Shopify":{type:"tech",auth:"App install (no credentials)",
   lead:"Engineering-dependent, get a committed date before promising one",
-  note:"Supy Integrations sets this one up. The client gives the store access details to the CSM.",
-  limits:["Our documentation is incomplete. Confirm exactly what is needed with the Integrations team before you go to the client."],
+  note:"There are no credentials to collect. Someone with admin access to the client's Shopify store installs the Supy app from the Shopify App Store, and that install is what authorises the connection. Supy Integrations finishes the setup afterwards.",
+  limits:["Supy still needs engineering time after the app is installed. Get a timeline from the Integrations team before you promise the client a date."],
   creds:[
-    {r:"Shopify store access details",i:"Collect from whoever administers the client's Shopify store and pass to the CSM."},
-    {r:"Integrations team engaged",i:"Raise the request and get a timeline before you promise the client a date."}
+    {r:"Supy app installed from the Shopify App Store",i:"Someone with admin access to the client's Shopify store installs it. Do not ask Shopify support for credentials, there are none to issue."},
+    {r:"Integrations team engaged",i:"Tell the Integrations team once the app is installed and get a timeline before you promise the client a date."}
   ]},
 
-"SNAPOS":{type:"self",auth:"API (key + secret)",
-  note:"Ask the client to get both from their SNAPOS contact.",
+"SNAPOS":{type:"self",auth:"API (key)",
+  note:"Ask the client to get this from their SNAPOS contact.",
   limits:[],
   creds:[
-    {r:"API Key",i:"Goes in Supy when you add SNAPOS."},
-    {r:"API Secret",i:"Goes in Supy alongside the key."}
+    {r:"API Key",i:"Goes in Supy when you add SNAPOS. This is the only value needed."}
   ]},
 
-"Spare":{type:"self",auth:"API (key + secret)",
+"Spare":{type:"self",auth:"API (username + password)",
   note:"Ask the client to get both from their Spare contact.",
-  limits:[],
+  limits:["Only completed orders come through. Voided, cancelled and pending orders are not returned at all, so those statuses will never appear in Supy."],
   creds:[
-    {r:"API Key",i:"Goes in Supy when you add Spare."},
-    {r:"Secret Key",i:"Goes in Supy alongside the key."}
+    {r:"Username",i:"The username on the client's Spare account. Goes in Supy when you add Spare."},
+    {r:"Password",i:"The password for that same Spare account."}
   ]},
 
-"Spice POS":{type:"self",auth:"API (key + secret)",
-  note:"Ask the client to get both from their Spice POS contact.",
-  limits:[],
+"Spice POS":{type:"self",auth:"API (access token)",
+  note:"Ask the client to get this from their Spice POS contact.",
+  limits:["Spice POS does not send negative quantities for voids, cancellations, refunds or returns. Any of those have to go into Supy as a manual upload, they will not sync."],
   creds:[
-    {r:"Client ID",i:"Goes in Supy when you add Spice POS."},
-    {r:"Client Secret",i:"Goes in Supy alongside the ID."}
+    {r:"Access Token",i:"The token for the client's Spice POS tenant. Goes in the Token field in Supy. This is the only value needed."}
   ]},
 
-"Square POS":{type:"self",auth:"OAuth (client logs in)",
-  note:"Nothing to request. The client signs into their own Square account in a popup.",
+"Square POS":{type:"self",auth:"API (email + password)",
+  note:"Ask the client to get both from their Square POS contact.",
   limits:[],
   creds:[
-    {r:"Square login",i:"The client logs in directly through the Square popup during setup."}
+    {r:"Email",i:"The email on the client's Square POS account. Goes in the Email ID field in Supy."},
+    {r:"Password",i:"The password for that same Square POS account."}
   ]},
 
-"Squirrel POS":{type:"assist",auth:"API (Supy assists with mapping)",
-  note:"The CSM helps with branch mapping. Our documentation is incomplete, so confirm the details internally first.",
-  limits:["We do not have a confirmed list of the exact credential fields. Check with the Supy team before you request anything from the client."],
+"Squirrel POS":{type:"assist",auth:"API (host + token + org IDs)",
+  note:"Ask the client to get these from their Squirrel POS contact. Only the Host and Token go in at connect. The CSM helps with branch mapping.",
+  limits:["Menu item mapping is a manual upload, not an automatic sync. The item list has to be re-uploaded every time the client changes their Squirrel menu. Tell them this before go-live.","Discounts are recorded at item level rather than order level.","For combo items, the combo revenue is split across the items inside it in proportion to each item's original price."],
   creds:[
-    {r:"Credential fields confirmed internally",i:"Ask the Supy team what Squirrel needs right now, then write it into the playbook."},
-    {r:"API credentials",i:"Once you know what to ask for, collect it from the client's Squirrel POS contact."},
+    {r:"Host",i:"The client's own Squirrel POS address. Goes in Supy when you add Squirrel POS."},
+    {r:"Token",i:"The token for the client's Squirrel POS tenant. Goes in alongside the Host."},
+    {r:"Organization ID (one per branch)",i:"One ID for each branch the client wants connected. Used at branch mapping, so collect it in the same request."},
     {r:"Branch details for the CSM",i:"Send the branch details to the CSM so they can finish the mapping."}
   ]},
 
-"SysPos":{type:"self",auth:"API (key + secret)",
-  note:"Ask the client to get both from their SysPos contact.",
+"SysPos":{type:"self",auth:"API (customer ID)",
+  note:"Ask the client to get this from their SysPos contact.",
   limits:[],
   creds:[
-    {r:"API Key",i:"Goes in Supy when you add SysPos."},
-    {r:"API Secret",i:"Goes in Supy alongside the key."}
+    {r:"Customer ID",i:"Goes in Supy when you add SysPos. This is the only value needed."}
   ]},
 
-"Task POS":{type:"self",auth:"API (key)",
-  note:"Ask the client to get this from their Task POS contact.",
-  limits:["Our documentation is incomplete. Confirm the current screens with the Supy team first."],
-  creds:[
-    {r:"API Key",i:"Goes in Supy when you add Task POS. This is the only value needed."}
-  ]},
-
-"Tissl":{type:"self",auth:"API (key + secret)",
-  note:"Ask the client to get both from their Tissl contact.",
+"Task POS":{type:"self",auth:"API (login + key + host)",
+  note:"Ask the client to get all four from their Task POS contact.",
   limits:[],
   creds:[
-    {r:"API Key",i:"Goes in Supy when you add Tissl."},
-    {r:"API Secret",i:"Goes in Supy alongside the key."}
+    {r:"Login (clerk name)",i:"The clerk name on the client's Task POS account. Goes in the Login field in Supy."},
+    {r:"Password",i:"The password for that same Task POS login."},
+    {r:"API Key",i:"Goes in Supy alongside the login."},
+    {r:"Host",i:"The client's own Task POS address."}
   ]},
 
-"Toast POS":{type:"tech",auth:"API (Supy Engineering)",
+"Tissl":{type:"self",auth:"API (organization ID)",
+  note:"Ask the client to get this from their Tissl contact.",
+  limits:["One menu item can sit under more than one category in Tissl as a 'shadow product'. If an item you expect is missing while mapping, check the other categories before raising it."],
+  creds:[
+    {r:"Organization ID",i:"Goes in Supy when you add Tissl. This is the only value needed."}
+  ]},
+
+"Toast POS":{type:"tech",auth:"App install (no credentials)",
   lead:"Engineering-dependent, get a committed date before promising one",
-  note:"Supy Integrations sets this one up. The client asks their Toast contact for the credentials and passes them to the CSM.",
-  limits:["This one needs engineering time. Get a timeline from the Integrations team before you promise the client a go-live date."],
+  note:"In most cases there are no credentials to collect. The client installs the Supy app from the Toast Partner Integrations marketplace and Toast notifies Supy with their restaurant details automatically. Tell the CSM once it is installed.",
+  limits:["Supy still needs engineering time after the app is installed. Get a timeline from the Integrations team before you promise the client a go-live date.","Only fully closed orders sync. Open and voided orders land in a void/cancelled view instead of counting as completed sales."],
   creds:[
-    {r:"Toast API credentials",i:"Collect from the client's Toast contact and pass to the CSM."},
-    {r:"Integrations team engaged",i:"Raise the request and get a timeline before you promise the client a date."}
+    {r:"Supy app installed from the Toast marketplace",i:"In Toast Web: Integrations > Integration Management > Browse & Purchase Integrations, search for Supy, then click Add Now. One or several locations can be selected at the same time.",n:"Do not ask the client's Toast contact for API credentials. The install is what connects them."},
+    {r:"Integrations team engaged",i:"Tell the Integrations team once the app is installed and get a timeline before you promise the client a date."}
   ]},
 
-"Tray POS":{type:"self",auth:"API (key + secret)",
-  note:"Ask the client to get both from their Tray POS contact.",
+"Tray POS":{type:"self",auth:"API (key)",
+  note:"Ask the client to get this from their Tray POS contact.",
   limits:[],
   creds:[
-    {r:"API Key",i:"Goes in Supy when you add Tray POS."},
-    {r:"API Secret",i:"Goes in Supy alongside the key."}
+    {r:"API Key",i:"Goes in Supy when you add Tray POS. This is the only value needed."}
   ]},
 
-"Urban Piper":{type:"self",auth:"API (key + secret)",
-  note:"Ask the client to get both from their Urban Piper contact.",
-  limits:["Our documentation is thin. Confirm the current flow with the Supy team before you walk a client through it."],
+"Urban Piper":{type:"self",auth:"Supy-enabled (store IDs)",
+  note:"The order matters. This one is not self-serve in the portal: the Supy onboarding contact enables it on the account, and a commercial agreement or referral partnership with Urban Piper has to be in place first. Confirm that before you plan anything.",
+  limits:["Urban Piper cannot be activated without a commercial agreement or referral partnership already in place with them. Check this on day one, because it is a commercial blocker, not a technical one.","Discount and modifier support is not fully documented. Confirm with the onboarding contact if either matters to the client."],
   creds:[
-    {r:"API Key",i:"Goes in Supy when you add Urban Piper."},
-    {r:"API Secret",i:"Goes in Supy alongside the key."}
+    {r:"Commercial agreement confirmed",i:"Check with the Supy onboarding contact that the agreement or referral partnership with Urban Piper is in place. Nothing else can start until it is."},
+    {r:"Store ID (one per store)",i:"One ID for each store the client wants connected. Ask the client to get these from their Urban Piper contact."},
+    {r:"Supy onboarding contact engaged",i:"Supy enables the integration on the account and shares an API key with the client's Urban Piper team securely if their side needs one for the webhook. You do not hand that key over yourself."}
   ]},
 
-"Vita Mojo":{type:"assist",auth:"API (Supy handles setup)",
-  note:"Supy does the setup directly. The client gives account access to the CSM and Supy takes it from there.",
-  limits:["Our documentation is incomplete. Confirm exactly what access the client needs to grant with the Supy team before you ask them for it."],
+"Vita Mojo":{type:"assist",auth:"Supy-provisioned (nothing to collect)",
+  note:"There is nothing to request from the client. Supy's onboarding team configures Vita Mojo directly using a dedicated reporting account provisioned for the client's business, so no client login is handled at all.",
+  limits:["Access is configured by Supy, not by the client. Any change to which stores or credentials are connected has to go back through the Supy onboarding contact."],
   creds:[
-    {r:"POS account access details",i:"Collect from the client and pass to the CSM. Supy completes the setup."},
-    {r:"Supy team engaged",i:"Confirm what access is needed and get a timeline before you promise the client a date."}
+    {r:"Supy onboarding contact engaged",i:"Ask the onboarding contact to enable Vita Mojo for the client's account, and get a timeline before you promise a date.",n:"Do not ask the client for Vita Mojo login credentials. Supy uses its own reporting account."}
   ]},
 
-"Zid POS":{type:"self",auth:"API (key + secret)",
-  note:"Ask the client to get both from their Zid POS contact.",
-  limits:["Our documentation is incomplete. Confirm the current screens with the Supy team first."],
+"Zid POS":{type:"self",who:"portal",auth:"API (email + password)",
+  note:"Nothing to request from a third party. This is the same login the client already uses to get into their Zid store.",
+  limits:["Zid does not support discounts or modifiers through its API. Order-level coupon discounts show in the total order amount, but item-level discount and modifier detail never arrives.","Zid does not report wastage at all. Wasted or spoiled stock has to be recorded manually in Supy.","For a multi-location Zid store, the multi-location inventory feature must be switched on in Zid, otherwise you cannot map individual branches in Supy."],
   creds:[
-    {r:"API Key",i:"Goes in Supy when you add Zid POS."},
-    {r:"API Secret",i:"Goes in Supy alongside the key."}
+    {r:"Email",i:"The email the client signs into Zid with. Goes in Supy when you add Zid."},
+    {r:"Password (or OTP)",i:"The password for that same Zid account, or the OTP if their account uses one."}
   ]}
 
 };
@@ -1305,17 +1319,26 @@ function providerBrief(pos){
   /* word boundaries matter: without \b, "nothing" matches "thin" */
   var thin = /\bincomplete\b|\bundocumented\b|not fully documented|no documentation|not documented|\bthin\b|\bminimal\b|\bpartial\b/i.test(text);
 
+  /* who: set on providers where the client is not waiting on the POS provider at all.
+     "login"  = the client is redirected to the POS and signs in during setup.
+     "portal" = the client already holds the values and reads them out of their own portal. */
+  var loginFlow  = p.who === "login"  || (!p.who && /popup|logs in|signs into/i.test(p.note));
+  var portalSelf = p.who === "portal";
+
   var waiting = p.type === "tech" ? "Supy Engineering, plus the POS provider for credentials"
               : p.type === "assist" ? "The CSM, plus the POS provider for credentials"
-              : /popup|logs in|signs into/i.test(p.note) ? "Only the client, they log in themselves"
+              : loginFlow ? "Only the client, they log in themselves"
+              : portalSelf ? "Only the client, the values are already in their own portal"
               : "The POS provider, to issue the credentials";
 
   var first = /^The order (of steps )?matters|Sequencing matters|The CSM (has to|must)/i.test(p.note)
       ? "Start with the CSM request described below. Nothing else can move until it is done."
     : p.type === "tech"
       ? "Raise the request with the Integrations team and get a committed date before you promise the client anything."
-    : /popup|logs in|signs into/i.test(p.note)
+    : loginFlow
       ? "Book time with the client's contact. They sign in themselves, so you cannot do this part without them on the call."
+    : portalSelf
+      ? "Walk the client through pulling the " + p.creds.length + " value" + (p.creds.length === 1 ? "" : "s") + " out of their own " + pos + " portal. There is nobody to wait on."
       : "Ask the client to request the " + p.creds.length + " item" + (p.creds.length === 1 ? "" : "s") + " listed in the sidebar from their " + pos + " contact.";
 
   return {
