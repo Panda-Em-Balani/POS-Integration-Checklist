@@ -1048,17 +1048,22 @@ var P = {
    COMPLEXITY RATING
    The rating exists to change the timeline, so each level carries the
    number of days it adds. Charter baseline is go-live at the end of
-   week 2, which is the 14 days on Simple. Standard and Complex add the
+   week 2, which is the 14 days on Direct. Standard and Complex add the
    buffer the rating is supposed to buy.
    ═════════════════════════════════════════════════════════════════════ */
 var CX = [
-  {k:"Simple",   days:14, d:"1 to 3 branches, light modifier use, one brand"},
+  {k:"Direct",   days:14, d:"1 to 3 branches, light modifier use, one brand"},
   {k:"Standard", days:21, d:"4 to 10 branches, moderate modifiers, or a second pillar in scope"},
   {k:"Complex",  days:30, d:"11+ branches, heavy modifiers, multi-brand, or engineering-handled POS"}
 ];
 function cxDays(name){
   for(var i=0;i<CX.length;i++) if(CX[i].k === name) return CX[i].days;
   return CX[0].days;
+}
+/* Renamed from "Simple" - old saved records still carry that string,
+   so translate it wherever a complexity value comes in from storage. */
+function migrateComplexity(v){
+  return v === "Simple" ? "Direct" : v;
 }
 
 /* ═════════════════════════════════════════════════════════════════════
@@ -1093,7 +1098,7 @@ function buildPhases(posName){
     {id:"k-pos",r:"Confirmed the exact POS product, not just the brand name",
       i:"Right now this is set to <b>"+esc(posName)+"</b>. Brand names hide real differences. Lightspeed alone has three separate integrations (K-Series, O-Series, X-Series) and they do not behave the same way.",nt:"info"},
     {id:"k-branches",r:"Counted how many branches will connect",
-      i:"1 to 3 branches is Simple. 4 to 10 is Standard. 11 or more is Complex.",o:"client"},
+      i:"1 to 3 branches is Direct. 4 to 10 is Standard. 11 or more is Complex.",o:"client"},
     {id:"k-mods",r:"Checked how much the menu relies on modifiers and combos",
       i:"Ask the client straight out. Minimal, moderate (10 to 30% of orders), or heavy (30%+). Example: a burger chain where nearly every order is 'no pickles, extra cheese, make it a meal' is heavy.",
       n:"Modifiers cause more mapping mistakes than anything else on this list. On a heavy-modifier menu, check every mapped item by hand."},
@@ -1510,7 +1515,7 @@ var Cloud = (function(){
             client: row.client_name, pos: row.pos_provider,
             pct: row.total_items ? Math.round(row.done_items / row.total_items * 100) : 0,
             done: row.done_items, all: row.total_items,
-            complexity: row.complexity || "",
+            complexity: migrateComplexity(row.complexity || ""),
             createdAt: row.created_at, updatedAt: row.updated_at,
             goLiveTarget: row.go_live_target || ""
           };
@@ -1942,7 +1947,7 @@ function sidebarHTML(p, phases, t, brief){
   if(!anchor){
     h += '<div class="hint">Set automatically once you tick your first checklist item. ' +
          'The default is <b>first tick plus ' + cxDays(cur.complexity) + ' days</b>' +
-         (cur.complexity ? ' for a ' + esc(cur.complexity) + ' job' : ', which assumes Simple until you rate it') + '.</div>';
+         (cur.complexity ? ' for a ' + esc(cur.complexity) + ' job' : ', which assumes Direct until you rate it') + '.</div>';
   }else{
     var col = toTarget !== null && toTarget < 0 ? "var(--tx-error)" : toTarget !== null && toTarget <= 7 ? "var(--tx-orange)" : "var(--mid)";
     h += '<div class="hint" style="color:' + col + '">' +
@@ -1954,7 +1959,7 @@ function sidebarHTML(p, phases, t, brief){
         ? 'Set by hand. <button class="link-btn" id="tgtAuto">Use the default instead</button> (' +
           esc(fmtDate(defaultTarget(cur))) + ', from ' + esc(fmtDate(anchor)) + ' plus ' + cxDays(cur.complexity) + ' days)'
         : 'Automatic: <b>' + esc(fmtDate(anchor)) + '</b> plus ' + cxDays(cur.complexity) + ' days' +
-          (cur.complexity ? ' for a ' + esc(cur.complexity) + ' job' : ' (Simple default, rate the job in Phase 0 to adjust)') +
+          (cur.complexity ? ' for a ' + esc(cur.complexity) + ' job' : ' (Direct default, rate the job in Phase 0 to adjust)') +
           '. Edit the date to pin it.') + '</div>';
   }
   h += '</div>';
@@ -2875,7 +2880,7 @@ function openClient(name, pos, isNew){
     cur.items = cur.items || {};
     cur.collapsed = cur.collapsed || {};
     cur.hs = cur.hs || blankHS();
-    cur.complexity = cur.complexity || "";
+    cur.complexity = migrateComplexity(cur.complexity || "");
     cur.specialNote = cur.specialNote || "";
     cur.goLiveTarget = cur.goLiveTarget || "";
     cur.goLiveManual = !!cur.goLiveManual;
@@ -3105,7 +3110,10 @@ function pageFromHash(){
   });
 
   DB.get("posck:index").then(function(ix){
-    if(ix && Array.isArray(ix)) index = ix;
+    if(ix && Array.isArray(ix)){
+      ix.forEach(function(x){ x.complexity = migrateComplexity(x.complexity || ""); });
+      index = ix;
+    }
     var p = pageFromHash();
     goPage(p === "health" && !cur ? "checklist" : p);
     refreshCloudIndex();
