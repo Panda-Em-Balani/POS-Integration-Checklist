@@ -43,8 +43,22 @@ body{font-family:var(--font);font-weight:400;font-size:14px;color:var(--text);
   max-width:1440px;margin:0 auto}
 #supy-app h1,#supy-app h2,#supy-app h3,#supy-app h4,#supy-app p{margin:0}
 
+/* ---------- Sticky header wrapper ---------- */
+#stickyHeader{
+  position:sticky;top:0;z-index:50;
+  background:var(--page);
+  margin:-20px -20px 0;        /* bleed to the edges of #supy-app's padding */
+  padding:20px 20px 0;
+}
+/* faint shadow so content slides under cleanly */
+#stickyHeader::after{
+  content:'';display:block;height:12px;
+  background:linear-gradient(to bottom,var(--page) 0%,transparent 100%);
+  pointer-events:none
+}
+
 /* ---------- Header + nav ---------- */
-.hd{background:var(--navy);border-radius:12px;padding:22px 24px;margin-bottom:16px}
+.hd{background:var(--navy);border-radius:0 0 12px 12px;padding:22px 24px;margin-bottom:0}
 .hd-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
 .hd h1{color:#fff;font-size:26px;font-weight:600;letter-spacing:-.015em;line-height:1.2}
 .hd p{color:#C9BEE0;font-size:12px;font-weight:400;margin-top:6px}
@@ -57,7 +71,7 @@ body{font-family:var(--font);font-weight:400;font-size:14px;color:var(--text);
 .nav-tab:disabled{opacity:.4;cursor:not-allowed}
 
 /* ---------- Setup bar ---------- */
-.setup{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:16px;
+.setup{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;margin-top:10px;margin-bottom:0;
   box-shadow:var(--sh-card)}
 .setup-grid{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end}
 .fld{display:flex;flex-direction:column;gap:5px;flex:1;min-width:190px}
@@ -70,7 +84,7 @@ body{font-family:var(--font);font-weight:400;font-size:14px;color:var(--text);
 
 /* ---------- Auth bar ---------- */
 .authbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--bg-neutral);
-  border:1px solid #DDD3F5;border-radius:8px;padding:9px 14px;margin-bottom:14px;font-size:12.5px;font-weight:400}
+  border:1px solid #DDD3F5;border-radius:8px;padding:9px 14px;margin-top:10px;margin-bottom:0;font-size:12.5px;font-weight:400}
 .authbar input{font-family:var(--font);font-size:12.5px;font-weight:400;padding:7px 10px;
   border:1.5px solid var(--border);border-radius:6px;background:#fff;color:var(--text);outline:none;min-width:200px}
 .authbar input:focus{border-color:var(--action)}
@@ -414,6 +428,7 @@ table.hs-tbl input.num{font-family:var(--mono);text-align:right}
 /* ---------- Responsive ---------- */
 @media (max-width:900px){
   #supy-app{padding:14px}
+  #stickyHeader{margin:-14px -14px 0;padding:14px 14px 0}
   .layout{flex-direction:column}
   .col-side{width:100%;flex:1 1 auto;position:static;order:2;max-height:none;overflow:visible}
   .col-main{order:1;width:100%}
@@ -425,6 +440,7 @@ table.hs-tbl input.num{font-family:var(--mono);text-align:right}
 }
 @media (max-width:600px){
   #supy-app{padding:10px}
+  #stickyHeader{margin:-10px -10px 0;padding:10px 10px 0}
   .hd{padding:16px}
   .hd h1{font-size:20px}
   .setup{padding:14px}
@@ -455,7 +471,8 @@ table.hs-tbl input.num{font-family:var(--mono);text-align:right}
   .row-del,.tbar,.hs-addrow,.link-btn{display:none !important}
   .layout{display:block}
   .col-main{width:100%}
-  .hd{background:#fff;border:0;border-bottom:1px solid #ccc;padding:0 0 10px 0;margin-bottom:12px}
+  #stickyHeader{position:static;margin:0;padding:0}
+  .hd{background:#fff;border:0;border-bottom:1px solid #ccc;padding:0 0 10px 0;margin-bottom:12px;border-radius:0}
   .hd h1{color:#000;font-size:19px}
   .hd p{color:#555}
   .phase{break-inside:auto;page-break-inside:auto;border:1px solid #ccc;margin-bottom:10px;box-shadow:none}
@@ -490,23 +507,24 @@ table.hs-tbl input.num{font-family:var(--mono);text-align:right}
 <body>
 
 <div id="supy-app">
-  <div class="hd">
-    <div class="hd-top">
-      <div>
-        <h1>POS Integration Checklist</h1>
-        <p>Pick a client and their POS. The checklist builds itself. Everything saves in this browser as you go.</p>
-      </div>
-      <div class="nav">
-        <button class="nav-tab on" id="tabChecklist">Checklist</button>
-        <button class="nav-tab" id="tabHealth">Health Sheet</button>
-        <button class="nav-tab" id="tabTracker">Client Tracker</button>
+  <div id="stickyHeader">
+    <div class="hd">
+      <div class="hd-top">
+        <div>
+          <h1>POS Integration Checklist</h1>
+          <p>Pick a client and their POS. The checklist builds itself. Everything saves as you go.</p>
+        </div>
+        <div class="nav">
+          <button class="nav-tab on" id="tabChecklist">Checklist</button>
+          <button class="nav-tab" id="tabHealth">Health Sheet</button>
+          <button class="nav-tab" id="tabTracker">Client Tracker</button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="authbar" id="authBar"></div>
+    <div class="authbar" id="authBar"></div>
 
-  <div class="setup" id="setupBar">
+    <div class="setup" id="setupBar">
     <div class="setup-grid">
       <div class="fld">
         <label>Client / retailer name</label>
@@ -525,16 +543,17 @@ table.hs-tbl input.num{font-family:var(--mono);text-align:right}
     </div>
     <div class="setup-hint">Existing clients open straight away. A name and POS pairing that does not exist yet asks you to confirm before it creates a new profile.</div>
   </div>
+  </div><!-- /#stickyHeader -->
 
-  <div id="checklistPage">
+  <div id="checklistPage" style="margin-top:16px">
     <div class="layout">
       <div class="col-main" id="main"></div>
       <div class="col-side" id="side"></div>
     </div>
   </div>
 
-  <div id="healthPage" style="display:none"></div>
-  <div id="trackerPage" style="display:none"></div>
+  <div id="healthPage" style="display:none;margin-top:16px"></div>
+  <div id="trackerPage" style="display:none;margin-top:16px"></div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -1411,6 +1430,15 @@ function relDays(v){
 function each(sel, fn){
   Array.prototype.forEach.call(document.querySelectorAll(sel), fn);
 }
+/* Returns the human-readable phase title for a given item id */
+function phaseForItem(id, phases){
+  for(var i=0;i<phases.length;i++){
+    for(var j=0;j<phases[i].items.length;j++){
+      if(phases[i].items[j].id === id) return phases[i].t;
+    }
+  }
+  return "";
+}
 
 /* ═════════════════════════════════════════════════════════════════════
    STORAGE
@@ -1598,6 +1626,7 @@ var tracker = { q:"", filter:null, sort:"health", dir:1 };
 var combo = { open:false, hi:-1, matches:[] };
 var saveTimer = null;
 var confirmAction = null;
+var deletedKeys = {};   /* keys the user explicitly deleted; persists across refreshes */
 
 function blankHS(){
   return {
@@ -1777,12 +1806,21 @@ function renderChecklist(){
   var main = $("main"), side = $("side");
 
   if(!cur){
-    main.innerHTML = '<div class="empty"><h3>No checklist open</h3>' +
-      '<p>Start typing a client name to search the profiles you already have, or enter a new name and pick a POS provider. ' +
-      'The Client Tracker tab lists everything saved, with its health status.</p></div>';
-    side.innerHTML = "";
+    /* hide the side column so the empty state spans the full content width */
+    side.style.display = "none";
+    main.style.width = "100%";
+    main.innerHTML =
+      '<div class="empty">' +
+        '<h3>No checklist open</h3>' +
+        '<p>Start typing a client name above to search profiles you already have, or enter a new name ' +
+        'and pick a POS provider, then click <strong>Open checklist</strong>. ' +
+        'Use the <strong>Client Tracker</strong> tab to see all clients at a glance.</p>' +
+      '</div>';
     return;
   }
+  /* restore side column when a client is open */
+  side.style.display = "";
+  main.style.width = "";
 
   var p = P[cur.pos];
   var phases = buildPhases(cur.pos);
@@ -2030,6 +2068,7 @@ function wireChecklist(phases, p){
         cur.items[id].done = true;
         cur.items[id].doneAt = nowISO();
       }
+      cur.lastEditedPhase = phaseForItem(id, phases);
       applyDefaultTarget();
       save().then(render);
     };
@@ -2045,17 +2084,19 @@ function wireChecklist(phases, p){
         cur.items["k-rating"].done = true;
         cur.items["k-rating"].doneAt = nowISO();
       }
+      cur.lastEditedPhase = "Kickoff and complexity rating";
       applyDefaultTarget();
       save().then(render);
     };
   });
 
+  /* phase collapse is pure UI state — write directly without advancing updatedAt */
   each(".phase-hd", function(el){
     el.onclick = function(){
       var pi = el.getAttribute("data-toggle");
       if(cur.collapsed[pi]) delete cur.collapsed[pi];
       else cur.collapsed[pi] = true;
-      save().then(render);
+      save(true).then(render);
     };
   });
 
@@ -2077,6 +2118,7 @@ function wireChecklist(phases, p){
       cur.items[id] = cur.items[id] || {};
       cur.items[id].note = el.value;
       if(!el.value && !cur.items[id].done) delete cur.items[id];
+      cur.lastEditedPhase = phaseForItem(id, phases);
       debounceSave();
     };
   });
@@ -2085,11 +2127,13 @@ function wireChecklist(phases, p){
   if(target) target.onchange = function(){
     cur.goLiveTarget = target.value;
     cur.goLiveManual = true;
+    cur.lastEditedPhase = "Go-live planning";
     save().then(render);
   };
   var tgtAuto = $("tgtAuto");
   if(tgtAuto) tgtAuto.onclick = function(){
     cur.goLiveManual = false;
+    cur.lastEditedPhase = "Go-live planning";
     applyDefaultTarget();
     save().then(render);
   };
@@ -2097,14 +2141,19 @@ function wireChecklist(phases, p){
   var sNote = $("sideNote");
   if(sNote){
     sNote.value = cur.specialNote || "";
-    sNote.oninput = function(){ cur.specialNote = sNote.value; debounceSave(); };
+    sNote.oninput = function(){
+      cur.specialNote = sNote.value;
+      cur.lastEditedPhase = "Special case note";
+      debounceSave();
+    };
   }
 
-  $("expandAll").onclick = function(){ cur.collapsed = {}; save().then(render); };
+  /* collapse/expand all: UI-only state, keep timestamp */
+  $("expandAll").onclick = function(){ cur.collapsed = {}; save(true).then(render); };
   $("collapseAll").onclick = function(){
     cur.collapsed = {};
     phases.forEach(function(_,i){ cur.collapsed[i] = true; });
-    save().then(render);
+    save(true).then(render);
   };
   $("printBtn").onclick = function(){ window.print(); };
   $("copyBtn").onclick = function(){ copyAsText(phases, p); };
@@ -2380,9 +2429,9 @@ function wireHealth(){
     var path = el.getAttribute("data-hs");
     var isSelect = el.tagName === "SELECT";
     var isDate = el.type === "date";
-    var handler = function(){ cur.hs[path] = el.value; debounceSave(); };
+    var handler = function(){ cur.hs[path] = el.value; cur.lastEditedPhase = "Integration Health Sheet"; debounceSave(); };
     if(isSelect || isDate){
-      el.onchange = function(){ cur.hs[path] = el.value; save().then(renderHealth); };
+      el.onchange = function(){ cur.hs[path] = el.value; cur.lastEditedPhase = "Integration Health Sheet"; save().then(renderHealth); };
     }else{
       el.oninput = handler;
     }
@@ -2401,6 +2450,7 @@ function wireHealth(){
         var cell = document.querySelector('[data-varout="' + i + '"]');
         if(cell) cell.innerHTML = varCell(rowObj);
       }
+      cur.lastEditedPhase = "Integration Health Sheet";
       debounceSave();
     };
     if(el.tagName === "SELECT" || el.type === "date") el.onchange = write;
@@ -2412,6 +2462,7 @@ function wireHealth(){
       var list = el.getAttribute("data-hsadd");
       if(list === "variance") cur.hs.variance.push({from:"",to:"",pos:"",supy:"",cause:""});
       else cur.hs.friction.push({date:"",what:"",hours:"",playbook:""});
+      cur.lastEditedPhase = "Integration Health Sheet";
       save().then(renderHealth);
     };
   });
@@ -2419,6 +2470,7 @@ function wireHealth(){
     el.onclick = function(){
       var parts = el.getAttribute("data-hsdel").split("|");
       cur.hs[parts[0]].splice(+parts[1], 1);
+      cur.lastEditedPhase = "Integration Health Sheet";
       save().then(renderHealth);
     };
   });
@@ -2715,10 +2767,10 @@ function renderTracker(){
     h += '<button class="btn btn-ghost btn-sm" id="clearFilter">Clear ' + esc(HEALTH_META[tracker.filter].label) + ' filter</button>';
   }
   if(Cloud.enabled()){
-    h += '<button class="btn btn-ghost btn-sm" id="cloudRefresh">Refresh from cloud</button>';
+    h += '<button class="btn btn-ghost btn-sm" id="cloudRefresh" title="Pull all clients from Supabase so you see your team\'s updates">&#8635; Refresh from cloud</button>';
   }
   if(Cloud.enabled() && Cloud.session()){
-    h += '<button class="btn btn-ghost btn-sm" id="cloudPushAll">Push local clients to cloud</button>';
+    h += '<button class="btn btn-ghost btn-sm" id="cloudPushAll" title="Upload any clients saved locally (before you signed in) to the shared cloud database">&#8679; Push local to cloud</button>';
   }
   h += '<span class="filter-note">' + shown.length + ' of ' + rows.length + ' clients</span></div>';
 
@@ -2756,7 +2808,9 @@ function renderTracker(){
          '<div class="mini-bar"><div class="mini-fill" style="width:' + r.pct + '%;background:' + barColor(r.health) + '"></div></div></td>';
     h += '<td><span class="hbadge hb-' + r.health + '">' + esc(HEALTH_META[r.health].label) + '</span></td>';
     h += '<td class="td-dim">' + esc(fmtDate(r.createdAt) || "Not recorded") + '</td>';
-    h += '<td class="td-dim">' + esc(relDays(r.updatedAt || r.createdAt)) + '</td>';
+    h += '<td class="td-dim">' + esc(relDays(r.updatedAt || r.createdAt)) +
+         (r.lastEditedPhase ? '<div style="font-size:10.5px;color:var(--mid);margin-top:2px;font-weight:400">' + esc(r.lastEditedPhase) + '</div>' : '') +
+         '</td>';
     h += '<td class="' + (toTarget !== null && toTarget < 0 && r.health !== "complete" ? "td-late" : "td-dim") + '">' +
          (r.goLiveTarget ? esc(fmtDate(r.goLiveTarget)) : "Not set") + '</td>';
     h += '<td><button class="row-del" data-del="' + esc(r.client) + '" data-delpos="' + esc(r.pos) +
@@ -2782,8 +2836,12 @@ function wireTracker(){
 
   var cr = $("cloudRefresh");
   if(cr) cr.onclick = function(){
+    if(!Cloud.session()){ toast("Sign in first to sync with your team"); return; }
     cr.disabled = true;
-    refreshCloudIndex().then(function(){ toast("Synced"); }).catch(function(){ toast("Could not reach the cloud"); });
+    refreshCloudIndex()
+      .then(function(n){ toast(n ? "Synced — " + n + " client" + (n===1?"":"s") + " from cloud" : "Synced — no clients in cloud yet"); })
+      .catch(function(){ toast("Could not reach the cloud — check your connection"); })
+      .then(function(){ cr.disabled = false; });
   };
 
   var cp = $("cloudPushAll");
@@ -2842,30 +2900,36 @@ function indexEntry(rec){
     pct:t.pct, done:t.done, all:t.all,
     complexity:rec.complexity || "",
     createdAt:rec.createdAt, updatedAt:rec.updatedAt,
-    goLiveTarget:rec.goLiveTarget || ""
+    goLiveTarget:rec.goLiveTarget || "",
+    lastEditedPhase:rec.lastEditedPhase || ""
   };
 }
 
-function save(){
+/* keepTimestamp:true → do not advance updatedAt (e.g. phase-collapse UI, opening existing records) */
+function save(keepTimestamp){
   if(!cur) return Promise.resolve();
-  cur.updatedAt = nowISO();
-  if(!cur.createdAt) cur.createdAt = cur.updatedAt;
+  if(!cur.createdAt) cur.createdAt = nowISO();
+  if(!keepTimestamp) cur.updatedAt = nowISO();
 
   var k = key(cur.client, cur.pos);
   var rest = index.filter(function(x){ return key(x.client, x.pos) !== k; });
   rest.unshift(indexEntry(cur));
   index = rest.slice(0, MAX_CLIENTS);
 
-  Cloud.upsertRecord(cur); /* fire-and-forget, never blocks the UI */
+  if(!keepTimestamp) Cloud.upsertRecord(cur); /* fire-and-forget, never blocks the UI */
 
   return DB.set(k, cur).then(function(){ return DB.set("posck:index", index); });
 }
 
 function deleteClient(client, pos){
   var k = key(client, pos);
+  /* remember this deletion so refreshCloudIndex cannot resurrect it */
+  deletedKeys[k] = true;
+  DB.set("posck:deleted", Object.keys(deletedKeys));
+
   index = index.filter(function(x){ return key(x.client, x.pos) !== k; });
   var wasCurrent = cur && key(cur.client, cur.pos) === k;
-  Cloud.deleteRecord(client, pos);
+  Cloud.deleteRecord(client, pos); /* fire-and-forget; deletedKeys guards the reload case */
   return DB.del(k).then(function(){
     return DB.set("posck:index", index);
   }).then(function(){
@@ -2892,6 +2956,7 @@ function openClient(name, pos, isNew){
      nothing has ever been synced for this client. */
   return Promise.all([DB.get(key(name,pos)), Cloud.fetchRecord(name,pos)]).then(function(res){
     var local = res[0], remote = res[1];
+    var recordExisted = !!(local || remote);
     if(remote){
       remote.collapsed = (local && local.collapsed) || {};
       cur = remote;
@@ -2909,7 +2974,9 @@ function openClient(name, pos, isNew){
     cur.goLiveManual = !!cur.goLiveManual;
     cur.createdAt = cur.createdAt || nowISO();
     applyDefaultTarget();
-    return save();
+    /* preserve updatedAt when opening an existing record — don't let the
+       open act itself count as "last edited" in the tracker */
+    return save(recordExisted && !isNew);
   }).then(function(){
     goPage("checklist");
     if(isNew) toast("Created " + name + " on " + pos);
@@ -2993,18 +3060,20 @@ function renderAuthBar(){
   var el = $("authBar");
   if(!el) return;
   if(!Cloud.enabled()){
-    el.innerHTML = '<span class="authbar-off">Cloud sync is not set up on this page yet, ' +
-      'so nothing here leaves this browser. See SUPABASE.md.</span>';
+    el.innerHTML = '<span class="authbar-off">Cloud sync is not configured — data stays in this browser only.</span>';
     return;
   }
   var s = Cloud.session();
   if(s && s.user){
-    el.innerHTML = '<span class="authbar-on">Signed in as ' + esc(s.user.email) + '</span>' +
+    el.innerHTML =
+      '<span class="authbar-on">&#10003; Signed in as ' + esc(s.user.email) + '</span>' +
+      '<span class="authbar-off" style="font-size:11.5px"> &mdash; all team clients are visible in the Tracker</span>' +
       '<button class="link-btn" id="authSignOut">Sign out</button>';
     var out = $("authSignOut");
     if(out) out.onclick = function(){ Cloud.signOut(); };
   }else{
     el.innerHTML =
+      '<span class="authbar-off" style="margin-right:6px">Sign in to share clients across the team:</span>' +
       '<input type="email" id="authEmail" placeholder="you@supy.io" autocomplete="email"/>' +
       '<button class="btn btn-primary btn-sm" id="authSend">Email me a sign-in link</button>' +
       '<span class="authbar-msg" id="authMsg"></span>';
@@ -3039,16 +3108,21 @@ function pushAllLocalToCloud(){
 }
 
 /* Cross-team view of the tracker: pull every signed-in staff member's
-   clients and merge in anything local that has not synced up yet. */
+   clients and merge in anything local that has not synced up yet.
+   deletedKeys are filtered out so a cloud record that was deleted locally
+   cannot resurrect itself on page refresh. */
 function refreshCloudIndex(){
   return Cloud.fetchIndex().then(function(remote){
-    if(!remote) return;
+    if(!remote) return 0;
+    /* filter out anything the user has explicitly deleted in this browser */
+    remote = remote.filter(function(r){ return !deletedKeys[key(r.client, r.pos)]; });
     var seen = {};
     remote.forEach(function(r){ seen[key(r.client, r.pos)] = true; });
     var localOnly = index.filter(function(x){ return !seen[key(x.client, x.pos)]; });
     index = remote.concat(localOnly).slice(0, MAX_CLIENTS);
     DB.set("posck:index", index);
     if(page === "tracker") renderTracker();
+    return remote.length;
   });
 }
 
@@ -3132,7 +3206,14 @@ function pageFromHash(){
     refreshCloudIndex();
   });
 
-  DB.get("posck:index").then(function(ix){
+  /* load the set of locally-deleted keys first so refreshCloudIndex
+     cannot resurrect a profile the user explicitly deleted */
+  DB.get("posck:deleted").then(function(del){
+    if(del && Array.isArray(del)){
+      del.forEach(function(k){ deletedKeys[k] = true; });
+    }
+    return DB.get("posck:index");
+  }).then(function(ix){
     if(ix && Array.isArray(ix)){
       ix.forEach(function(x){ x.complexity = migrateComplexity(x.complexity || ""); });
       index = ix;
