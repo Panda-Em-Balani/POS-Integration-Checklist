@@ -224,11 +224,12 @@ body{font-family:var(--font);font-weight:400;font-size:14px;color:var(--text);
 .item-ins{font-size:12.5px;font-weight:400;color:#555;margin-bottom:5px}
 .item-ex{font-family:var(--mono);font-size:11.5px;color:var(--tx-neutral);background:var(--bg-neutral);
   border-radius:4px;padding:3px 8px;display:inline-block;margin-top:2px;word-break:break-word}
-.item-note{font-size:12px;background:var(--bg-warning);color:var(--tx-warning);border-radius:6px;
-  padding:7px 10px;margin-top:6px;display:flex;gap:7px;align-items:flex-start}
-.item-note::before{content:'!';font-weight:700;flex-shrink:0;font-family:var(--mono)}
-.item-note.info{background:var(--bg-info);color:var(--tx-info)}
-.item-note.info::before{content:'i'}
+.item-note{font-size:12px;background:var(--bg-warning);color:var(--tx-warning);border-radius:0 6px 6px 0;
+  padding:8px 12px;margin-top:6px;display:flex;gap:8px;align-items:flex-start;
+  border-left:4px solid var(--tx-warning);font-weight:500}
+.item-note::before{content:'\26A0';font-weight:700;flex-shrink:0;font-size:13px}
+.item-note.info{background:var(--bg-info);color:var(--tx-info);border-left-color:var(--tx-info)}
+.item-note.info::before{content:'\2139';font-size:14px}
 
 .item-meta{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:7px}
 .done-at{font-size:11.5px;color:var(--tx-success);font-weight:600}
@@ -368,6 +369,7 @@ table.tbl tbody tr:hover{background:var(--light)}
   display:block;margin-bottom:5px}
 .hs-f input,.hs-f select,.hs-f textarea{font-family:var(--font);font-size:13.5px;font-weight:400;padding:9px 11px;
   border:1.5px solid var(--border);border-radius:8px;background:#fff;color:var(--text);outline:none;width:100%;resize:vertical}
+.hs-f textarea{field-sizing:content;min-height:2.4em;max-height:300px}
 .hs-f input:focus,.hs-f select:focus,.hs-f textarea:focus{border-color:var(--action)}
 .hs-f select{cursor:pointer}
 .hs-f .sub{font-size:11px;color:var(--mid);margin-top:5px;line-height:1.45}
@@ -412,6 +414,99 @@ table.hs-tbl input.num{font-family:var(--mono);text-align:right}
 .hs-addrow{margin-top:12px}
 .hs-emptyrow{font-size:12.5px;color:var(--mid);padding:14px 2px;line-height:1.5}
 
+/* ---------- Phase nav strip ---------- */
+.phase-nav{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px;padding:0}
+.phase-nav .pnav{font-family:var(--font);font-size:11.5px;font-weight:600;padding:6px 11px;
+  border-radius:8px;border:1.5px solid var(--border);background:#fff;color:var(--text);cursor:pointer;
+  white-space:nowrap;transition:all .15s ease-out;display:flex;align-items:center;gap:5px}
+.phase-nav .pnav:hover{border-color:var(--action);background:var(--light)}
+.phase-nav .pnav.active{border-color:var(--action);background:var(--bg-neutral);color:var(--tx-neutral)}
+.phase-nav .pnav .pnav-dot{width:7px;height:7px;border-radius:50%;background:var(--border);flex-shrink:0}
+.phase-nav .pnav.done .pnav-dot{background:var(--tx-success)}
+.phase-nav .pnav.active .pnav-dot{background:var(--action)}
+
+/* ---------- HS section nav strip ---------- */
+.hs-nav{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:16px;padding:0}
+.hs-nav .hsnav{font-family:var(--font);font-size:11.5px;font-weight:600;padding:6px 11px;
+  border-radius:8px;border:1.5px solid var(--border);background:#fff;color:var(--text);cursor:pointer;
+  white-space:nowrap;transition:all .15s ease-out}
+.hs-nav .hsnav:hover{border-color:var(--action);background:var(--light)}
+
+/* ---------- Setup bar collapse ---------- */
+.setup-collapse{display:flex;align-items:center;gap:10px;cursor:pointer;padding:0}
+.setup-toggle{background:none;border:none;padding:4px 6px;cursor:pointer;font-size:13px;color:var(--mid);
+  transition:transform .2s ease-out;flex-shrink:0;line-height:1}
+.setup.collapsed .setup-grid,.setup.collapsed .setup-hint{display:none}
+.setup.collapsed{padding:10px 18px}
+.setup-summary{font-size:13px;font-weight:600;color:var(--text);flex:1}
+.setup-summary span{color:var(--mid);font-weight:400}
+
+/* ---------- Note save button ---------- */
+.note-actions{display:flex;gap:8px;align-items:center;margin-top:6px}
+.note-save{font-family:var(--font);font-size:11px;font-weight:600;padding:5px 12px;border-radius:6px;
+  border:1.5px solid var(--action);background:var(--bg-neutral);color:var(--action);cursor:pointer;
+  transition:all .15s ease-out}
+.note-save:hover{background:var(--action);color:#fff}
+.note-saved-msg{font-size:11px;font-weight:600;color:var(--tx-success);opacity:0;transition:opacity .3s ease-out}
+.note-saved-msg.show{opacity:1}
+
+/* ---------- Multi special-case notes ---------- */
+.scn-entry{display:flex;gap:8px;align-items:flex-start;margin-bottom:8px}
+.scn-entry textarea{flex:1;font-family:var(--font);font-size:12.5px;font-weight:400;padding:9px 11px;
+  border:1.5px solid var(--border);border-radius:8px;background:#fff;color:var(--text);outline:none;
+  min-height:52px;resize:vertical}
+.scn-entry textarea:focus{border-color:var(--action)}
+.scn-actions{display:flex;flex-direction:column;gap:4px;flex-shrink:0;padding-top:2px}
+.scn-del{background:none;border:none;font-size:16px;color:var(--mid);cursor:pointer;padding:2px 5px;line-height:1}
+.scn-del:hover{color:var(--tx-error)}
+.scn-save{font-family:var(--font);font-size:10px;font-weight:600;padding:3px 8px;border-radius:4px;
+  border:1px solid var(--action);background:var(--bg-neutral);color:var(--action);cursor:pointer}
+.scn-save:hover{background:var(--action);color:#fff}
+
+/* ---------- Toolbar overflow ---------- */
+.toolbar-overflow{position:relative;display:inline-block}
+.toolbar-dots{font-family:var(--font);font-size:18px;font-weight:700;padding:6px 12px;border-radius:8px;
+  border:1.5px solid var(--border);background:#fff;color:var(--mid);cursor:pointer;line-height:1}
+.toolbar-dots:hover{border-color:var(--action);color:var(--text)}
+.toolbar-menu{display:none;position:absolute;right:0;top:calc(100% + 4px);background:var(--card);
+  border:1px solid var(--border);border-radius:8px;box-shadow:var(--sh-card);z-index:40;min-width:150px;padding:4px}
+.toolbar-menu.open{display:block}
+.toolbar-menu button{display:block;width:100%;text-align:left;font-family:var(--font);font-size:12.5px;
+  font-weight:500;padding:8px 12px;border:none;background:none;cursor:pointer;border-radius:6px;color:var(--text)}
+.toolbar-menu button:hover{background:var(--light)}
+.toolbar-menu button.danger{color:var(--tx-error)}
+.toolbar-menu button.danger:hover{background:var(--bg-error)}
+
+/* ---------- Sidebar tabs ---------- */
+.side-tabs{display:flex;gap:0;margin-bottom:0;border-bottom:2px solid var(--border)}
+.side-tab{font-family:var(--font);font-size:11.5px;font-weight:600;padding:9px 14px;border:none;
+  background:none;color:var(--mid);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;
+  transition:all .15s ease-out}
+.side-tab:hover{color:var(--text)}
+.side-tab.on{color:var(--action);border-bottom-color:var(--action)}
+
+/* ---------- Provider brief collapse ---------- */
+.pbanner-compact{display:flex;align-items:center;gap:10px;padding:12px 18px;background:var(--purple);
+  border-radius:12px;margin-bottom:12px;cursor:pointer}
+.pbanner-compact:hover{background:var(--purple-dark)}
+.pbanner-compact-txt{color:#fff;font-size:13px;font-weight:600;flex:1}
+.pbanner-compact-expand{color:#D9CFF0;font-size:11px;font-weight:500;white-space:nowrap}
+
+/* ---------- HS sticky info (on health page) ---------- */
+.hs-sticky-info{background:linear-gradient(135deg,#1A0B3D,#503390);border-radius:0 0 12px 12px;
+  padding:14px 20px;margin-bottom:0}
+.hs-sticky-info h2{color:#fff;font-size:17px;font-weight:600;letter-spacing:-.01em;margin-bottom:2px}
+.hs-sticky-info .hs-sticky-sub{color:#C9BEE0;font-size:11px;font-weight:400}
+.hs-sticky-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.hs-sticky-meta .hs-scell{background:rgba(26,11,61,.42);border:1px solid rgba(255,255,255,.12);
+  border-radius:6px;padding:6px 10px;flex:1;min-width:100px}
+.hs-sticky-meta .hs-scell .k{color:#C9BEE0;font-size:8.5px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.08em;display:block}
+.hs-sticky-meta .hs-scell .v{color:#fff;font-size:12.5px;font-weight:600;margin-top:2px}
+.hs-sticky-back{color:#C9BEE0;font-size:11.5px;font-weight:600;background:none;border:none;cursor:pointer;
+  text-decoration:underline;padding:0;font-family:var(--font)}
+.hs-sticky-back:hover{color:#fff}
+
 /* ---------- Modal ---------- */
 .mask{position:fixed;inset:0;background:rgba(26,11,61,.5);z-index:900;display:none;align-items:center;
   justify-content:center;padding:20px}
@@ -437,6 +532,10 @@ table.hs-tbl input.num{font-family:var(--mono);text-align:right}
   .nav{width:100%}
   .nav-tab{flex:1;text-align:center;padding:9px 8px}
   .pfacts,.hs-meta{grid-template-columns:repeat(2,1fr)}
+  .phase-nav,.hs-nav{gap:4px}
+  .phase-nav .pnav,.hs-nav .hsnav{padding:5px 8px;font-size:10.5px}
+  .hs-sticky-meta{gap:4px}
+  .hs-sticky-meta .hs-scell{min-width:80px;padding:5px 8px}
 }
 @media (max-width:600px){
   #supy-app{padding:10px}
@@ -449,6 +548,9 @@ table.hs-tbl input.num{font-family:var(--mono);text-align:right}
   .setup-grid .fld[data-btn] .btn{width:100%}
   .hcards{grid-template-columns:1fr}
   .pfacts,.hs-meta,.hs-grid{grid-template-columns:1fr}
+  .phase-nav .pnav{font-size:10px;padding:5px 7px}
+  .hs-sticky-meta{flex-direction:column}
+  .hs-sticky-meta .hs-scell{min-width:0}
   .item{padding:12px 13px;gap:10px}
   .phase-hd{padding:11px 13px;gap:9px}
   .phase-t{font-size:14px}
@@ -468,7 +570,8 @@ table.hs-tbl input.num{font-family:var(--mono);text-align:right}
   html,body{background:#fff}
   #supy-app{background:#fff;padding:0;max-width:none}
   .nav,.setup,.authbar,.toolbar,.col-side,.toast,.mask,.note-btn,.cx-chip:not(.on),
-  .row-del,.tbar,.hs-addrow,.link-btn{display:none !important}
+  .row-del,.tbar,.hs-addrow,.link-btn,.phase-nav,.hs-nav,.hs-sticky-info,.toolbar-overflow,
+  .scn-del,.scn-save,.note-save,.setup-toggle{display:none !important}
   .layout{display:block}
   .col-main{width:100%}
   #stickyHeader{position:static;margin:0;padding:0}
@@ -525,7 +628,11 @@ table.hs-tbl input.num{font-family:var(--mono);text-align:right}
     <div class="authbar" id="authBar"></div>
 
     <div class="setup" id="setupBar">
-    <div class="setup-grid">
+    <div class="setup-collapse" id="setupCollapse">
+      <div class="setup-summary" id="setupSummary" style="display:none"></div>
+      <button class="setup-toggle" id="setupToggle" title="Collapse / expand">&#9660;</button>
+    </div>
+    <div class="setup-grid" id="setupGrid">
       <div class="fld">
         <label>Client / retailer name</label>
         <div class="combo">
@@ -541,8 +648,9 @@ table.hs-tbl input.num{font-family:var(--mono);text-align:right}
         <button class="btn btn-primary" id="loadBtn">Open checklist</button>
       </div>
     </div>
-    <div class="setup-hint">Existing clients open straight away. A name and POS pairing that does not exist yet asks you to confirm before it creates a new profile.</div>
+    <div class="setup-hint" id="setupHint">Existing clients open straight away. A name and POS pairing that does not exist yet asks you to confirm before it creates a new profile.</div>
   </div>
+  <div id="hsStickySlot"></div>
   </div><!-- /#stickyHeader -->
 
   <div id="checklistPage" style="margin-top:16px">
@@ -1791,22 +1899,103 @@ function gateStatus(phases, gi){
 /* ═════════════════════════════════════════════════════════════════════
    CHECKLIST RENDER
    ═════════════════════════════════════════════════════════════════════ */
+var setupCollapsed = false;
+
 function render(){
   $("checklistPage").style.display = page === "checklist" ? "" : "none";
   $("healthPage").style.display    = page === "health"    ? "" : "none";
   $("trackerPage").style.display   = page === "tracker"   ? "" : "none";
-  $("setupBar").style.display      = page === "tracker"   ? "none" : "";
+
+  var hideSetup = page === "tracker" || page === "health";
+  $("setupBar").style.display      = hideSetup ? "none" : "";
+  $("hsStickySlot").innerHTML      = "";
+
+  if(page === "health" && cur){
+    renderHsStickyInfo();
+  }
+
+  updateSetupBar();
 
   if(page === "tracker"){ renderTracker(); return; }
   if(page === "health"){ renderHealth(); return; }
   renderChecklist();
 }
 
+function updateSetupBar(){
+  var bar = $("setupBar");
+  var summary = $("setupSummary");
+  var grid = $("setupGrid");
+  var hint = $("setupHint");
+  var toggle = $("setupToggle");
+  if(!bar || bar.style.display === "none") return;
+
+  if(cur && setupCollapsed){
+    bar.classList.add("collapsed");
+    summary.style.display = "";
+    summary.innerHTML = esc(cur.client) + ' <span>on ' + esc(cur.pos) + '</span>';
+    grid.style.display = "none";
+    hint.style.display = "none";
+    toggle.innerHTML = "&#9654;";
+  }else{
+    bar.classList.remove("collapsed");
+    summary.style.display = "none";
+    grid.style.display = "";
+    hint.style.display = "";
+    toggle.innerHTML = "&#9660;";
+  }
+}
+
+function renderHsStickyInfo(){
+  var slot = $("hsStickySlot");
+  if(!cur){ slot.innerHTML = ""; return; }
+
+  var phases = buildPhases(cur.pos);
+  var t = totals(phases, cur.items);
+  var anchor = kickoffAnchor(cur);
+  var row = {pct:t.pct, done:t.done, all:t.all, createdAt:cur.createdAt,
+             updatedAt:cur.updatedAt, goLiveTarget:cur.goLiveTarget};
+  var hh = healthOf(row);
+  var hs = cur.hs || blankHS();
+
+  var status = t.done === t.all && t.all > 0 ? "Closed"
+             : /^GO/.test(hs.signDecision || "") ? "Live, audit"
+             : "In progress";
+
+  var h = '<div class="hs-sticky-info">';
+  h += '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">';
+  h += '<div><h2>' + esc(cur.client) + ' &middot; ' + esc(cur.pos) + '</h2>';
+  h += '<div class="hs-sticky-sub">Integration health sheet</div></div>';
+  h += '<button class="hs-sticky-back" id="hsStickyBack">&larr; Back to checklist</button>';
+  h += '</div>';
+  h += '<div class="hs-sticky-meta">';
+  h += hsSticky("Status", status);
+  h += hsSticky("Health", HEALTH_META[hh].label);
+  h += hsSticky("Complexity", cur.complexity || "Not rated");
+  h += hsSticky("Checklist", t.pct + "%");
+  h += hsSticky("Work started", anchor ? fmtDate(anchor) : "N/A");
+  h += hsSticky("Go-live target", cur.goLiveTarget ? fmtDate(cur.goLiveTarget) : "N/A");
+  h += hsSticky("Actual go-live", hs.actualGoLive ? fmtDate(hs.actualGoLive) : "N/A");
+  h += hsSticky("Days open", anchor ? String(daysSince(anchor)) : "0");
+  h += '</div></div>';
+
+  slot.innerHTML = h;
+
+  var back = $("hsStickyBack");
+  if(back) back.onclick = function(){ goPage("checklist"); };
+}
+
+function hsSticky(k, v){
+  return '<div class="hs-scell"><span class="k">' + esc(k) + '</span>' +
+         '<span class="v">' + esc(v) + '</span></div>';
+}
+
+var pbannerExpanded = true;
+var sideTab = "creds";
+
 function renderChecklist(){
   var main = $("main"), side = $("side");
 
   if(!cur){
-    /* hide the side column so the empty state spans the full content width */
     side.style.display = "none";
     main.style.width = "100%";
     main.innerHTML =
@@ -1818,7 +2007,6 @@ function renderChecklist(){
       '</div>';
     return;
   }
-  /* restore side column when a client is open */
   side.style.display = "";
   main.style.width = "";
 
@@ -1829,36 +2017,66 @@ function renderChecklist(){
 
   var tagCls = p.type === "self" ? "tag-self" : p.type === "assist" ? "tag-assist" : "tag-tech";
 
+  /* auto-collapse on first load: collapse done + untouched phases */
+  if(!cur._autoCollapsed){
+    cur._autoCollapsed = true;
+    var activeFound = false;
+    phases.forEach(function(ph,pi){
+      var dn = ph.items.filter(function(it){ return isDone(it.id); }).length;
+      var complete = ph.items.length > 0 && dn === ph.items.length;
+      var untouched = dn === 0;
+      if(complete || untouched){
+        cur.collapsed[pi] = true;
+      }else if(!activeFound){
+        delete cur.collapsed[pi];
+        activeFound = true;
+      }
+    });
+  }
+
   var h = "";
 
+  /* toolbar with overflow */
   h += '<div class="toolbar">' +
        '<button class="btn btn-ghost btn-sm" id="expandAll">Expand all</button>' +
        '<button class="btn btn-ghost btn-sm" id="collapseAll">Collapse all</button>' +
-       '<button class="btn btn-ghost btn-sm" id="copyBtn">Copy as text</button>' +
-       '<button class="btn btn-ghost btn-sm" id="printBtn">Print</button>' +
-       '<button class="btn btn-danger btn-sm" id="resetBtn">Reset progress</button>' +
-       '<button class="btn btn-danger btn-sm" id="delBtn">Delete client</button></div>';
+       '<div class="toolbar-overflow"><button class="toolbar-dots" id="toolbarDots">&middot;&middot;&middot;</button>' +
+       '<div class="toolbar-menu" id="toolbarMenu">' +
+       '<button id="copyBtn">Copy as text</button>' +
+       '<button id="printBtn">Print</button>' +
+       '<button class="danger" id="resetBtn">Reset progress</button>' +
+       '<button class="danger" id="delBtn">Delete client</button>' +
+       '</div></div></div>';
 
-  /* provider brief */
-  h += '<div class="pbanner"><div class="pbanner-t">' + esc(cur.pos) +
-       '<span class="pbanner-tag ' + tagCls + '">' + esc(brief.type) + '</span>' +
-       '<span class="pbanner-tag" style="background:rgba(255,255,255,.15);color:#fff">' + esc(p.auth) + '</span></div>';
-  h += '<div class="pbanner-n">' + esc(p.note) + '</div>';
-  h += '<div class="pbanner-first"><span class="eyebrow">Start here</span>' +
-       '<span class="txt">' + esc(brief.first) + '</span></div>';
+  /* provider brief: compact or full */
+  var phase3done = phases.length > 3 && phases[3].items.length > 0 &&
+    phases[3].items.filter(function(it){ return isDone(it.id); }).length === phases[3].items.length;
 
-  h += '<div class="pfacts">';
-  h += pfact("Who you wait on", brief.waiting, false);
-  h += pfact("Credentials", brief.creds, false);
-  h += pfact("Item mapping", brief.mapping, brief.mappingWarn);
-  h += pfact("Reconciliation report", brief.recon, brief.reconWarn);
-  h += pfact("Our documentation", brief.docs, brief.docsWarn);
-  h += pfact("Known limitations", brief.limits ? brief.limits + " documented, listed in the sidebar" : "None documented yet", brief.limits > 0);
-  if(brief.lead) h += pfact("Expected wait", brief.lead, true);
-  h += '</div>';
-
-  if(p.recon) h += '<div class="pbanner-recon">Reconcile against: ' + esc(p.recon) + '</div>';
-  h += '</div>';
+  if(phase3done && !pbannerExpanded){
+    h += '<div class="pbanner-compact" id="pbannerCompact">' +
+         '<div class="pbanner-compact-txt">' + esc(cur.pos) +
+         ' &middot; ' + esc(brief.type) + ' &middot; ' + esc(p.auth) + '</div>' +
+         '<span class="pbanner-compact-expand">Show details &rsaquo;</span></div>';
+  }else{
+    h += '<div class="pbanner" id="pbannerFull"><div class="pbanner-t">' + esc(cur.pos) +
+         '<span class="pbanner-tag ' + tagCls + '">' + esc(brief.type) + '</span>' +
+         '<span class="pbanner-tag" style="background:rgba(255,255,255,.15);color:#fff">' + esc(p.auth) + '</span></div>';
+    h += '<div class="pbanner-n">' + esc(p.note) + '</div>';
+    h += '<div class="pbanner-first"><span class="eyebrow">Start here</span>' +
+         '<span class="txt">' + esc(brief.first) + '</span></div>';
+    h += '<div class="pfacts">';
+    h += pfact("Who you wait on", brief.waiting, false);
+    h += pfact("Credentials", brief.creds, false);
+    h += pfact("Item mapping", brief.mapping, brief.mappingWarn);
+    h += pfact("Reconciliation report", brief.recon, brief.reconWarn);
+    h += pfact("Our documentation", brief.docs, brief.docsWarn);
+    h += pfact("Known limitations", brief.limits ? brief.limits + " documented, listed in the sidebar" : "None documented yet", brief.limits > 0);
+    if(brief.lead) h += pfact("Expected wait", brief.lead, true);
+    h += '</div>';
+    if(p.recon) h += '<div class="pbanner-recon">Reconcile against: ' + esc(p.recon) + '</div>';
+    if(phase3done) h += '<div style="text-align:right;padding:6px 18px 0"><button class="btn btn-ghost btn-sm" id="pbannerHide">Collapse brief</button></div>';
+    h += '</div>';
+  }
 
   /* progress */
   h += '<div class="prog-wrap"><div class="prog-top">' +
@@ -1878,12 +2096,25 @@ function renderChecklist(){
   }
   h += '</div>';
 
+  /* phase nav strip */
+  h += '<div class="phase-nav">';
+  phases.forEach(function(ph, pi){
+    var dn = ph.items.filter(function(it){ return isDone(it.id); }).length;
+    var complete = ph.items.length > 0 && dn === ph.items.length;
+    var started = dn > 0;
+    var cls = complete ? "done" : (started && !complete ? "active" : "");
+    var shortT = ph.t.length > 18 ? ph.t.substring(0, 16) + ".." : ph.t;
+    h += '<button class="pnav ' + cls + '" data-pnav="' + pi + '">' +
+         '<span class="pnav-dot"></span>' + esc(ph.n) + ' ' + esc(shortT) + '</button>';
+  });
+  h += '</div>';
+
   /* phases */
   phases.forEach(function(ph,pi){
     var dn = ph.items.filter(function(it){ return isDone(it.id); }).length;
     var complete = ph.items.length > 0 && dn === ph.items.length;
     var closed = !!cur.collapsed[pi];
-    h += '<div class="phase' + (closed ? " closed" : "") + (complete ? " complete" : "") + '">';
+    h += '<div class="phase' + (closed ? " closed" : "") + (complete ? " complete" : "") + '" id="phase-' + pi + '">';
     h += '<div class="phase-hd" data-toggle="' + pi + '">' +
          '<div class="phase-n">' + esc(ph.n) + '</div>' +
          '<div class="phase-t">' + esc(ph.t) + (ph.gate ? '<span class="gate">' + esc(ph.gate) + '</span>' : '') + '</div>' +
@@ -1945,7 +2176,9 @@ function itemHTML(it){
   if(openNotes[it.id]){
     h += '<div class="note-box"><textarea data-noteinput="' + esc(it.id) + '" ' +
          'placeholder="Context worth remembering. Example: waiting on client since Aug 12. Or: API key expired, re-requested.">' +
-         esc(st.note || "") + '</textarea></div>';
+         esc(st.note || "") + '</textarea>' +
+         '<div class="note-actions"><button class="note-save" data-notesave="' + esc(it.id) + '">Save</button>' +
+         '<span class="note-saved-msg" id="noteSaved-' + esc(it.id) + '">Saved</span></div></div>';
   }else if(st.note){
     h += '<div class="note-saved">' + esc(st.note) + '</div>';
   }
@@ -1979,27 +2212,7 @@ function sidebarHTML(p, phases, t, brief){
        t.done + ' / ' + t.all + '</span></div>';
   h += '</div></div>';
 
-  /* credentials */
-  h += '<div class="side-card">';
-  h += '<div class="side-hd"><h3>Credentials to collect</h3>' +
-       '<div class="side-sub">' + esc(cur.pos) + ' &middot; ' + credDone + ' of ' + p.creds.length + ' done</div></div>';
-  h += '<div class="side-body">';
-  h += '<div style="margin-bottom:12px"><span class="side-tag ' + tagCls + '">' + esc(brief.type) + '</span> ' +
-       '<span class="side-tag" style="background:var(--bg-neutral);color:var(--tx-neutral)">' + esc(p.auth) + '</span></div>';
-  p.creds.forEach(function(c,i){
-    var id = "cred-" + i, on = isDone(id);
-    h += '<div class="side-cred' + (on ? " on" : "") + '">';
-    h += '<div class="cb sm' + (on ? " on" : "") + '" data-check="' + id + '"></div>';
-    h += '<div class="side-cred-b"><div class="side-cred-n">' + esc(c.r) + '</div>';
-    h += '<div class="side-cred-i">' + esc(c.i) + '</div>';
-    if(c.ex) h += '<div class="side-cred-ex">' + esc(c.ex) + '</div>';
-    h += '</div></div>';
-  });
-  h += '<div class="side-cred-i" style="margin-top:11px;color:var(--tx-error)">Never collect credentials over email or chat. ' +
-       'Type them into the Retailer Portal, or use the secure request process.</div>';
-  h += '</div></div>';
-
-  /* go-live target + special case */
+  /* go-live target + special case notes */
   h += '<div class="side-card"><div class="side-body">';
   h += '<div class="side-fld" style="margin-bottom:16px"><label>Go-live target date</label>' +
        '<input type="date" id="sideTarget" value="' + esc(cur.goLiveTarget || "") + '"/>';
@@ -2025,16 +2238,47 @@ function sidebarHTML(p, phases, t, brief){
   }
   h += '</div>';
 
-  h += '<div class="side-fld"><label>Special case note</label>' +
-       '<textarea id="sideNote" rows="4" placeholder="Example: the client&#39;s own IT team is running the integration, we only validate. Or: they will not share the API key, so credentials go through their CTO."></textarea>' +
-       '<div class="hint">Use this when the client wants to run the integration themselves, or has unusual credential requirements. It is included in Copy as text.</div></div>';
+  /* multi special-case notes */
+  var notes = cur.specialNotes || [];
+  h += '<div class="side-fld"><label>Special case notes</label>';
+  h += '<div id="scnList">';
+  notes.forEach(function(n, i){
+    h += '<div class="scn-entry">' +
+         '<textarea data-scn="' + i + '" rows="2" placeholder="Example: client&#39;s IT team runs the integration.">' + esc(n) + '</textarea>' +
+         '<div class="scn-actions"><button class="scn-save" data-scnsave="' + i + '" title="Save">Save</button>' +
+         '<button class="scn-del" data-scndel="' + i + '" title="Remove">&times;</button></div></div>';
+  });
+  h += '</div>';
+  h += '<button class="btn btn-ghost btn-sm" id="scnAdd" style="margin-top:6px">+ Add note</button>';
+  h += '<div class="hint">One note per special circumstance. Included in Copy as text and the Health Sheet.</div></div>';
   h += '</div></div>';
 
-  /* known limitations */
+  /* tabbed: credentials / limitations */
   h += '<div class="side-card">';
-  h += '<div class="side-hd" style="background:var(--purple)"><h3>Known limitations</h3>' +
-       '<div class="side-sub">Tell the client these before go-live, not after</div></div>';
-  h += '<div class="side-body">';
+  h += '<div class="side-tabs">';
+  h += '<button class="side-tab' + (sideTab === "creds" ? " on" : "") + '" data-sidetab="creds">Credentials (' + credDone + '/' + p.creds.length + ')</button>';
+  h += '<button class="side-tab' + (sideTab === "limits" ? " on" : "") + '" data-sidetab="limits">Limitations (' + (p.limits ? p.limits.length : 0) + ')</button>';
+  h += '</div>';
+
+  /* credentials tab */
+  h += '<div class="side-body" id="sideCredsTab" style="display:' + (sideTab === "creds" ? "" : "none") + '">';
+  h += '<div style="margin-bottom:12px"><span class="side-tag ' + tagCls + '">' + esc(brief.type) + '</span> ' +
+       '<span class="side-tag" style="background:var(--bg-neutral);color:var(--tx-neutral)">' + esc(p.auth) + '</span></div>';
+  p.creds.forEach(function(c,i){
+    var id = "cred-" + i, on = isDone(id);
+    h += '<div class="side-cred' + (on ? " on" : "") + '">';
+    h += '<div class="cb sm' + (on ? " on" : "") + '" data-check="' + id + '"></div>';
+    h += '<div class="side-cred-b"><div class="side-cred-n">' + esc(c.r) + '</div>';
+    h += '<div class="side-cred-i">' + esc(c.i) + '</div>';
+    if(c.ex) h += '<div class="side-cred-ex">' + esc(c.ex) + '</div>';
+    h += '</div></div>';
+  });
+  h += '<div class="side-cred-i" style="margin-top:11px;color:var(--tx-error)">Never collect credentials over email or chat. ' +
+       'Type them into the Retailer Portal, or use the secure request process.</div>';
+  h += '</div>';
+
+  /* limitations tab */
+  h += '<div class="side-body" id="sideLimitsTab" style="display:' + (sideTab === "limits" ? "" : "none") + '">';
   if(p.limits && p.limits.length){
     p.limits.forEach(function(l){ h += '<div class="side-lim">' + esc(l) + '</div>'; });
   }else{
@@ -2044,7 +2288,8 @@ function sidebarHTML(p, phases, t, brief){
          '<b>refunds and voids</b>, and <b>orders either side of the business day cutoff</b>. ' +
          'Anything you find goes straight into the playbook.</div>';
   }
-  h += '</div></div>';
+  h += '</div>';
+  h += '</div>';
 
   return h;
 }
@@ -2053,8 +2298,6 @@ function sidebarHTML(p, phases, t, brief){
    CHECKLIST WIRING
    ═════════════════════════════════════════════════════════════════════ */
 function wireChecklist(phases, p){
-  /* one handler covers the checklist and the sidebar, so ticking a
-     credential in either place updates the other */
   each("[data-check]", function(el){
     el.onclick = function(){
       var id = el.getAttribute("data-check");
@@ -2078,7 +2321,6 @@ function wireChecklist(phases, p){
     el.onclick = function(){
       var k = el.getAttribute("data-cx");
       cur.complexity = (cur.complexity === k) ? "" : k;
-      /* picking a rating is the act of assigning it */
       if(cur.complexity && !isDone("k-rating")){
         cur.items["k-rating"] = cur.items["k-rating"] || {};
         cur.items["k-rating"].done = true;
@@ -2090,7 +2332,6 @@ function wireChecklist(phases, p){
     };
   });
 
-  /* phase collapse is pure UI state — write directly without advancing updatedAt */
   each(".phase-hd", function(el){
     el.onclick = function(){
       var pi = el.getAttribute("data-toggle");
@@ -2111,7 +2352,6 @@ function wireChecklist(phases, p){
     };
   });
 
-  /* typing never re-renders, or the caret would jump */
   each("[data-noteinput]", function(el){
     el.oninput = function(){
       var id = el.getAttribute("data-noteinput");
@@ -2122,6 +2362,75 @@ function wireChecklist(phases, p){
       debounceSave();
     };
   });
+
+  /* note save buttons */
+  each("[data-notesave]", function(el){
+    el.onclick = function(){
+      var id = el.getAttribute("data-notesave");
+      var ta = document.querySelector('[data-noteinput="' + id + '"]');
+      if(ta){
+        cur.items[id] = cur.items[id] || {};
+        cur.items[id].note = ta.value;
+        if(!ta.value && !cur.items[id].done) delete cur.items[id];
+        cur.lastEditedPhase = phaseForItem(id, phases);
+      }
+      save().then(function(){
+        var msg = document.getElementById("noteSaved-" + id);
+        if(msg){ msg.classList.add("show"); setTimeout(function(){ msg.classList.remove("show"); }, 1500); }
+      });
+    };
+  });
+
+  /* phase nav buttons */
+  each("[data-pnav]", function(el){
+    el.onclick = function(){
+      var pi = el.getAttribute("data-pnav");
+      delete cur.collapsed[pi];
+      save(true).then(function(){
+        render();
+        var target = document.getElementById("phase-" + pi);
+        if(target) target.scrollIntoView({behavior:"smooth", block:"start"});
+      });
+    };
+  });
+
+  /* toolbar overflow menu */
+  var dots = $("toolbarDots");
+  var menu = $("toolbarMenu");
+  if(dots && menu){
+    dots.onclick = function(e){
+      e.stopPropagation();
+      menu.classList.toggle("open");
+    };
+    document.addEventListener("click", function(){ menu.classList.remove("open"); });
+  }
+
+  /* provider brief toggle */
+  var pCompact = $("pbannerCompact");
+  if(pCompact) pCompact.onclick = function(){ pbannerExpanded = true; render(); };
+  var pHide = $("pbannerHide");
+  if(pHide) pHide.onclick = function(){ pbannerExpanded = false; render(); };
+
+  /* sidebar tabs */
+  each("[data-sidetab]", function(el){
+    el.onclick = function(){
+      sideTab = el.getAttribute("data-sidetab");
+      render();
+    };
+  });
+
+  /* setup bar collapse */
+  var sToggle = $("setupToggle");
+  if(sToggle) sToggle.onclick = function(e){
+    e.stopPropagation();
+    setupCollapsed = !setupCollapsed;
+    updateSetupBar();
+  };
+  var sSummary = $("setupSummary");
+  if(sSummary) sSummary.onclick = function(){
+    setupCollapsed = false;
+    updateSetupBar();
+  };
 
   var target = $("sideTarget");
   if(target) target.onchange = function(){
@@ -2138,17 +2447,40 @@ function wireChecklist(phases, p){
     save().then(render);
   };
 
-  var sNote = $("sideNote");
-  if(sNote){
-    sNote.value = cur.specialNote || "";
-    sNote.oninput = function(){
-      cur.specialNote = sNote.value;
+  /* multi special-case notes */
+  each("[data-scn]", function(el){
+    el.oninput = function(){
+      var i = parseInt(el.getAttribute("data-scn"), 10);
+      cur.specialNotes[i] = el.value;
+      cur.specialNote = cur.specialNotes.join("\n");
       cur.lastEditedPhase = "Special case note";
       debounceSave();
     };
-  }
+  });
+  each("[data-scnsave]", function(el){
+    el.onclick = function(){
+      cur.specialNote = cur.specialNotes.join("\n");
+      save().then(function(){ toast("Note saved"); });
+    };
+  });
+  each("[data-scndel]", function(el){
+    el.onclick = function(){
+      var i = parseInt(el.getAttribute("data-scndel"), 10);
+      cur.specialNotes.splice(i, 1);
+      cur.specialNote = cur.specialNotes.join("\n");
+      cur.lastEditedPhase = "Special case note";
+      save().then(render);
+    };
+  });
+  var scnAdd = $("scnAdd");
+  if(scnAdd) scnAdd.onclick = function(){
+    cur.specialNotes = cur.specialNotes || [];
+    cur.specialNotes.push("");
+    cur.specialNote = cur.specialNotes.join("\n");
+    cur.lastEditedPhase = "Special case note";
+    save().then(render);
+  };
 
-  /* collapse/expand all: UI-only state, keep timestamp */
   $("expandAll").onclick = function(){ cur.collapsed = {}; save(true).then(render); };
   $("collapseAll").onclick = function(){
     cur.collapsed = {};
@@ -2193,7 +2525,7 @@ function hsf(type, path, label, opts){
   var val = hs[path] == null ? "" : hs[path];
   var h = '<div class="hs-f' + (opts.wide ? " wide" : "") + '"><label>' + esc(label) + '</label>';
   if(type === "textarea"){
-    h += '<textarea data-hs="' + path + '" rows="' + (opts.rows || 3) + '" placeholder="' +
+    h += '<textarea data-hs="' + path + '" rows="' + (opts.rows || 2) + '" placeholder="' +
          esc(opts.ph || "") + '">' + esc(val) + '</textarea>';
   }else if(type === "select"){
     h += '<select data-hs="' + path + '"><option value="">Not set</option>';
@@ -2241,7 +2573,7 @@ function renderHealth(){
        '<button class="btn btn-ghost btn-sm" id="hsPrint">Print</button>' +
        '<button class="btn btn-ghost btn-sm" id="hsToChecklist">Back to checklist</button></div>';
 
-  /* header */
+  /* header (info tiles are now in the sticky slot, this is the description only) */
   h += '<div class="hs-hd"><span class="eyebrow">Integration health sheet</span>';
   h += '<h2>' + esc(cur.client) + ' &middot; ' + esc(cur.pos) + '</h2>';
   h += '<div class="hs-sub">Opened at kickoff, closed at Day 30. Everything on this page is evidence: what was ' +
@@ -2258,8 +2590,17 @@ function renderHealth(){
   h += hsMeta("Days open", anchor ? String(daysSince(anchor)) : "0", true);
   h += '</div></div>';
 
+  /* section nav strip */
+  var hsSections = ["Scope","Highlights","Gate log","Variance","Audits","Friction","Sign-off","Close"];
+  h += '<div class="hs-nav">';
+  hsSections.forEach(function(s){
+    var id = "hs-" + s.toLowerCase().replace(/[^a-z]/g, "");
+    h += '<button class="hsnav" data-hsnav="' + id + '">' + esc(s) + '</button>';
+  });
+  h += '</div>';
+
   /* 1. scope and contact */
-  h += hsCard("Scope and contacts", "Captured at kickoff. These are the answers that drove the complexity rating, so write down what you were actually told, not what you assumed.");
+  h += hsCard("Scope and contacts", "Captured at kickoff. These are the answers that drove the complexity rating, so write down what you were actually told, not what you assumed.", "hs-scope");
   h += '<div class="hs-grid">';
   h += hsf("text","contactName","Client contact name",{ph:"Full name, not a team",
     sub:"The person who actually answers when something breaks, not whoever signed the contract"});
@@ -2286,10 +2627,11 @@ function renderHealth(){
       if(st && st.note && st.note.trim()) itemNotes.push({phase:ph.t, label:it.r, note:st.note.trim(), done:!!st.done});
     });
   });
-  h += hsCard("Checklist highlights", "Pulled from the Checklist tab: the special case note and any per-item notes left there, plus what we already know about this POS. Edit the source on the Checklist tab, not here.");
-  if(cur.specialNote && cur.specialNote.trim()){
-    h += '<div class="hs-hl"><span class="hs-hl-tag">Special case</span><br>' + esc(cur.specialNote.trim()) + '</div>';
-  }
+  h += hsCard("Checklist highlights", "Pulled from the Checklist tab: the special case note and any per-item notes left there, plus what we already know about this POS. Edit the source on the Checklist tab, not here.", "hs-highlights");
+  var scnFiltered = (cur.specialNotes || []).filter(function(n){ return n && n.trim(); });
+  scnFiltered.forEach(function(n, i){
+    h += '<div class="hs-hl"><span class="hs-hl-tag">Special case ' + (scnFiltered.length > 1 ? (i + 1) : "") + '</span><br>' + esc(n.trim()) + '</div>';
+  });
   itemNotes.forEach(function(n){
     h += '<div class="hs-hl"><span class="hs-hl-tag">' + esc(n.phase) + (n.done ? "" : " &middot; still open") + '</span><br>' +
          '<b>' + esc(n.label) + ':</b> ' + esc(n.note) + '</div>';
@@ -2298,13 +2640,13 @@ function renderHealth(){
     h += '<div class="hs-hl"><span class="hs-hl-tag">Known limitations for ' + esc(cur.pos) + ' &middot; provider-wide, not client-specific</span><br>' +
          p.limits.map(esc).join('<br>') + '</div>';
   }
-  if(!(cur.specialNote && cur.specialNote.trim()) && !itemNotes.length && !(p.limits && p.limits.length)){
+  if(!scnFiltered.length && !itemNotes.length && !(p.limits && p.limits.length)){
     h += '<div class="hs-emptyrow">Nothing flagged yet. Add a special case note or a per-item note on the Checklist tab and it appears here automatically.</div>';
   }
   h += hsCardEnd();
 
   /* 2. gate log */
-  h += hsCard("Gate log", "Status comes straight from the checklist and cannot be typed over. The note is where the evidence goes: what you checked, what you saw, and anything you accepted with a caveat.");
+  h += hsCard("Gate log", "Status comes straight from the checklist and cannot be typed over. The note is where the evidence goes: what you checked, what you saw, and anything you accepted with a caveat.", "hs-gatelog");
   GATES.forEach(function(g){
     var st = gateStatus(phases, g.i);
     h += '<div class="hs-gate">';
@@ -2319,7 +2661,7 @@ function renderHealth(){
   h += hsCardEnd();
 
   /* 3. variance log */
-  h += hsCard("Variance log", "The 1% KPI is a trend, not a single reading. Add a row for the pre-go-live check, one at Day 7, and one per week up to Day 30. The percentage calculates itself.");
+  h += hsCard("Variance log", "The 1% KPI is a trend, not a single reading. Add a row for the pre-go-live check, one at Day 7, and one per week up to Day 30. The percentage calculates itself.", "hs-variance");
   h += '<div class="hs-scroll"><table class="hs-tbl"><thead><tr>' +
        '<th style="width:120px">From</th><th style="width:120px">To</th>' +
        '<th style="width:130px">POS total</th><th style="width:130px">Supy total</th>' +
@@ -2345,7 +2687,7 @@ function renderHealth(){
   h += hsCardEnd();
 
   /* 4. audits */
-  h += hsCard("Day 7 and Day 30 audits", "The checklist has the item-by-item audit. This is the summary you would hand someone who asks what state the integration is in.");
+  h += hsCard("Day 7 and Day 30 audits", "The checklist has the item-by-item audit. This is the summary you would hand someone who asks what state the integration is in.", "hs-audits");
   h += '<div class="hs-grid">';
   h += hsf("date","d7date","Day 7 audit completed",{sub:"Rerun the reconciliation on the last 3 days, do not reuse the pre-go-live window"});
   h += hsf("date","d30date","Day 30 audit completed",{sub:"This date is what closes the Health Sheet"});
@@ -2357,7 +2699,7 @@ function renderHealth(){
   h += hsCardEnd();
 
   /* 5. friction log */
-  h += hsCard("Friction log", "Anything that was harder than it should have been. This is the input to the monthly friction report to Product, so rough hours are more useful than a perfect description.");
+  h += hsCard("Friction log", "Anything that was harder than it should have been. This is the input to the monthly friction report to Product, so rough hours are more useful than a perfect description.", "hs-friction");
   h += '<div class="hs-scroll"><table class="hs-tbl"><thead><tr>' +
        '<th style="width:130px">Date</th><th>What happened</th>' +
        '<th style="width:100px">Hours lost</th><th style="width:150px">In the playbook?</th><th style="width:44px"></th>' +
@@ -2384,7 +2726,7 @@ function renderHealth(){
   h += hsCardEnd();
 
   /* 6. sign-off */
-  h += hsCard("Go-live sign-off", "You are a required approver here, not a cc. A conditional GO is a legitimate answer, but the conditions have to be written down and dated or they are not conditions.");
+  h += hsCard("Go-live sign-off", "You are a required approver here, not a cc. A conditional GO is a legitimate answer, but the conditions have to be written down and dated or they are not conditions.", "hs-signoff");
   h += '<div class="hs-grid">';
   h += hsf("select","signDecision","Decision",{options:["GO","GO with conditions","NO-GO"],
     sub:"Marking GO here is what unblocks this deal's go-live status in HubSpot. Nothing else does."});
@@ -2397,7 +2739,7 @@ function renderHealth(){
   h += hsCardEnd();
 
   /* 7. close */
-  h += hsCard("Day 30 close", "The sheet closes at Day 30. Two ticket numbers, not a verdict: the charter KPI is a downward trend, and a trend needs two readings.");
+  h += hsCard("Day 30 close", "The sheet closes at Day 30. Two ticket numbers, not a verdict: the charter KPI is a downward trend, and a trend needs two readings.", "hs-close");
   h += '<div class="hs-grid">';
   h += hsf("number","closeTickets1","Integration tickets, week 1",{ph:"e.g. 6",
     sub:"Count tickets tied to this integration only, not general POS or account issues"});
@@ -2417,8 +2759,8 @@ function hsMeta(k,v,mono){
   return '<div class="hs-mcell"><span class="k">' + esc(k) + '</span>' +
          '<span class="v' + (mono ? " mono" : "") + '">' + esc(v) + '</span></div>';
 }
-function hsCard(title, hint){
-  return '<div class="hs-card"><div class="hs-card-hd"><h3>' + esc(title) + '</h3>' +
+function hsCard(title, hint, id){
+  return '<div class="hs-card"' + (id ? ' id="' + id + '"' : '') + '><div class="hs-card-hd"><h3>' + esc(title) + '</h3>' +
          (hint ? '<div class="hint">' + esc(hint) + '</div>' : '') + '</div><div class="hs-body">';
 }
 function hsCardEnd(){ return '</div></div>'; }
@@ -2475,6 +2817,13 @@ function wireHealth(){
     };
   });
 
+  each("[data-hsnav]", function(el){
+    el.onclick = function(){
+      var target = document.getElementById(el.getAttribute("data-hsnav"));
+      if(target) target.scrollIntoView({behavior:"smooth", block:"start"});
+    };
+  });
+
   $("hsPrint").onclick = function(){ window.print(); };
   $("hsToChecklist").onclick = function(){ goPage("checklist"); };
   $("hsCopy").onclick = function(){ copyHealthSheet(); };
@@ -2507,8 +2856,10 @@ function copyAsText(phases, p){
   out += "Last activity: " + (fmtDate(cur.updatedAt) || "not recorded") + "\n";
   out += "Go-live target: " + (cur.goLiveTarget ? fmtDate(cur.goLiveTarget) +
          (cur.goLiveManual ? " (set by hand)" : " (automatic)") : "not set") + "\n";
-  if(cur.specialNote && cur.specialNote.trim()){
-    out += "\nSPECIAL CASE NOTE\n" + cur.specialNote.trim() + "\n";
+  var scn = (cur.specialNotes || []).filter(function(n){ return n && n.trim(); });
+  if(scn.length){
+    out += "\nSPECIAL CASE NOTES\n";
+    scn.forEach(function(n, i){ out += (i + 1) + ". " + n.trim() + "\n"; });
   }
   out += "\n";
 
@@ -2969,7 +3320,11 @@ function openClient(name, pos, isNew){
     cur.collapsed = cur.collapsed || {};
     cur.hs = cur.hs || blankHS();
     cur.complexity = migrateComplexity(cur.complexity || "");
-    cur.specialNote = cur.specialNote || "";
+    if(cur.specialNote && !cur.specialNotes){
+      cur.specialNotes = [cur.specialNote];
+    }
+    cur.specialNotes = cur.specialNotes || [];
+    cur.specialNote = cur.specialNotes.join("\n");
     cur.goLiveTarget = cur.goLiveTarget || "";
     cur.goLiveManual = !!cur.goLiveManual;
     cur.createdAt = cur.createdAt || nowISO();
@@ -2978,6 +3333,7 @@ function openClient(name, pos, isNew){
        open act itself count as "last edited" in the tracker */
     return save(recordExisted && !isNew);
   }).then(function(){
+    setupCollapsed = true;
     goPage("checklist");
     if(isNew) toast("Created " + name + " on " + pos);
   });
