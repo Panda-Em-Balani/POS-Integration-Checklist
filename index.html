@@ -715,7 +715,7 @@ var P = {
 
 "Addictive":{type:"self",auth:"API (phone + password)",
   note:"Nothing to arrange with Supy first. Ask the client to get both details from their Addictive contact.",
-  limits:["Addictive does not share discounts at all. Discount amounts will never appear in Supy sales data, even when the cashier applied them on the POS. Tell the client this before go-live so it is not a surprise later."],
+  limits:["Addictive does not share discounts at all. Discount amounts will never appear in Supy sales data, even when the cashier applied them on the POS. Tell the client this before go-live so it is not a surprise later.","Modifiers are supported and mapped alongside regular menu items."],
   recon:"Reports > Reports Dashboard > Sales Report. Net Sales = Total Sales Excl. Tax. Gross Sales = Total Sales Incl. Tax.",
   creds:[
     {r:"Phone number",i:"The phone number the Addictive account is registered under. Goes in the 'Enter Phone' field in Supy.",ex:"+971 50 123 4567"},
@@ -724,7 +724,7 @@ var P = {
 
 "AI Menu":{type:"self",auth:"API (client ID + secret)",
   note:"Ask the client to get both values from their AI Menu contact.",
-  limits:["A refund with no matching sale on the same day gets dropped from Supy sales data, unless someone marks it as wastage."],
+  limits:["Discounts are supported and reflected in sales data.","Modifiers are supported and mapped alongside regular menu items.","A refund with no matching sale on the same day gets dropped from Supy sales data, unless someone marks it as wastage."],
   recon:"Administration > View History > Custom Sales Report. Settled Gross Total = Total Sales Incl. Tax. Net Total = Total Sales Excl. Tax. Total Discount = Total Discount Value.",
   creds:[
     {r:"Client ID",i:"Goes in the 'Key' field when you add AI Menu as a POS in Supy."},
@@ -744,7 +744,7 @@ var P = {
 
 "Clover":{type:"self",auth:"OAuth (client logs in)",
   note:"Nothing to request from Clover. The client signs into their own Clover account in a popup window during setup.",
-  limits:["Every Clover location becomes its own separate tenant in Supy. A client with 5 locations means 5 tenants, not 1. Rate the job as more complex and plan the extra setup time."],
+  limits:["Discounts are supported and reflected in sales data.","Modifiers are supported and mapped alongside regular menu items.","Every Clover location becomes its own separate tenant in Supy. A client with 5 locations means 5 tenants, not 1. Rate the job as more complex and plan the extra setup time."],
   recon:"Reports > Sales Report, with a custom date range. Net Sales = Total Sales Excl. Tax.",
   creds:[
     {r:"Clover portal email",i:"The client types this on the Clover login page after Supy redirects them. You never see it."},
@@ -764,7 +764,7 @@ var P = {
 
 "Dinlr":{type:"self",auth:"OAuth (client logs in)",
   note:"Nothing to request from Dinlr. The client signs into their own account during setup.",
-  limits:[],
+  limits:["Discounts are supported and reflected across the affected item, variant, and modifiers.","Modifiers are supported and mapped alongside regular menu items.","Cancellations and refunds update the original order rather than creating a separate one.","Sales timestamps follow the time zone configured on the Dinlr location."],
   recon:"Overview > Reports > Sales Report > Sales Summary. Totals = Total Sales Incl. Tax. Net Sales = Total Sales Excl. Tax.",
   creds:[
     {r:"Dinlr username",i:"The client types this on the Dinlr login page."},
@@ -774,7 +774,7 @@ var P = {
 
 "Dual Link":{type:"self",auth:"API (username + password)",
   note:"Ask the client to get both from their Dual Link contact.",
-  limits:[],
+  limits:["Discounts are supported and reflected in your sales data.","Modifiers are supported. In the Dual Link sales report they appear as separate line items marked with an asterisk next to the product name."],
   recon:"Reports > Sales by Product. PRODUCT (a * means it is a modifier) = POS Item Name. BASE = Total Sales Excl. Tax. TOTAL = Total Sales Incl. Tax. DISCOUNTED = Total Discount Value.",
   creds:[
     {r:"Username",i:"Goes in Supy when you add Dual Link."},
@@ -784,7 +784,7 @@ var P = {
 "Eats365":{type:"assist",auth:"API (Supy assists)",
   mapping:"Syncs from the POS, but only after Item Access Permission is switched on",
   note:"The order of steps matters here. The CSM has to start with Eats365 support and send an access token to the client's Eats365 contact, who redeems it on the merchant portal. Only after that can the client connect. Start this on day one.",
-  limits:["Sales types are not pulled in automatically. Each one has to be typed in by hand, by code and name (pick_up, delivery, dine_in). If the client adds a new order type later, someone has to remember to add it here too, or those sales arrive with no type on them."],
+  limits:["Discounts are supported and reflected in sales data.","Modifiers are supported and mapped alongside regular menu items.","Completed orders appear as positive sales. Returned orders appear under the Void/Cancelled tab as negative values, recorded against the same order rather than creating a new one.","Sales types are not pulled in automatically. Each one has to be typed in by hand, by code and name (pick_up, delivery, dine_in). If the client adds a new order type later, someone has to remember to add it here too, or those sales arrive with no type on them."],
   creds:[
     {r:"CSM raises the request with Eats365",i:"Do this first. Nothing else can start until it is done. The CSM contacts Eats365 support and gets the access token."},
     {r:"Eats365 contact redeems the token",i:"The client's Eats365 contact redeems the token on the Eats365 merchant portal."},
@@ -812,7 +812,7 @@ var P = {
 
 "Foodics":{type:"self",auth:"OAuth (client logs in)",
   note:"Nothing to request from Foodics. The client signs into their own account in a popup and approves the permissions Supy asks for.",
-  limits:["The business day opening and closing times have to match between Foodics and Supy, branch by branch. If they do not, orders near the cutoff land on different dates in each system and the daily totals will never agree. Check this before you validate, not after you find a mismatch.","Items sold at 100% discount are left out of the Foodics net quantity but counted in Supy, so quantities can differ on days with giveaways."],
+  limits:["Discounts are supported and reflected in sales data.","Modifiers and combos are tracked separately from the parent product in Supy. Foodics' own Sales by Products dashboard rolls modifier revenue into the parent product's total without breaking it out, so the two reports can look different even when the underlying revenue matches.","The business day opening and closing times have to match between Foodics and Supy, branch by branch. If they do not, orders near the cutoff land on different dates in each system and the daily totals will never agree. Check this before you validate, not after you find a mismatch.","Items sold at 100% discount are left out of the Foodics net quantity but counted in Supy, so quantities can differ on days with giveaways."],
   recon:"Reports > Sales Reports > Sales by Product. Use Sales by Product, not Sales by Branch, because the two do not agree. Do not tick 'group by day' either, it inflates the revenue figure.",
   creds:[
     {r:"Account Number",i:"The client types this on the Foodics login popup.",ex:"12345"},
@@ -841,7 +841,7 @@ var P = {
 
 "GoTab":{type:"self",auth:"API (key + secret)",
   note:"Ask the client to get both from their GoTab contact.",
-  limits:["You cannot tell which item a discount was applied to. GoTab spreads every discount evenly across all items in the order, so item-level discount reporting is not possible.","A day's sales only become available once GoTab closes the fiscal day. Pull a day that is still open and you get nothing back, which looks like a broken connection but is not."],
+  limits:["You cannot tell which item a discount was applied to. GoTab spreads every discount evenly across all items in the order, so item-level discount reporting is not possible.","Modifiers are supported and mapped alongside regular menu items.","A day's sales only become available once GoTab closes the fiscal day. Pull a day that is still open and you get nothing back, which looks like a broken connection but is not."],
   creds:[
     {r:"API Access ID",i:"Goes in the 'Key' field when you add GoTab in Supy."},
     {r:"API Access Secret",i:"Goes in the 'Secret' field."}
@@ -850,7 +850,7 @@ var P = {
 "Grubtech (via API)":{type:"tech",auth:"API (Supy Engineering)",
   mapping:"Syncs from the POS, unless one Location ID covers several stores, then it goes manual",
   note:"Supy Integrations sets this one up, not you. The client either asks their Grubtech contact for the credentials, or emails Grubtech directly with the CSM copied in.",
-  limits:["If one Grubtech Location ID covers several stores, item mapping cannot sync automatically and items have to be uploaded by hand. Find this out early, because it changes the plan.","Schedule the sales sync at least 3 hours after the last shift closes, or you will pull incomplete days.","Grubtech only supports cancelling a whole order. Partial cancellations and returns do not come through."],
+  limits:["If one Grubtech Location ID covers several stores, item mapping cannot sync automatically and items have to be uploaded by hand. Find this out early, because it changes the plan.","Schedule the sales sync at least 3 hours after the last shift closes, or you will pull incomplete days.","Discounts are supported. Grubtech only supports full order cancellation; partial cancellations and returns are not available through the integration."],
   recon:"Real-Time Reports > Sales > Locations. Net Sales = Total Sales Excl. Tax, and it may include delivery charges. Gross Sales = Total Sales Incl. Tax. Discounts = Total Discount Value.",
   creds:[
     {r:"Sales API Key",i:"Collect from the client and pass to the CSM for the Integrations team."},
@@ -863,7 +863,7 @@ var P = {
 "Grubtech (via Webhooks)":{type:"tech",auth:"Webhook (Supy Engineering)",
   mapping:"Done inside Grubtech, not in Supy. Supy recipe codes go in the Grubtech external ID field",lead:"About 48 hours from handing over the branch details",
   note:"Supy Integrations builds the webhook connection, usually within 48 hours of getting the branch details. Supy gives Grubtech the endpoint to push to.",
-  limits:["Item mapping happens inside Grubtech, not in Supy. The Supy recipe code has to be typed into the 'external ID' field on each Grubtech item.","There is no Sync button and no way to re-fetch a day. If Supy is briefly unreachable when Grubtech pushes, that push is lost and cannot be recovered.","Delivery fees land on a dedicated 'delivery fee' recipe, which has to be created in Supy first or the fees have nowhere to go."],
+  limits:["Item mapping happens inside Grubtech, not in Supy. The Supy recipe code has to be typed into the 'external ID' field on each Grubtech item.","There is no Sync button and no way to re-fetch a day. If Supy is briefly unreachable when Grubtech pushes, that push may not be retried successfully. The Supy Integrations team monitors for and helps resolve any gaps.","Discounts and modifiers are both supported, including item-level and order-level discounts.","Delivery fees land on a dedicated 'delivery fee' recipe, which has to be created in Supy first or the fees have nowhere to go."],
   creds:[
     {r:"Branch ID (one per location)",i:"Get one per location from the client's Grubtech contact and pass them to the CSM."},
     {r:"Recipe codes entered in Grubtech",i:"For every recipe, the matching Supy recipe code goes into the 'external ID' field on the Grubtech item.",n:"This is done in Grubtech by the client or by Grubtech, not by you in Supy. Until it is done, nothing maps."},
@@ -872,7 +872,7 @@ var P = {
 
 "IdealPOS":{type:"self",auth:"API (key + ID + secret)",
   note:"Ask the client to get all three from their IdealPOS contact.",
-  limits:["A refund comes through as a brand new transaction with no link back to the original sale, so you cannot match them up.","An open tab is dated when it is closed, not when it is opened. A tab opened last night and settled this morning counts as today's sale.","Wastage is its own transaction type and can never appear inside a sales order.","Timestamps come through in the restaurant's local time, not UTC. Do not convert them."],
+  limits:["Discounts are supported at item level, order/subtotal level, or both at once.","Modifiers are supported and mapped alongside regular menu items.","Voided items are removed from a sale before payment and stay recorded within the same order.","A refund comes through as a brand new transaction with no link back to the original sale, so you cannot match them up.","An open tab is dated when it is closed, not when it is opened. A tab opened last night and settled this morning counts as today's sale.","Wastage is its own transaction type and can never appear inside a sales order.","Timestamps come through in the restaurant's local time, not UTC. Do not convert them."],
   creds:[
     {r:"API Key",i:"Goes in Supy when you add Ideal POS."},
     {r:"Tenant ID",i:"Identifies the client's IdealPOS account."},
@@ -881,7 +881,7 @@ var P = {
 
 "Lightspeed K-Series":{type:"self",auth:"API (direct login)",
   note:"The client uses the Lightspeed K-Series login they already have. There is nothing to request from Lightspeed.",
-  limits:["Use a different login email for each restaurant or account. Reuse one email across two accounts and their menu item data gets mixed together.","If you are connecting branches across several tenants, set each tenant's sync time at least 30 minutes apart or the authentication fails.","Sales are not tracked for 'production instructions'. If the client uses those instead of real menu items, they have to be rebuilt as proper items first."],
+  limits:["Use a different login email for each restaurant or account. Reuse one email across two accounts and their menu item data gets mixed together.","If you are connecting branches across several tenants, set each tenant's sync time at least 30 minutes apart or the authentication fails.","Sales are not tracked for 'production instructions'. If the client uses those instead of real menu items, they have to be rebuilt as proper items first.","Discounts are supported and reflected in sales data.","Modifiers are supported and mapped alongside regular menu items.","If 'Use Void Reason to Track Wastage' is off (the default), every void/cancelled transaction appears as wastage. Turn it on only once staff consistently tag real wastage with the word 'wastage' in the void reason field."],
   recon:"Reports > Shifts Report. Gross = Total Sales Incl. Tax. Net = Total Sales Excl. Tax.",
   creds:[
     {r:"Username",i:"The client enters this in Supy when adding Lightspeed K-Series.",n:"Check this email is used for this restaurant only and is not shared with another Lightspeed account."},
@@ -893,7 +893,7 @@ var P = {
 
 "Lightspeed O-Series":{type:"self",auth:"OAuth (client logs in)",
   note:"This is the product that used to be called Kounta. The client signs in with their existing Lightspeed O-Series login and grants access to the right company.",
-  limits:["On-screen modifiers are not tracked in sales data at all. Only 'options' are. This is a limit of the Lightspeed API, not something Supy can work around.","Any sale carrying an on-screen modifier arrives as INVALID_MODIFIER priced at 0.0. If the client uses on-screen modifiers, they must move them to options in the Lightspeed backoffice before go-live. This cannot be fixed retroactively, so past days stay broken forever."],
+  limits:["Discounts are supported and reflected in sales data.","On-screen modifiers are not tracked in sales data at all. Only 'options' are. This is a limit of the Lightspeed API, not something Supy can work around.","Any sale carrying an on-screen modifier arrives as INVALID_MODIFIER priced at 0.0. If the client uses on-screen modifiers, they must move them to options in the Lightspeed backoffice before go-live. This cannot be fixed retroactively, so past days stay broken forever."],
   recon:"Insights > Reports > Product Sales > Sales by Product. Product Name (a * means it is a modifier) = POS Item Name. Sales = Total Sales Incl. Tax.",
   creds:[
     {r:"Lightspeed O-Series email",i:"The client types this on the Lightspeed login page."},
@@ -915,7 +915,7 @@ var P = {
 "Linga POS":{type:"assist",auth:"API (Supy assists with mapping)",
   lead:"Branch mapping needs CSM time, so it is not instant",
   note:"The client asks their Linga POS contact for the Store ID and API Key. The CSM has to help with branch mapping.",
-  limits:["Linga's own sales reports fold modifier returns into the parent item's total, while Supy records them per modifier. On any day with returns the two reports will differ. That is expected, not a bug, so do not raise it as an issue."],
+  limits:["Discounts are supported and reflected in sales data.","Modifiers are supported but are reported separately from their parent item.","Linga's own sales reports fold modifier returns into the parent item's total, while Supy records them per modifier. On any day with returns the two reports will differ. That is expected, not a bug, so do not raise it as an issue."],
   recon:"Reports > Sales. Download both the menu items report and the modifiers report, you need both. Sale Amount = Total Sales Excl. Tax. Quantity = Quantity Sold. Discount = Total Discount Value.",
   creds:[
     {r:"Store ID (for the first connection)",i:"Goes in Supy when you add Linga POS."},
@@ -944,7 +944,8 @@ var P = {
 
 "Marn":{type:"self",auth:"API (brand key)",
   note:"Ask the client to get their Brand Key from their Marn contact. The CSM has a short video walkthrough on finding it, available on request.",
-  limits:["Automated Sync is required. The manual sync button does not work for Marn, so turn on Auto-Sales Sync in the branch mapping dropdown for every branch you connect.","Only order-level discounts come through. Item-level discounts are not supported.","Some voided orders do not return item-level detail, so the integration cannot always reflect the voided items individually.","Complimentary items look odd in raw Marn reports: sale amount at full price, tax as a matching negative, grand total zero. That is expected, not a bug."],
+  limits:["Automated Sync is required. The manual sync button does not work for Marn, so turn on Auto-Sales Sync in the branch mapping dropdown for every branch you connect.","Only order-level discounts come through. Item-level discounts are not supported.","Some voided orders do not return item-level detail, so the integration cannot always reflect the voided items individually.","Complimentary items look odd in raw Marn reports: sale amount at full price, tax as a matching negative, grand total zero. That is expected, not a bug.","For items with a priced modifier, the order Grand Total in Marn includes both the item and modifier revenue together."],
+  recon:"Analytics > Reports > Sales Details. Sale = Total Sales Excl. Tax (after discount). Discount = Total Discount Value (incl. tax, already deducted). TotalTax = Total Tax. Check Voided Items and Refunds reports separately.",
   creds:[
     {r:"Brand Key",i:"Goes in Supy when you add Marn. This is the only value needed."}
   ]},
@@ -952,6 +953,7 @@ var P = {
 "MobiPOS":{type:"self",who:"portal",auth:"API (access token)",
   note:"The client can get this themselves: log in to MobiPOS, go to the API access section and copy the token. Their MobiPOS contact can also provide it.",
   limits:["Refunds are not linked back to the original order, so you cannot always trace a refund to the sale it came from.","Modifiers can come through as ordinary menu items rather than as sub-items of a parent product. Treat modifier support as unreliable here.","Discount handling is not fully confirmed. Check it with the CSM before promising the client discount reporting."],
+  recon:"Reports > Transaction Order Report. Price/Total Price = Total Sales Incl. Tax. Apply 'Show Nett Price' filter to get Total Sales Excl. Tax.",
   creds:[
     {r:"API Access Token",i:"Goes in Supy when you add MobiPOS. This is the only value needed."}
   ]},
@@ -966,7 +968,9 @@ var P = {
 
 "Omega POS":{type:"self",auth:"API (key + branch IDs)",
   note:"Ask the client to get both from their Omega POS contact. Request early, because Omega is one of the slower providers to respond.",
-  limits:["Omega POS may charge the client a fee to hand over the credentials, and their support can be slow on integration questions. Build lead time into the plan rather than assuming a same-week turnaround.","Voided and cancelled items show up as a negative quantity in Omega sales data.","The error 'Branch License not valid or expired' means the key is dead. Ask the Omega contact to issue a new one."],
+  limits:["Omega POS may charge the client a fee to hand over the credentials, and their support can be slow on integration questions. Build lead time into the plan rather than assuming a same-week turnaround.","Discounts are supported and recorded at the order level.","Voided and cancelled items show up as a negative quantity in Omega sales data.","The error 'Branch License not valid or expired' means the key is dead. Ask the Omega contact to issue a new one."],
+  mapping:"Manual upload with the Menu Items Template, no POS sync",
+  recon:"Backoffice Reports > Sales Summary by Day. Before Tax = Total Sales Excl. Tax.",
   creds:[
     {r:"API Key",i:"The only value entered at connect. Goes in Supy when you add Omega POS."},
     {r:"Branch ID (one per branch)",i:"One ID for each branch the client wants connected. Used at branch mapping, not at connect, but collect it in the same request."}
@@ -974,7 +978,7 @@ var P = {
 
 "Oolio":{type:"self",auth:"API (email + password)",
   note:"Ask the client for the login on the account they use to manage Oolio, or get it from their Oolio contact.",
-  limits:[],
+  limits:["Both order-level and item-level discounts are supported. Item-level discounts are distributed proportionally between an item and its modifiers.","Modifiers are supported and follow the same tax treatment as the item they belong to.","Refunds are linked back to their original order, so refunded sales can be traced.","Voided items are separated from completed sales in the underlying data."],
   creds:[
     {r:"Email",i:"The email on the client's Oolio account. Goes in Supy when you add Oolio."},
     {r:"Password",i:"The password for that same Oolio account."}
@@ -997,7 +1001,7 @@ var P = {
 
 "Papaya":{type:"self",who:"portal",auth:"API (key)",
   note:"The client can create this themselves: in Papaya, go to Settings > Open API, create a new key and select the Inventory Management use case. Their Papaya contact can also provide it.",
-  limits:["Papaya's API does not return refund details. Refunds will not come through at all, so account for them separately at reconciliation."],
+  limits:["Papaya's API does not return refund details. Refunds will not come through at all, so account for them separately at reconciliation.","Item-level discounts are supported. When a discount applies to an item with modifiers, the discount is distributed between the item and its modifiers.","Modifiers are supported, and modifier prices are included in the item's total price."],
   creds:[
     {r:"API Key",i:"Goes in Supy when you add Papaya. This is the only value needed."}
   ]},
@@ -1020,7 +1024,9 @@ var P = {
 
 "QU POS":{type:"self",auth:"API (client ID + secret + integration ID)",
   note:"Ask the client to get all three from their QU POS contact.",
-  limits:[],
+  limits:["Discounts are supported and recorded at the order level."],
+  recon:"Reports > Sales > Check Detail. Net Sales = Total Sales Excl. Tax. Gross Sales = Total Sales Incl. Tax. Discounts = Total Discount.",
+  mapping:"Manual upload with the Menu Items Template, no POS sync",
   creds:[
     {r:"Client ID",i:"Goes in Supy when you add QU POS."},
     {r:"Client Secret",i:"Goes in Supy alongside the ID."},
@@ -1030,6 +1036,7 @@ var P = {
 "Quadranet":{type:"self",auth:"API (login + brand ID + site ID)",
   note:"Ask the client to get all four from their Quadranet contact.",
   limits:["Leave the sales sync schedule on and set it to 9:30 AM or later, so the previous business day has fully closed before it runs.","If a POS item arrives with no item ID, Supy uses the item name as the code instead. The tooltip saying so is expected. Fixing historical data means deleting the affected records and re-pulling them.","Discount and modifier support is not documented for Quadranet. Confirm with the CSM if either matters to the client."],
+  mapping:"Manual upload with the Menu Items Template, no POS sync",
   creds:[
     {r:"Username",i:"Goes in Supy when you add Quadranet."},
     {r:"Password",i:"Goes in Supy alongside the username."},
@@ -1039,7 +1046,8 @@ var P = {
 
 "Quantic POS":{type:"self",who:"portal",auth:"API (merchant ID)",
   note:"The client finds this themselves: in the Quantic merchant portal, go to App Store > Third Party Apps > Supy > Subscribe, then open the settings icon. The Merchant ID shows there once they have subscribed.",
-  limits:[],
+  limits:["Item-level discounts are supported, including voucher-based discounts.","Modifiers are supported. Modifier quantity is calculated as item quantity multiplied by modifier quantity, and modifier price is calculated the same way.","Orders can close as paid, voided, complimentary, or refunded, and each status is distinguished in the sales data."],
+  recon:"Reports > Sales Summary > Sales Summary / EOD. Total Sale = Total Sales Incl. Tax. Net Sale = Total Sales Excl. Tax.",
   creds:[
     {r:"Merchant ID",i:"Goes in the POS Merchant ID field in Supy. This is the only value needed."}
   ]},
@@ -1055,7 +1063,8 @@ var P = {
 
 "Revel":{type:"self",auth:"API (key + secret + host)",
   note:"Ask the client to get all three from their Revel contact, or from Revel support directly with the Supy contact kept in the loop.",
-  limits:["Revenue rung up through Revel's 'Special Request' feature cannot be captured, because no product ID or name is passed. Get the client to create a real product or modifier instead.","Renaming a menu item in Revel rewrites the name retroactively across all past Revel reports, but the integration keeps the name that was live at the time of each sale. Item codes still match, so mapping is fine, but names will look inconsistent.","The Product Mix report can split one product code across several rows while Supy aggregates it into one. Sum the split rows before you call it a variance."],
+  limits:["Both order-level and item-level discounts are supported, and modifiers are supported as well.","Revenue rung up through Revel's 'Special Request' feature cannot be captured, because no product ID or name is passed. Get the client to create a real product or modifier instead.","Renaming a menu item in Revel rewrites the name retroactively across all past Revel reports, but the integration keeps the name that was live at the time of each sale. Item codes still match, so mapping is fine, but names will look inconsistent.","The Product Mix report can split one product code across several rows while Supy aggregates it into one. Sum the split rows before you call it a variance.","In the Void/Cancelled tab, there are two separate options for converting to wastage: 'Convert Sales to Wastages' (for regular sales) and 'Convert Complimentary to Wastages' (for complimentary items). Use the one that matches the scenario."],
+  recon:"Product Mix report. Qty = Quantity Sold. Total Sales = Total Sales. Sum split rows for the same product code before comparing.",
   creds:[
     {r:"API Key",i:"Goes in Supy when you add Revel."},
     {r:"API Secret",i:"Goes in Supy alongside the key."},
@@ -1064,7 +1073,7 @@ var P = {
 
 "Roller":{type:"self",auth:"API (client ID + secret)",
   note:"Ask the client to get both from their Roller contact.",
-  limits:[],
+  limits:["Item-level discounts are supported.","A negative total amount on an order generally indicates a refund.","Cancelled orders appear in the void tab of Roller's sales data."],
   creds:[
     {r:"Client ID",i:"Goes in the Key field in Supy, not a field called Client ID."},
     {r:"Client Secret",i:"Goes in the Secret field in Supy."}
@@ -1073,7 +1082,8 @@ var P = {
 "Shopify":{type:"tech",auth:"App install (no credentials)",
   lead:"Engineering-dependent, get a committed date before promising one",
   note:"There are no credentials to collect. Someone with admin access to the client's Shopify store installs the Supy app from the Shopify App Store, and that install is what authorises the connection. Supy Integrations finishes the setup afterwards.",
-  limits:["Supy still needs engineering time after the app is installed. Get a timeline from the Integrations team before you promise the client a date."],
+  limits:["Supy still needs engineering time after the app is installed. Get a timeline from the Integrations team before you promise the client a date.","No manual API credentials are needed. Authentication is handled entirely through the Shopify App Store install flow."],
+  recon:"Analytics > Reports > Total Sales. Total Sales = Total Sales Incl. Tax. Net Sales = Total Sales Excl. Tax. Discount = Total Discount.",
   creds:[
     {r:"Supy app installed from the Shopify App Store",i:"Someone with admin access to the client's Shopify store installs it. Do not ask Shopify support for credentials, there are none to issue."},
     {r:"Integrations team engaged",i:"Tell the Integrations team once the app is installed and get a timeline before you promise the client a date."}
@@ -1081,14 +1091,16 @@ var P = {
 
 "SNAPOS":{type:"self",auth:"API (key)",
   note:"Ask the client to get this from their SNAPOS contact.",
-  limits:[],
+  limits:["Discounts are supported and can be calculated on the item price or across the whole order, depending on how the SNAPOS account is configured.","Modifiers are supported."],
+  recon:"Overview > Reporting > Sales > Sales Summary. Net Sales + Tax = Total Sales Incl. Tax. Net Sales = Total Sales Excl. Tax.",
   creds:[
     {r:"API Key",i:"Goes in Supy when you add SNAPOS. This is the only value needed."}
   ]},
 
 "Spare":{type:"self",auth:"API (username + password)",
   note:"Ask the client to get both from their Spare contact.",
-  limits:["Only completed orders come through. Voided, cancelled and pending orders are not returned at all, so those statuses will never appear in Supy."],
+  limits:["Only completed orders come through. Voided, cancelled and pending orders are not returned at all, so those statuses will never appear in Supy.","Item-level discounts are supported.","Modifiers are supported and linked to their parent item in the underlying data."],
+  mapping:"Manual upload with the Menu Items Template, no POS sync",
   creds:[
     {r:"Username",i:"The username on the client's Spare account. Goes in Supy when you add Spare."},
     {r:"Password",i:"The password for that same Spare account."}
@@ -1096,14 +1108,16 @@ var P = {
 
 "Spice POS":{type:"self",auth:"API (access token)",
   note:"Ask the client to get this from their Spice POS contact.",
-  limits:["Spice POS does not send negative quantities for voids, cancellations, refunds or returns. Any of those have to go into Supy as a manual upload, they will not sync."],
+  limits:["Discounts and modifiers are both supported and reflected in your synced sales data.","Spice POS does not send negative quantities for voids, cancellations, refunds or returns. Any of those have to go into Supy as a manual upload, they will not sync."],
+  recon:"Back office > Sales. Net Amount = Total Sales Excl. Tax. Gross Amount = Total Sales Incl. Tax. Discount = Total Discount.",
   creds:[
     {r:"Access Token",i:"The token for the client's Spice POS tenant. Goes in the Token field in Supy. This is the only value needed."}
   ]},
 
 "Square POS":{type:"self",auth:"API (email + password)",
   note:"Ask the client to get both from their Square POS contact.",
-  limits:[],
+  limits:["Discounts and modifiers are both supported and reflected in your synced sales data.","Discounts can be applied at the order level or the item level.","Square taxes can be additive (on top of the item price) or inclusive (already in the item price). Either way, synced figures match the Square reports.","Square distinguishes item refunds (specific items returned) from custom-amount refunds (money returned without specific items). Both are reflected in sales data."],
+  recon:"Dashboard > Transactions. Total Collected = Total Sales Incl. Tax. Net Sales = Total Sales Excl. Tax. For item detail: Reports > Item Sales. Net Sales = Total Sales Excl. Tax. Discounts = Total Discount. Gross Sales = Total Sales Incl. Tax plus Discount.",
   creds:[
     {r:"Email",i:"The email on the client's Square POS account. Goes in the Email ID field in Supy."},
     {r:"Password",i:"The password for that same Square POS account."}
@@ -1121,14 +1135,15 @@ var P = {
 
 "SysPos":{type:"self",auth:"API (customer ID)",
   note:"Ask the client to get this from their SysPos contact.",
-  limits:[],
+  limits:["Discounts and modifiers are both supported and reflected in your synced sales data. Discounts can apply at either the order level or the item level."],
+  recon:"Reporting > Sales. Total With VAT = Total Sales Incl. Tax. Total Without VAT = Total Sales Excl. Tax. Discount = Total Discount.",
   creds:[
     {r:"Customer ID",i:"Goes in Supy when you add SysPos. This is the only value needed."}
   ]},
 
 "Task POS":{type:"self",auth:"API (login + key + host)",
   note:"Ask the client to get all four from their Task POS contact.",
-  limits:[],
+  limits:["Discounts and modifiers are both supported and reflected in your synced sales data.","Task POS wastage records can also be synced into Supy so wasted stock is reflected in your inventory."],
   creds:[
     {r:"Login (clerk name)",i:"The clerk name on the client's Task POS account. Goes in the Login field in Supy."},
     {r:"Password",i:"The password for that same Task POS login."},
@@ -1138,7 +1153,8 @@ var P = {
 
 "Tissl":{type:"self",auth:"API (organization ID)",
   note:"Ask the client to get this from their Tissl contact.",
-  limits:["One menu item can sit under more than one category in Tissl as a 'shadow product'. If an item you expect is missing while mapping, check the other categories before raising it."],
+  limits:["Discounts and modifiers are both supported and reflected in your synced sales data.","One menu item can sit under more than one category in Tissl as a 'shadow product'. If an item you expect is missing while mapping, check the other categories before raising it."],
+  recon:"Report Center > Statement of Business (Revenue Reports). Net = Total Sales Excl. Tax. Gross = Total Sales Incl. Tax. Discount = Total Discount.",
   creds:[
     {r:"Organization ID",i:"Goes in Supy when you add Tissl. This is the only value needed."}
   ]},
@@ -1146,7 +1162,8 @@ var P = {
 "Toast POS":{type:"tech",auth:"App install (no credentials)",
   lead:"Engineering-dependent, get a committed date before promising one",
   note:"In most cases there are no credentials to collect. The client installs the Supy app from the Toast Partner Integrations marketplace and Toast notifies Supy with their restaurant details automatically. Tell the CSM once it is installed.",
-  limits:["Supy still needs engineering time after the app is installed. Get a timeline from the Integrations team before you promise the client a go-live date.","Only fully closed orders sync. Open and voided orders land in a void/cancelled view instead of counting as completed sales."],
+  limits:["Supy still needs engineering time after the app is installed. Get a timeline from the Integrations team before you promise the client a go-live date.","For multi-location clients, several locations can be selected at once during the app install step. Branch, item, sales type, and wastage code mapping are still done individually per location.","Item prices include modifier prices. Both order-level and item-level discounts are supported.","Only fully closed orders sync. Open and voided orders land in a void/cancelled view instead of counting as completed sales."],
+  recon:"Reports > Sales Summary. Net Sales = Total Sales Excl. Tax. Net Sales + Tax = Total Sales Incl. Tax. Discount Total = Total Discount.",
   creds:[
     {r:"Supy app installed from the Toast marketplace",i:"In Toast Web: Integrations > Integration Management > Browse & Purchase Integrations, search for Supy, then click Add Now. One or several locations can be selected at the same time.",n:"Do not ask the client's Toast contact for API credentials. The install is what connects them."},
     {r:"Integrations team engaged",i:"Tell the Integrations team once the app is installed and get a timeline before you promise the client a date."}
@@ -1154,7 +1171,8 @@ var P = {
 
 "Tray POS":{type:"self",auth:"API (key)",
   note:"Ask the client to get this from their Tray POS contact.",
-  limits:[],
+  limits:["Discounts and modifiers are both supported and reflected in your synced sales data.","Refunds recorded in Tray POS are automatically reflected against the original sales order once synced."],
+  recon:"Reports > SALES - Tenders Summary. Total Base = Total Sales Excl. Tax. Total Total = Total Sales Incl. Tax.",
   creds:[
     {r:"API Key",i:"Goes in Supy when you add Tray POS. This is the only value needed."}
   ]},
@@ -1170,7 +1188,7 @@ var P = {
 
 "Vita Mojo":{type:"assist",auth:"Supy-provisioned (nothing to collect)",
   note:"There is nothing to request from the client. Supy's onboarding team configures Vita Mojo directly using a dedicated reporting account provisioned for the client's business, so no client login is handled at all.",
-  limits:["Access is configured by Supy, not by the client. Any change to which stores or credentials are connected has to go back through the Supy onboarding contact."],
+  limits:["Discounts and modifiers are both supported, including promotions applied at item or order level.","Access is configured by Supy, not by the client. Any change to which stores or credentials are connected has to go back through the Supy onboarding contact."],
   creds:[
     {r:"Supy onboarding contact engaged",i:"Ask the onboarding contact to enable Vita Mojo for the client's account, and get a timeline before you promise a date.",n:"Do not ask the client for Vita Mojo login credentials. Supy uses its own reporting account."}
   ]},
